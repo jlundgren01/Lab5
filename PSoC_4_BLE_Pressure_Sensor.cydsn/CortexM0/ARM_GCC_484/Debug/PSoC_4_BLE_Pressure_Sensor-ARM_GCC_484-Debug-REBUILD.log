@@ -1,0 +1,11 @@
+--------------- Rebuild Started: 11/22/2016 11:53:54 Project: PSoC_4_BLE_Pressure_Sensor, Configuration: ARM GCC 4.8.4 Debug ---------------
+Deleting file ".\PSoC_4_BLE_Pressure_Sensor.rpt"
+cydsfit.exe -.appdatapath "C:\Users\Ecapable\AppData\Local\Cypress Semiconductor\PSoC Creator\3.1" -.fdsnotice -.fdswarpdepfile=warp_dependencies.txt -.fdselabdepfile=elab_dependencies.txt -.fdsbldfile=generated_files.txt -p C:\Users\Ecapable\Desktop\PSoC_4_BLE_Pressure_Sensor\PSoC_4_BLE_Pressure_Sensor.cydsn\PSoC_4_BLE_Pressure_Sensor.cyprj -d CY8C4247LQI-BL483 -s C:\Users\Ecapable\Desktop\PSoC_4_BLE_Pressure_Sensor\PSoC_4_BLE_Pressure_Sensor.cydsn\Generated_Source\PSoC4 -- -yv2 -q10 -ygs -o2 -v3 -.fftcfgtype=LE
+Elaborating Design...
+Error: bse.M0202: Internal Error (aborting): Object reference not set to an instance of an object. (App=cydsfit)
+Stack Trace:
+   at CyDesigner.PSoC.CyDsFit.ElaborateDesign()
+   at CyDesigner.PSoC.CyDsFit.Run(TimeSpan loadTime, TimeSpan createTime)
+   at CyDesigner.PSoC.CyDsFit.Run(String[] args, TimeSpan loadTime, TimeSpan createTime)
+   at CyDesigner.PSoC.Program.InternalRun(CyApp myApp, String[] args)Error: cdf.M0005: CyDsFit aborted due to errors, please address all errors and rerun CyDsFit. (App=cydsfit)
+--------------- Rebuild Failed: 11/22/2016 11:53:57 ---------------

@@ -1,0 +1,3415 @@
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 34, 0
+  11              		.eabi_attribute 18, 4
+  12              		.code	16
+  13              		.file	"BLEApplication.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.global	StartAdvertisement
+  18              		.bss
+  19              		.type	StartAdvertisement, %object
+  20              		.size	StartAdvertisement, 1
+  21              	StartAdvertisement:
+  22 0000 00       		.space	1
+  23              		.global	DeviceConnected
+  24              		.type	DeviceConnected, %object
+  25              		.size	DeviceConnected, 1
+  26              	DeviceConnected:
+  27 0001 00       		.space	1
+  28              		.global	BLEStackStatus
+  29              		.type	BLEStackStatus, %object
+  30              		.size	BLEStackStatus, 1
+  31              	BLEStackStatus:
+  32 0002 00       		.space	1
+  33              		.global	ConnectionParametersUpdateRequired
+  34              		.data
+  35              		.type	ConnectionParametersUpdateRequired, %object
+  36              		.size	ConnectionParametersUpdateRequired, 1
+  37              	ConnectionParametersUpdateRequired:
+  38 0000 01       		.byte	1
+  39              		.global	TemperatureNotificationEnabled
+  40              		.bss
+  41              		.type	TemperatureNotificationEnabled, %object
+  42              		.size	TemperatureNotificationEnabled, 1
+  43              	TemperatureNotificationEnabled:
+  44 0003 00       		.space	1
+  45              		.global	PressureNotificationEnabled
+  46              		.type	PressureNotificationEnabled, %object
+  47              		.size	PressureNotificationEnabled, 1
+  48              	PressureNotificationEnabled:
+  49 0004 00       		.space	1
+  50              		.global	AltitudeNotificationEnabled
+  51              		.type	AltitudeNotificationEnabled, %object
+  52              		.size	AltitudeNotificationEnabled, 1
+  53              	AltitudeNotificationEnabled:
+  54 0005 00       		.space	1
+  55              		.global	UpdateTemperatureNotificationAttribute
+  56              		.type	UpdateTemperatureNotificationAttribute, %object
+  57              		.size	UpdateTemperatureNotificationAttribute, 1
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 2
+
+
+  58              	UpdateTemperatureNotificationAttribute:
+  59 0006 00       		.space	1
+  60              		.global	UpdatePressureNotificationAttribute
+  61              		.type	UpdatePressureNotificationAttribute, %object
+  62              		.size	UpdatePressureNotificationAttribute, 1
+  63              	UpdatePressureNotificationAttribute:
+  64 0007 00       		.space	1
+  65              		.global	UpdateAltitudeNotificationAttribute
+  66              		.type	UpdateAltitudeNotificationAttribute, %object
+  67              		.size	UpdateAltitudeNotificationAttribute, 1
+  68              	UpdateAltitudeNotificationAttribute:
+  69 0008 00       		.space	1
+  70              		.comm	TemperatureNotificationCCCDValue,2,4
+  71              		.comm	PressureNotificationCCCDValue,2,4
+  72              		.comm	AltitudeNotificationCCCDValue,2,4
+  73              		.comm	TemperatureNotificationData,4,4
+  74              		.comm	PressureNotificationData,4,4
+  75              		.comm	AltitudeNotificationData,4,4
+  76 0009 000000   		.align	2
+  77              	ConnectionHandle:
+  78 000c 0000     		.space	2
+  79 000e 0000     		.align	2
+  80              	WriteRequestedParameter:
+  81 0010 00000000 		.space	4
+  82              		.align	2
+  83              	TemperatureNotificationHandle:
+  84 0014 00000000 		.space	12
+  84      00000000 
+  84      00000000 
+  85              		.align	2
+  86              	PressureNotificationHandle:
+  87 0020 00000000 		.space	12
+  87      00000000 
+  87      00000000 
+  88              		.align	2
+  89              	AltitudeNotificationHandle:
+  90 002c 00000000 		.space	12
+  90      00000000 
+  90      00000000 
+  91              		.align	2
+  92              	TemperatureNotificationCCCDHandle:
+  93 0038 00000000 		.space	12
+  93      00000000 
+  93      00000000 
+  94              		.align	2
+  95              	PressureNotificationCCCDHandle:
+  96 0044 00000000 		.space	12
+  96      00000000 
+  96      00000000 
+  97              		.align	2
+  98              	AltitudeNotificationCCCDHandle:
+  99 0050 00000000 		.space	12
+  99      00000000 
+  99      00000000 
+ 100              		.data
+ 101 0001 000000   		.align	2
+ 102              		.type	ConnectionParametersHandle, %object
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 3
+
+
+ 103              		.size	ConnectionParametersHandle, 8
+ 104              	ConnectionParametersHandle:
+ 105 0004 6400     		.short	100
+ 106 0006 6E00     		.short	110
+ 107 0008 0000     		.short	0
+ 108 000a C800     		.short	200
+ 109              		.section	.text.CustomEventHandler,"ax",%progbits
+ 110              		.align	2
+ 111              		.global	CustomEventHandler
+ 112              		.code	16
+ 113              		.thumb_func
+ 114              		.type	CustomEventHandler, %function
+ 115              	CustomEventHandler:
+ 116              	.LFB37:
+ 117              		.file 1 ".\\BLEApplication.c"
+   1:.\BLEApplication.c **** /**************************************************************************************************
+   2:.\BLEApplication.c **** * Project Name		: PSoC_4_BLE_Pressure_Sensor
+   3:.\BLEApplication.c **** * File Name			: BLEApplication.c
+   4:.\BLEApplication.c **** * Version 			: 1.0
+   5:.\BLEApplication.c **** * Device Used		: CY8C4247LQI-BL483
+   6:.\BLEApplication.c **** * Software Used		: PSoC Creator 3.1
+   7:.\BLEApplication.c **** * Compiler    		: ARM GCC 4.8.4
+   8:.\BLEApplication.c **** * Related Hardware	: CY8CKIT-042-BLE Bluetooth Low Energy Pioneer Kit
+   9:.\BLEApplication.c **** ***************************************************************************************************
+  10:.\BLEApplication.c **** 
+  11:.\BLEApplication.c **** /**************************************************************************************************
+  12:.\BLEApplication.c **** * Copyright (2015), Cypress Semiconductor Corporation. All Rights Reserved.
+  13:.\BLEApplication.c **** ***************************************************************************************************
+  14:.\BLEApplication.c **** * This software, including source code, documentation and related materials
+  15:.\BLEApplication.c **** * ("Software") is owned by Cypress Semiconductor Corporation (Cypress) and is
+  16:.\BLEApplication.c **** * protected by and subject to worldwide patent protection (United States and 
+  17:.\BLEApplication.c **** * foreign), United States copyright laws and international treaty provisions. 
+  18:.\BLEApplication.c **** * Cypress hereby grants to licensee a personal, non-exclusive, non-transferable
+  19:.\BLEApplication.c **** * license to copy, use, modify, create derivative works of, and compile the 
+  20:.\BLEApplication.c **** * Cypress source code and derivative works for the sole purpose of creating 
+  21:.\BLEApplication.c **** * custom software in support of licensee product, such licensee product to be
+  22:.\BLEApplication.c **** * used only in conjunction with Cypress's integrated circuit as specified in the
+  23:.\BLEApplication.c **** * applicable agreement. Any reproduction, modification, translation, compilation,
+  24:.\BLEApplication.c **** * or representation of this Software except as specified above is prohibited 
+  25:.\BLEApplication.c **** * without the express written permission of Cypress.
+  26:.\BLEApplication.c **** * 
+  27:.\BLEApplication.c **** * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND, 
+  28:.\BLEApplication.c **** * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED 
+  29:.\BLEApplication.c **** * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  30:.\BLEApplication.c **** * Cypress reserves the right to make changes to the Software without notice. 
+  31:.\BLEApplication.c **** * Cypress does not assume any liability arising out of the application or use
+  32:.\BLEApplication.c **** * of Software or any product or circuit described in the Software. Cypress does
+  33:.\BLEApplication.c **** * not authorize its products for use as critical components in any products 
+  34:.\BLEApplication.c **** * where a malfunction or failure may reasonably be expected to result in 
+  35:.\BLEApplication.c **** * significant injury or death ("ACTIVE Risk Product"). By including Cypress's 
+  36:.\BLEApplication.c **** * product in a ACTIVE Risk Product, the manufacturer of such system or application
+  37:.\BLEApplication.c **** * assumes all risk of such use and in doing so indemnifies Cypress against all
+  38:.\BLEApplication.c **** * liability. Use of this Software may be limited by and subject to the applicable
+  39:.\BLEApplication.c **** * Cypress software license agreement.
+  40:.\BLEApplication.c **** ***************************************************************************************************
+  41:.\BLEApplication.c **** 
+  42:.\BLEApplication.c **** #include <BLEApplication.h>
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 4
+
+
+  43:.\BLEApplication.c **** 
+  44:.\BLEApplication.c **** /*************************Variables Declaration****************************************************
+  45:.\BLEApplication.c **** uint8 StartAdvertisement = FALSE; //This flag is used to start advertisement
+  46:.\BLEApplication.c **** uint8 DeviceConnected = FALSE; //This flag is set when a Central device is connected
+  47:.\BLEApplication.c **** uint8 BLEStackStatus = FALSE; //Variable store the BLE stack status
+  48:.\BLEApplication.c **** uint8 ConnectionParametersUpdateRequired = TRUE; //This flag is used to send the connection paramet
+  49:.\BLEApplication.c **** uint8 TemperatureNotificationEnabled = FALSE; //This flag is set when the Central device writes to 
+  50:.\BLEApplication.c **** uint8 PressureNotificationEnabled = FALSE; //This flag is set when the Central device writes to CCC
+  51:.\BLEApplication.c **** uint8 AltitudeNotificationEnabled = FALSE; //This flag is set when the Central device writes to CCC
+  52:.\BLEApplication.c **** uint8 UpdateTemperatureNotificationAttribute = FALSE; //This flags is used to update the respective
+  53:.\BLEApplication.c **** uint8 UpdatePressureNotificationAttribute = FALSE; //This flags is used to update the respective pr
+  54:.\BLEApplication.c **** uint8 UpdateAltitudeNotificationAttribute = FALSE; //This flags is used to update the respective al
+  55:.\BLEApplication.c **** uint8 TemperatureNotificationCCCDValue[0x02]; //The temperature CCCD value is stored in this array
+  56:.\BLEApplication.c **** uint8 PressureNotificationCCCDValue[0x02]; //The pressure CCCD value is stored in this array
+  57:.\BLEApplication.c **** uint8 AltitudeNotificationCCCDValue[0x02]; //The altitude CCCD value is stored in this array
+  58:.\BLEApplication.c **** uint8 TemperatureNotificationData[0x04]; //The temperature notification value is stored in this arr
+  59:.\BLEApplication.c **** uint8 PressureNotificationData[0x04]; //The pressure notification value is stored in this array
+  60:.\BLEApplication.c **** uint8 AltitudeNotificationData[0x04]; //The altitude notification value is stored in this array
+  61:.\BLEApplication.c **** extern uint8 ChangePowerPinDriveMode; //This flag is set when the GATT disconnect event occurs
+  62:.\BLEApplication.c **** extern long LastTemperatureData; //Previous temperature reading is stored in this variable
+  63:.\BLEApplication.c **** extern long LastPressureData; //Previous pressure reading is stored in this variable
+  64:.\BLEApplication.c **** extern long LastAltitudeData; //Previous altitude reading is stored in this variable
+  65:.\BLEApplication.c **** static CYBLE_CONN_HANDLE_T ConnectionHandle; //This handle stores the connection parameters
+  66:.\BLEApplication.c **** static CYBLE_GATTS_WRITE_REQ_PARAM_T *WriteRequestedParameter; //Variable to store the data receive
+  67:.\BLEApplication.c **** static CYBLE_GATTS_HANDLE_VALUE_NTF_T TemperatureNotificationHandle; //This handle stores the tempe
+  68:.\BLEApplication.c **** static CYBLE_GATTS_HANDLE_VALUE_NTF_T PressureNotificationHandle; //This handle stores the pressure
+  69:.\BLEApplication.c **** static CYBLE_GATTS_HANDLE_VALUE_NTF_T AltitudeNotificationHandle; //This handle stores the altitude
+  70:.\BLEApplication.c **** static CYBLE_GATT_HANDLE_VALUE_PAIR_T TemperatureNotificationCCCDHandle; //This handle is used to u
+  71:.\BLEApplication.c **** static CYBLE_GATT_HANDLE_VALUE_PAIR_T PressureNotificationCCCDHandle; //This handle is used to upda
+  72:.\BLEApplication.c **** static CYBLE_GATT_HANDLE_VALUE_PAIR_T AltitudeNotificationCCCDHandle; //This handle is used to upda
+  73:.\BLEApplication.c **** static CYBLE_GAP_CONN_UPDATE_PARAM_T ConnectionParametersHandle = {CONN_PARAM_UPDATE_MIN_CONN_INTER
+  74:.\BLEApplication.c ****     CONN_PARAM_UPDATE_SLAVE_LATENCY, CONN_PARAM_UPDATE_SUPRV_TIMEOUT}; //Connection Parameter updat
+  75:.\BLEApplication.c **** /**************************************************************************************************
+  76:.\BLEApplication.c **** 
+  77:.\BLEApplication.c **** /**************************************************************************************************
+  78:.\BLEApplication.c **** * Function Name: CustomEventHandler
+  79:.\BLEApplication.c **** ***************************************************************************************************
+  80:.\BLEApplication.c **** * Summary: This is a call back event function to handle various events from BLE stack.
+  81:.\BLEApplication.c **** *
+  82:.\BLEApplication.c **** * Parameters:
+  83:.\BLEApplication.c **** *  Event - Event returned
+  84:.\BLEApplication.c **** *  EventParameter - Link to value of the event returned
+  85:.\BLEApplication.c **** *
+  86:.\BLEApplication.c **** * Return:
+  87:.\BLEApplication.c **** *  void
+  88:.\BLEApplication.c **** *
+  89:.\BLEApplication.c **** ***************************************************************************************************
+  90:.\BLEApplication.c **** void CustomEventHandler(uint32 Event, void *EventParameter)
+  91:.\BLEApplication.c **** {
+ 118              		.loc 1 91 0
+ 119              		.cfi_startproc
+ 120 0000 80B5     		push	{r7, lr}
+ 121              		.cfi_def_cfa_offset 8
+ 122              		.cfi_offset 7, -8
+ 123              		.cfi_offset 14, -4
+ 124 0002 82B0     		sub	sp, sp, #8
+ 125              		.cfi_def_cfa_offset 16
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 5
+
+
+ 126 0004 00AF     		add	r7, sp, #0
+ 127              		.cfi_def_cfa_register 7
+ 128 0006 7860     		str	r0, [r7, #4]
+ 129 0008 3960     		str	r1, [r7]
+  92:.\BLEApplication.c ****     switch(Event)
+ 130              		.loc 1 92 0
+ 131 000a 7B68     		ldr	r3, [r7, #4]
+ 132 000c 282B     		cmp	r3, #40
+ 133 000e 26D0     		beq	.L3
+ 134 0010 06D8     		bhi	.L4
+ 135 0012 052B     		cmp	r3, #5
+ 136 0014 15D0     		beq	.L5
+ 137 0016 262B     		cmp	r3, #38
+ 138 0018 18D0     		beq	.L6
+ 139 001a 012B     		cmp	r3, #1
+ 140 001c 0DD0     		beq	.L7
+  93:.\BLEApplication.c **** 	{
+  94:.\BLEApplication.c ****         /**********************************************************
+  95:.\BLEApplication.c ****         *                       General Events
+  96:.\BLEApplication.c ****         ***********************************************************/
+  97:.\BLEApplication.c **** 		case CYBLE_EVT_STACK_ON: //This event is received when the BLE component is started			
+  98:.\BLEApplication.c ****             StartAdvertisement = TRUE; //Set the advertisement flag
+  99:.\BLEApplication.c **** 		break;
+ 100:.\BLEApplication.c ****             
+ 101:.\BLEApplication.c ****         case CYBLE_EVT_STACK_BUSY_STATUS: //This event is generated when the internal stack buffer 
+ 102:.\BLEApplication.c ****             BLEStackStatus = *(uint8*)EventParameter; //Extract the BLE stack status
+ 103:.\BLEApplication.c ****         break;
+ 104:.\BLEApplication.c ****         
+ 105:.\BLEApplication.c ****         /**********************************************************
+ 106:.\BLEApplication.c ****         *                       GAP Events
+ 107:.\BLEApplication.c ****         ***********************************************************/		
+ 108:.\BLEApplication.c ****         case CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP: //This event is received when the device star
+ 109:.\BLEApplication.c ****             if(CyBle_GetState() == CYBLE_STATE_DISCONNECTED)
+ 110:.\BLEApplication.c ****             {
+ 111:.\BLEApplication.c ****                 StartAdvertisement = TRUE; //Set the advertisement flag
+ 112:.\BLEApplication.c ****             }
+ 113:.\BLEApplication.c ****         break;
+ 114:.\BLEApplication.c **** 			
+ 115:.\BLEApplication.c **** 		case CYBLE_EVT_GAP_DEVICE_DISCONNECTED: //This event is received when the device is disconnected
+ 116:.\BLEApplication.c **** 			StartAdvertisement = TRUE; //Set the advertisement flag
+ 117:.\BLEApplication.c ****         break;
+ 118:.\BLEApplication.c **** 
+ 119:.\BLEApplication.c ****         /**********************************************************
+ 120:.\BLEApplication.c ****         *                       GATT Events
+ 121:.\BLEApplication.c ****         ***********************************************************/
+ 122:.\BLEApplication.c ****         case CYBLE_EVT_GATT_CONNECT_IND: //This event is received when the device is connected over
+ 123:.\BLEApplication.c **** 			ConnectionHandle = *(CYBLE_CONN_HANDLE_T *)EventParameter; //Update the attribute handle on GATT
+ 124:.\BLEApplication.c **** 			
+ 125:.\BLEApplication.c **** 			DeviceConnected = TRUE; //Set device connection status flag
+ 126:.\BLEApplication.c ****             ChangePowerPinDriveMode = FALSE; //Clear change power pin drive mode flag
+ 127:.\BLEApplication.c ****         break;
+ 128:.\BLEApplication.c **** 			
+ 129:.\BLEApplication.c ****         case CYBLE_EVT_GATT_DISCONNECT_IND: //This event is received when device is disconnected
+ 130:.\BLEApplication.c **** 			DeviceConnected = FALSE; //Clear device connection status flag
+ 131:.\BLEApplication.c ****             TemperatureNotificationEnabled = FALSE; //Clear the temperature notification flag
+ 132:.\BLEApplication.c ****             PressureNotificationEnabled =  FALSE; //Clear the pressure notification flag
+ 133:.\BLEApplication.c ****             AltitudeNotificationEnabled = FALSE; //Clear the altitude notification flag
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 6
+
+
+ 134:.\BLEApplication.c ****             UpdateTemperatureNotificationAttribute = TRUE; //Clear the update temperature notificat
+ 135:.\BLEApplication.c ****             UpdatePressureNotificationAttribute = TRUE; //Clear the update pressure notification fl
+ 136:.\BLEApplication.c ****             UpdateAltitudeNotificationAttribute = TRUE; //Clear the update altitude notification fl
+ 137:.\BLEApplication.c ****             /* Clear temperature notification data */
+ 138:.\BLEApplication.c ****             TemperatureNotificationData[0x03] = TemperatureNotificationData[0x02] = TemperatureNoti
+ 139:.\BLEApplication.c ****             /* Clear pressure notification data */
+ 140:.\BLEApplication.c ****             PressureNotificationData[0x03] = PressureNotificationData[0x02] = PressureNotificationD
+ 141:.\BLEApplication.c ****             /* Clear altitude notification data */
+ 142:.\BLEApplication.c ****             AltitudeNotificationData[0x03] = AltitudeNotificationData[0x02] = AltitudeNotificationD
+ 143:.\BLEApplication.c ****             LastTemperatureData = ZERO; //Clear last stored temperature notification data
+ 144:.\BLEApplication.c ****             LastPressureData = ZERO; //Clear last stored pressure notification data
+ 145:.\BLEApplication.c ****             LastAltitudeData = ZERO; //Clear last stored altitude notification data
+ 146:.\BLEApplication.c ****             ChangePowerPinDriveMode = TRUE; //Set change power pin drive mode flag
+ 147:.\BLEApplication.c ****             ConnectionParametersUpdateRequired = TRUE; //Set the Connection Parameters Update flag
+ 148:.\BLEApplication.c ****             UpdateNotificationCCCDAttribute(); //Update the CCCD writing by the Central device
+ 149:.\BLEApplication.c **** 		break;
+ 150:.\BLEApplication.c ****             
+ 151:.\BLEApplication.c ****         case CYBLE_EVT_GATTS_WRITE_REQ: //When this event is triggered, the peripheral has received
+ 152:.\BLEApplication.c **** 			/* Extract the write value from the event parameter */
+ 153:.\BLEApplication.c ****             WriteRequestedParameter = (CYBLE_GATTS_WRITE_REQ_PARAM_T *)EventParameter;
+ 154:.\BLEApplication.c **** 			
+ 155:.\BLEApplication.c **** 			/* Check if command is for notification attribute and update the flag for sending notifications 
+ 156:.\BLEApplication.c ****             if(WriteRequestedParameter->handleValPair.attrHandle == CYBLE_BMP180_TEMPERATURE_CLIENT
+ 157:.\BLEApplication.c ****             {
+ 158:.\BLEApplication.c ****                 /* Set temperature notification flag so that application can start sending notifica
+ 159:.\BLEApplication.c **** 				TemperatureNotificationEnabled = WriteRequestedParameter->handleValPair.value.val[CYBLE_BMP180_
+ 160:.\BLEApplication.c ****                 
+ 161:.\BLEApplication.c ****                 UpdateTemperatureNotificationAttribute = TRUE; //Set flag to allow CCCD to be updat
+ 162:.\BLEApplication.c ****             }
+ 163:.\BLEApplication.c ****             
+ 164:.\BLEApplication.c ****             /* Check if command is for notification attribute and update the flag for sending notif
+ 165:.\BLEApplication.c ****             if(WriteRequestedParameter->handleValPair.attrHandle == CYBLE_BMP180_PRESSURE_CLIENT_CH
+ 166:.\BLEApplication.c ****             {
+ 167:.\BLEApplication.c ****                 /* Set pressure notification flag so that application can start sending notificatio
+ 168:.\BLEApplication.c **** 				PressureNotificationEnabled = WriteRequestedParameter->handleValPair.value.val[CYBLE_BMP180_PRE
+ 169:.\BLEApplication.c ****                 
+ 170:.\BLEApplication.c ****                 UpdatePressureNotificationAttribute = TRUE; //Set flag to allow CCCD to be updated 
+ 171:.\BLEApplication.c ****             }
+ 172:.\BLEApplication.c ****             
+ 173:.\BLEApplication.c ****             /* Check if command is for notification attribute and update the flag for sending notif
+ 174:.\BLEApplication.c ****             if(WriteRequestedParameter->handleValPair.attrHandle == CYBLE_BMP180_ALTITUDE_CLIENT_CH
+ 175:.\BLEApplication.c ****             {
+ 176:.\BLEApplication.c ****                 /* Set altitude notification flag so that application can start sending notificatio
+ 177:.\BLEApplication.c **** 				AltitudeNotificationEnabled = WriteRequestedParameter->handleValPair.value.val[CYBLE_BMP180_ALT
+ 178:.\BLEApplication.c ****                 
+ 179:.\BLEApplication.c ****                 UpdateAltitudeNotificationAttribute = TRUE; //Set flag to allow CCCD to be updated 
+ 180:.\BLEApplication.c ****             }
+ 181:.\BLEApplication.c ****             
+ 182:.\BLEApplication.c ****             /* Send response to the write command received */
+ 183:.\BLEApplication.c **** 			CyBle_GattsWriteRsp(ConnectionHandle);
+ 184:.\BLEApplication.c ****         break;
+ 185:.\BLEApplication.c ****             
+ 186:.\BLEApplication.c ****         /**********************************************************
+ 187:.\BLEApplication.c ****         *                       L2CAP Events
+ 188:.\BLEApplication.c ****         ***********************************************************/
+ 189:.\BLEApplication.c ****             
+ 190:.\BLEApplication.c ****         case CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_RSP: //This event is generated when the L2CAP connec
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 7
+
+
+ 191:.\BLEApplication.c ****             ConnectionParametersUpdateRequired = FALSE; //Clear the Connection Parameters Update fl
+ 192:.\BLEApplication.c ****         break;
+ 193:.\BLEApplication.c **** 			
+ 194:.\BLEApplication.c ****         default:
+ 195:.\BLEApplication.c ****         break;
+ 141              		.loc 1 195 0
+ 142 001e BDE0     		b	.L1
+ 143              	.L4:
+  92:.\BLEApplication.c ****     switch(Event)
+ 144              		.loc 1 92 0
+ 145 0020 422B     		cmp	r3, #66
+ 146 0022 31D0     		beq	.L8
+ 147 0024 02D8     		bhi	.L9
+ 148 0026 412B     		cmp	r3, #65
+ 149 0028 1DD0     		beq	.L10
+ 150              		.loc 1 195 0
+ 151 002a B7E0     		b	.L1
+ 152              	.L9:
+  92:.\BLEApplication.c ****     switch(Event)
+ 153              		.loc 1 92 0
+ 154 002c 4C2B     		cmp	r3, #76
+ 155 002e 00D1     		bne	.LCB40
+ 156 0030 7EE0     		b	.L11	@long jump
+ 157              	.LCB40:
+ 158 0032 712B     		cmp	r3, #113
+ 159 0034 00D1     		bne	.LCB42
+ 160 0036 ADE0     		b	.L12	@long jump
+ 161              	.LCB42:
+ 162              		.loc 1 195 0
+ 163 0038 B0E0     		b	.L1
+ 164              	.L7:
+  98:.\BLEApplication.c **** 		break;
+ 165              		.loc 1 98 0
+ 166 003a 5A4B     		ldr	r3, .L18
+ 167 003c 0122     		mov	r2, #1
+ 168 003e 1A70     		strb	r2, [r3]
+  99:.\BLEApplication.c ****             
+ 169              		.loc 1 99 0
+ 170 0040 ACE0     		b	.L1
+ 171              	.L5:
+ 102:.\BLEApplication.c ****         break;
+ 172              		.loc 1 102 0
+ 173 0042 3B68     		ldr	r3, [r7]
+ 174 0044 1A78     		ldrb	r2, [r3]
+ 175 0046 584B     		ldr	r3, .L18+4
+ 176 0048 1A70     		strb	r2, [r3]
+ 103:.\BLEApplication.c ****         
+ 177              		.loc 1 103 0
+ 178 004a A7E0     		b	.L1
+ 179              	.L6:
+ 109:.\BLEApplication.c ****             {
+ 180              		.loc 1 109 0
+ 181 004c 574B     		ldr	r3, .L18+8
+ 182 004e 1B78     		ldrb	r3, [r3]
+ 183 0050 042B     		cmp	r3, #4
+ 184 0052 03D1     		bne	.L14
+ 111:.\BLEApplication.c ****             }
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 8
+
+
+ 185              		.loc 1 111 0
+ 186 0054 534B     		ldr	r3, .L18
+ 187 0056 0122     		mov	r2, #1
+ 188 0058 1A70     		strb	r2, [r3]
+ 113:.\BLEApplication.c **** 			
+ 189              		.loc 1 113 0
+ 190 005a 9FE0     		b	.L1
+ 191              	.L14:
+ 192 005c 9EE0     		b	.L1
+ 193              	.L3:
+ 116:.\BLEApplication.c ****         break;
+ 194              		.loc 1 116 0
+ 195 005e 514B     		ldr	r3, .L18
+ 196 0060 0122     		mov	r2, #1
+ 197 0062 1A70     		strb	r2, [r3]
+ 117:.\BLEApplication.c **** 
+ 198              		.loc 1 117 0
+ 199 0064 9AE0     		b	.L1
+ 200              	.L10:
+ 123:.\BLEApplication.c **** 			
+ 201              		.loc 1 123 0
+ 202 0066 524A     		ldr	r2, .L18+12
+ 203 0068 3B68     		ldr	r3, [r7]
+ 204 006a 111C     		mov	r1, r2
+ 205 006c 1A1C     		mov	r2, r3
+ 206 006e 0223     		mov	r3, #2
+ 207 0070 081C     		mov	r0, r1
+ 208 0072 111C     		mov	r1, r2
+ 209 0074 1A1C     		mov	r2, r3
+ 210 0076 FFF7FEFF 		bl	memcpy
+ 125:.\BLEApplication.c ****             ChangePowerPinDriveMode = FALSE; //Clear change power pin drive mode flag
+ 211              		.loc 1 125 0
+ 212 007a 4E4B     		ldr	r3, .L18+16
+ 213 007c 0122     		mov	r2, #1
+ 214 007e 1A70     		strb	r2, [r3]
+ 126:.\BLEApplication.c ****         break;
+ 215              		.loc 1 126 0
+ 216 0080 4D4B     		ldr	r3, .L18+20
+ 217 0082 0022     		mov	r2, #0
+ 218 0084 1A70     		strb	r2, [r3]
+ 127:.\BLEApplication.c **** 			
+ 219              		.loc 1 127 0
+ 220 0086 89E0     		b	.L1
+ 221              	.L8:
+ 130:.\BLEApplication.c ****             TemperatureNotificationEnabled = FALSE; //Clear the temperature notification flag
+ 222              		.loc 1 130 0
+ 223 0088 4A4B     		ldr	r3, .L18+16
+ 224 008a 0022     		mov	r2, #0
+ 225 008c 1A70     		strb	r2, [r3]
+ 131:.\BLEApplication.c ****             PressureNotificationEnabled =  FALSE; //Clear the pressure notification flag
+ 226              		.loc 1 131 0
+ 227 008e 4B4B     		ldr	r3, .L18+24
+ 228 0090 0022     		mov	r2, #0
+ 229 0092 1A70     		strb	r2, [r3]
+ 132:.\BLEApplication.c ****             AltitudeNotificationEnabled = FALSE; //Clear the altitude notification flag
+ 230              		.loc 1 132 0
+ 231 0094 4A4B     		ldr	r3, .L18+28
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 9
+
+
+ 232 0096 0022     		mov	r2, #0
+ 233 0098 1A70     		strb	r2, [r3]
+ 133:.\BLEApplication.c ****             UpdateTemperatureNotificationAttribute = TRUE; //Clear the update temperature notificat
+ 234              		.loc 1 133 0
+ 235 009a 4A4B     		ldr	r3, .L18+32
+ 236 009c 0022     		mov	r2, #0
+ 237 009e 1A70     		strb	r2, [r3]
+ 134:.\BLEApplication.c ****             UpdatePressureNotificationAttribute = TRUE; //Clear the update pressure notification fl
+ 238              		.loc 1 134 0
+ 239 00a0 494B     		ldr	r3, .L18+36
+ 240 00a2 0122     		mov	r2, #1
+ 241 00a4 1A70     		strb	r2, [r3]
+ 135:.\BLEApplication.c ****             UpdateAltitudeNotificationAttribute = TRUE; //Clear the update altitude notification fl
+ 242              		.loc 1 135 0
+ 243 00a6 494B     		ldr	r3, .L18+40
+ 244 00a8 0122     		mov	r2, #1
+ 245 00aa 1A70     		strb	r2, [r3]
+ 136:.\BLEApplication.c ****             /* Clear temperature notification data */
+ 246              		.loc 1 136 0
+ 247 00ac 484B     		ldr	r3, .L18+44
+ 248 00ae 0122     		mov	r2, #1
+ 249 00b0 1A70     		strb	r2, [r3]
+ 138:.\BLEApplication.c ****             /* Clear pressure notification data */
+ 250              		.loc 1 138 0
+ 251 00b2 484B     		ldr	r3, .L18+48
+ 252 00b4 0022     		mov	r2, #0
+ 253 00b6 1A70     		strb	r2, [r3]
+ 254 00b8 464B     		ldr	r3, .L18+48
+ 255 00ba 1A78     		ldrb	r2, [r3]
+ 256 00bc 454B     		ldr	r3, .L18+48
+ 257 00be 5A70     		strb	r2, [r3, #1]
+ 258 00c0 444B     		ldr	r3, .L18+48
+ 259 00c2 5A78     		ldrb	r2, [r3, #1]
+ 260 00c4 434B     		ldr	r3, .L18+48
+ 261 00c6 9A70     		strb	r2, [r3, #2]
+ 262 00c8 424B     		ldr	r3, .L18+48
+ 263 00ca 9A78     		ldrb	r2, [r3, #2]
+ 264 00cc 414B     		ldr	r3, .L18+48
+ 265 00ce DA70     		strb	r2, [r3, #3]
+ 140:.\BLEApplication.c ****             /* Clear altitude notification data */
+ 266              		.loc 1 140 0
+ 267 00d0 414B     		ldr	r3, .L18+52
+ 268 00d2 0022     		mov	r2, #0
+ 269 00d4 1A70     		strb	r2, [r3]
+ 270 00d6 404B     		ldr	r3, .L18+52
+ 271 00d8 1A78     		ldrb	r2, [r3]
+ 272 00da 3F4B     		ldr	r3, .L18+52
+ 273 00dc 5A70     		strb	r2, [r3, #1]
+ 274 00de 3E4B     		ldr	r3, .L18+52
+ 275 00e0 5A78     		ldrb	r2, [r3, #1]
+ 276 00e2 3D4B     		ldr	r3, .L18+52
+ 277 00e4 9A70     		strb	r2, [r3, #2]
+ 278 00e6 3C4B     		ldr	r3, .L18+52
+ 279 00e8 9A78     		ldrb	r2, [r3, #2]
+ 280 00ea 3B4B     		ldr	r3, .L18+52
+ 281 00ec DA70     		strb	r2, [r3, #3]
+ 142:.\BLEApplication.c ****             LastTemperatureData = ZERO; //Clear last stored temperature notification data
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 10
+
+
+ 282              		.loc 1 142 0
+ 283 00ee 3B4B     		ldr	r3, .L18+56
+ 284 00f0 0022     		mov	r2, #0
+ 285 00f2 1A70     		strb	r2, [r3]
+ 286 00f4 394B     		ldr	r3, .L18+56
+ 287 00f6 1A78     		ldrb	r2, [r3]
+ 288 00f8 384B     		ldr	r3, .L18+56
+ 289 00fa 5A70     		strb	r2, [r3, #1]
+ 290 00fc 374B     		ldr	r3, .L18+56
+ 291 00fe 5A78     		ldrb	r2, [r3, #1]
+ 292 0100 364B     		ldr	r3, .L18+56
+ 293 0102 9A70     		strb	r2, [r3, #2]
+ 294 0104 354B     		ldr	r3, .L18+56
+ 295 0106 9A78     		ldrb	r2, [r3, #2]
+ 296 0108 344B     		ldr	r3, .L18+56
+ 297 010a DA70     		strb	r2, [r3, #3]
+ 143:.\BLEApplication.c ****             LastPressureData = ZERO; //Clear last stored pressure notification data
+ 298              		.loc 1 143 0
+ 299 010c 344B     		ldr	r3, .L18+60
+ 300 010e 0022     		mov	r2, #0
+ 301 0110 1A60     		str	r2, [r3]
+ 144:.\BLEApplication.c ****             LastAltitudeData = ZERO; //Clear last stored altitude notification data
+ 302              		.loc 1 144 0
+ 303 0112 344B     		ldr	r3, .L18+64
+ 304 0114 0022     		mov	r2, #0
+ 305 0116 1A60     		str	r2, [r3]
+ 145:.\BLEApplication.c ****             ChangePowerPinDriveMode = TRUE; //Set change power pin drive mode flag
+ 306              		.loc 1 145 0
+ 307 0118 334B     		ldr	r3, .L18+68
+ 308 011a 0022     		mov	r2, #0
+ 309 011c 1A60     		str	r2, [r3]
+ 146:.\BLEApplication.c ****             ConnectionParametersUpdateRequired = TRUE; //Set the Connection Parameters Update flag
+ 310              		.loc 1 146 0
+ 311 011e 264B     		ldr	r3, .L18+20
+ 312 0120 0122     		mov	r2, #1
+ 313 0122 1A70     		strb	r2, [r3]
+ 147:.\BLEApplication.c ****             UpdateNotificationCCCDAttribute(); //Update the CCCD writing by the Central device
+ 314              		.loc 1 147 0
+ 315 0124 314B     		ldr	r3, .L18+72
+ 316 0126 0122     		mov	r2, #1
+ 317 0128 1A70     		strb	r2, [r3]
+ 148:.\BLEApplication.c **** 		break;
+ 318              		.loc 1 148 0
+ 319 012a FFF7FEFF 		bl	UpdateNotificationCCCDAttribute
+ 149:.\BLEApplication.c ****             
+ 320              		.loc 1 149 0
+ 321 012e 35E0     		b	.L1
+ 322              	.L11:
+ 153:.\BLEApplication.c **** 			
+ 323              		.loc 1 153 0
+ 324 0130 2F4B     		ldr	r3, .L18+76
+ 325 0132 3A68     		ldr	r2, [r7]
+ 326 0134 1A60     		str	r2, [r3]
+ 156:.\BLEApplication.c ****             {
+ 327              		.loc 1 156 0
+ 328 0136 2E4B     		ldr	r3, .L18+76
+ 329 0138 1B68     		ldr	r3, [r3]
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 11
+
+
+ 330 013a 9B89     		ldrh	r3, [r3, #12]
+ 331 013c 0F2B     		cmp	r3, #15
+ 332 013e 08D1     		bne	.L15
+ 159:.\BLEApplication.c ****                 
+ 333              		.loc 1 159 0
+ 334 0140 2B4B     		ldr	r3, .L18+76
+ 335 0142 1B68     		ldr	r3, [r3]
+ 336 0144 5B68     		ldr	r3, [r3, #4]
+ 337 0146 1A78     		ldrb	r2, [r3]
+ 338 0148 1C4B     		ldr	r3, .L18+24
+ 339 014a 1A70     		strb	r2, [r3]
+ 161:.\BLEApplication.c ****             }
+ 340              		.loc 1 161 0
+ 341 014c 1E4B     		ldr	r3, .L18+36
+ 342 014e 0122     		mov	r2, #1
+ 343 0150 1A70     		strb	r2, [r3]
+ 344              	.L15:
+ 165:.\BLEApplication.c ****             {
+ 345              		.loc 1 165 0
+ 346 0152 274B     		ldr	r3, .L18+76
+ 347 0154 1B68     		ldr	r3, [r3]
+ 348 0156 9B89     		ldrh	r3, [r3, #12]
+ 349 0158 132B     		cmp	r3, #19
+ 350 015a 08D1     		bne	.L16
+ 168:.\BLEApplication.c ****                 
+ 351              		.loc 1 168 0
+ 352 015c 244B     		ldr	r3, .L18+76
+ 353 015e 1B68     		ldr	r3, [r3]
+ 354 0160 5B68     		ldr	r3, [r3, #4]
+ 355 0162 1A78     		ldrb	r2, [r3]
+ 356 0164 164B     		ldr	r3, .L18+28
+ 357 0166 1A70     		strb	r2, [r3]
+ 170:.\BLEApplication.c ****             }
+ 358              		.loc 1 170 0
+ 359 0168 184B     		ldr	r3, .L18+40
+ 360 016a 0122     		mov	r2, #1
+ 361 016c 1A70     		strb	r2, [r3]
+ 362              	.L16:
+ 174:.\BLEApplication.c ****             {
+ 363              		.loc 1 174 0
+ 364 016e 204B     		ldr	r3, .L18+76
+ 365 0170 1B68     		ldr	r3, [r3]
+ 366 0172 9B89     		ldrh	r3, [r3, #12]
+ 367 0174 172B     		cmp	r3, #23
+ 368 0176 08D1     		bne	.L17
+ 177:.\BLEApplication.c ****                 
+ 369              		.loc 1 177 0
+ 370 0178 1D4B     		ldr	r3, .L18+76
+ 371 017a 1B68     		ldr	r3, [r3]
+ 372 017c 5B68     		ldr	r3, [r3, #4]
+ 373 017e 1A78     		ldrb	r2, [r3]
+ 374 0180 104B     		ldr	r3, .L18+32
+ 375 0182 1A70     		strb	r2, [r3]
+ 179:.\BLEApplication.c ****             }
+ 376              		.loc 1 179 0
+ 377 0184 124B     		ldr	r3, .L18+44
+ 378 0186 0122     		mov	r2, #1
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 12
+
+
+ 379 0188 1A70     		strb	r2, [r3]
+ 380              	.L17:
+ 183:.\BLEApplication.c ****         break;
+ 381              		.loc 1 183 0
+ 382 018a 094B     		ldr	r3, .L18+12
+ 383 018c 1868     		ldr	r0, [r3]
+ 384 018e FFF7FEFF 		bl	CyBle_GattsWriteRsp
+ 184:.\BLEApplication.c ****             
+ 385              		.loc 1 184 0
+ 386 0192 03E0     		b	.L1
+ 387              	.L12:
+ 191:.\BLEApplication.c ****         break;
+ 388              		.loc 1 191 0
+ 389 0194 154B     		ldr	r3, .L18+72
+ 390 0196 0022     		mov	r2, #0
+ 391 0198 1A70     		strb	r2, [r3]
+ 192:.\BLEApplication.c **** 			
+ 392              		.loc 1 192 0
+ 393 019a C046     		mov	r8, r8
+ 394              	.L1:
+ 196:.\BLEApplication.c **** 	}
+ 197:.\BLEApplication.c **** }
+ 395              		.loc 1 197 0
+ 396 019c BD46     		mov	sp, r7
+ 397 019e 02B0     		add	sp, sp, #8
+ 398              		@ sp needed
+ 399 01a0 80BD     		pop	{r7, pc}
+ 400              	.L19:
+ 401 01a2 C046     		.align	2
+ 402              	.L18:
+ 403 01a4 00000000 		.word	StartAdvertisement
+ 404 01a8 00000000 		.word	BLEStackStatus
+ 405 01ac 00000000 		.word	cyBle_state
+ 406 01b0 0C000000 		.word	ConnectionHandle
+ 407 01b4 00000000 		.word	DeviceConnected
+ 408 01b8 00000000 		.word	ChangePowerPinDriveMode
+ 409 01bc 00000000 		.word	TemperatureNotificationEnabled
+ 410 01c0 00000000 		.word	PressureNotificationEnabled
+ 411 01c4 00000000 		.word	AltitudeNotificationEnabled
+ 412 01c8 00000000 		.word	UpdateTemperatureNotificationAttribute
+ 413 01cc 00000000 		.word	UpdatePressureNotificationAttribute
+ 414 01d0 00000000 		.word	UpdateAltitudeNotificationAttribute
+ 415 01d4 00000000 		.word	TemperatureNotificationData
+ 416 01d8 00000000 		.word	PressureNotificationData
+ 417 01dc 00000000 		.word	AltitudeNotificationData
+ 418 01e0 00000000 		.word	LastTemperatureData
+ 419 01e4 00000000 		.word	LastPressureData
+ 420 01e8 00000000 		.word	LastAltitudeData
+ 421 01ec 00000000 		.word	ConnectionParametersUpdateRequired
+ 422 01f0 10000000 		.word	WriteRequestedParameter
+ 423              		.cfi_endproc
+ 424              	.LFE37:
+ 425              		.size	CustomEventHandler, .-CustomEventHandler
+ 426              		.section	.text.SendTemperatureOverNotification,"ax",%progbits
+ 427              		.align	2
+ 428              		.global	SendTemperatureOverNotification
+ 429              		.code	16
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 13
+
+
+ 430              		.thumb_func
+ 431              		.type	SendTemperatureOverNotification, %function
+ 432              	SendTemperatureOverNotification:
+ 433              	.LFB38:
+ 198:.\BLEApplication.c **** /**************************************************************************************************
+ 199:.\BLEApplication.c **** 
+ 200:.\BLEApplication.c **** /**************************************************************************************************
+ 201:.\BLEApplication.c **** * Function Name: SendTemperatureOverNotification
+ 202:.\BLEApplication.c **** ***************************************************************************************************
+ 203:.\BLEApplication.c **** * Summary: This function sends the temperature data as BLE notification.
+ 204:.\BLEApplication.c **** * It updates the notification handle with temperature data and triggers the BLE component to send n
+ 205:.\BLEApplication.c **** *
+ 206:.\BLEApplication.c **** * Parameters:
+ 207:.\BLEApplication.c **** *  void
+ 208:.\BLEApplication.c **** *
+ 209:.\BLEApplication.c **** * Return:
+ 210:.\BLEApplication.c **** *  void
+ 211:.\BLEApplication.c **** *
+ 212:.\BLEApplication.c **** ***************************************************************************************************
+ 213:.\BLEApplication.c **** void SendTemperatureOverNotification(void)
+ 214:.\BLEApplication.c **** {
+ 434              		.loc 1 214 0
+ 435              		.cfi_startproc
+ 436 0000 80B5     		push	{r7, lr}
+ 437              		.cfi_def_cfa_offset 8
+ 438              		.cfi_offset 7, -8
+ 439              		.cfi_offset 14, -4
+ 440 0002 00AF     		add	r7, sp, #0
+ 441              		.cfi_def_cfa_register 7
+ 215:.\BLEApplication.c **** 	/* If stack is not busy, then send the notification */
+ 216:.\BLEApplication.c ****     if(BLEStackStatus == CYBLE_STACK_STATE_FREE)
+ 442              		.loc 1 216 0
+ 443 0004 0A4B     		ldr	r3, .L22
+ 444 0006 1B78     		ldrb	r3, [r3]
+ 445 0008 002B     		cmp	r3, #0
+ 446 000a 0ED1     		bne	.L20
+ 217:.\BLEApplication.c ****     {
+ 218:.\BLEApplication.c ****         /* Update notification handle with temperature data */
+ 219:.\BLEApplication.c ****     	TemperatureNotificationHandle.attrHandle = CYBLE_BMP180_TEMPERATURE_CHAR_HANDLE;
+ 447              		.loc 1 219 0
+ 448 000c 094B     		ldr	r3, .L22+4
+ 449 000e 0E22     		mov	r2, #14
+ 450 0010 1A81     		strh	r2, [r3, #8]
+ 220:.\BLEApplication.c ****     	TemperatureNotificationHandle.value.val = TemperatureNotificationData;
+ 451              		.loc 1 220 0
+ 452 0012 084B     		ldr	r3, .L22+4
+ 453 0014 084A     		ldr	r2, .L22+8
+ 454 0016 1A60     		str	r2, [r3]
+ 221:.\BLEApplication.c ****     	TemperatureNotificationHandle.value.len = sizeof(TemperatureNotificationData);
+ 455              		.loc 1 221 0
+ 456 0018 064B     		ldr	r3, .L22+4
+ 457 001a 0422     		mov	r2, #4
+ 458 001c 9A80     		strh	r2, [r3, #4]
+ 222:.\BLEApplication.c ****     	
+ 223:.\BLEApplication.c ****     	/* Send the updated handle as part of attribute for notifications */
+ 224:.\BLEApplication.c ****     	CyBle_GattsNotification(ConnectionHandle, &TemperatureNotificationHandle);
+ 459              		.loc 1 224 0
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 14
+
+
+ 460 001e 074B     		ldr	r3, .L22+12
+ 461 0020 044A     		ldr	r2, .L22+4
+ 462 0022 1868     		ldr	r0, [r3]
+ 463 0024 111C     		mov	r1, r2
+ 464 0026 FFF7FEFF 		bl	CyBle_GattsNotification
+ 465              	.L20:
+ 225:.\BLEApplication.c ****     }
+ 226:.\BLEApplication.c **** }
+ 466              		.loc 1 226 0
+ 467 002a BD46     		mov	sp, r7
+ 468              		@ sp needed
+ 469 002c 80BD     		pop	{r7, pc}
+ 470              	.L23:
+ 471 002e C046     		.align	2
+ 472              	.L22:
+ 473 0030 00000000 		.word	BLEStackStatus
+ 474 0034 14000000 		.word	TemperatureNotificationHandle
+ 475 0038 00000000 		.word	TemperatureNotificationData
+ 476 003c 0C000000 		.word	ConnectionHandle
+ 477              		.cfi_endproc
+ 478              	.LFE38:
+ 479              		.size	SendTemperatureOverNotification, .-SendTemperatureOverNotification
+ 480              		.section	.text.SendPressureOverNotification,"ax",%progbits
+ 481              		.align	2
+ 482              		.global	SendPressureOverNotification
+ 483              		.code	16
+ 484              		.thumb_func
+ 485              		.type	SendPressureOverNotification, %function
+ 486              	SendPressureOverNotification:
+ 487              	.LFB39:
+ 227:.\BLEApplication.c **** /**************************************************************************************************
+ 228:.\BLEApplication.c **** 
+ 229:.\BLEApplication.c **** /**************************************************************************************************
+ 230:.\BLEApplication.c **** * Function Name: SendPressureOverNotification
+ 231:.\BLEApplication.c **** ***************************************************************************************************
+ 232:.\BLEApplication.c **** * Summary: This function sends the pressure data as BLE notification.
+ 233:.\BLEApplication.c **** * It updates the notification handle with pressure data and triggers the BLE component to send noti
+ 234:.\BLEApplication.c **** *
+ 235:.\BLEApplication.c **** * Parameters:
+ 236:.\BLEApplication.c **** *  void
+ 237:.\BLEApplication.c **** *
+ 238:.\BLEApplication.c **** * Return:
+ 239:.\BLEApplication.c **** *  void
+ 240:.\BLEApplication.c **** *
+ 241:.\BLEApplication.c **** ***************************************************************************************************
+ 242:.\BLEApplication.c **** void SendPressureOverNotification(void)
+ 243:.\BLEApplication.c **** {
+ 488              		.loc 1 243 0
+ 489              		.cfi_startproc
+ 490 0000 80B5     		push	{r7, lr}
+ 491              		.cfi_def_cfa_offset 8
+ 492              		.cfi_offset 7, -8
+ 493              		.cfi_offset 14, -4
+ 494 0002 00AF     		add	r7, sp, #0
+ 495              		.cfi_def_cfa_register 7
+ 244:.\BLEApplication.c **** 	/* If stack is not busy, then send the notification */
+ 245:.\BLEApplication.c ****     if(BLEStackStatus == CYBLE_STACK_STATE_FREE)
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 15
+
+
+ 496              		.loc 1 245 0
+ 497 0004 0A4B     		ldr	r3, .L26
+ 498 0006 1B78     		ldrb	r3, [r3]
+ 499 0008 002B     		cmp	r3, #0
+ 500 000a 0ED1     		bne	.L24
+ 246:.\BLEApplication.c ****     {
+ 247:.\BLEApplication.c ****         /* Update notification handle with pressure data */
+ 248:.\BLEApplication.c ****     	PressureNotificationHandle.attrHandle = CYBLE_BMP180_PRESSURE_CHAR_HANDLE;
+ 501              		.loc 1 248 0
+ 502 000c 094B     		ldr	r3, .L26+4
+ 503 000e 1222     		mov	r2, #18
+ 504 0010 1A81     		strh	r2, [r3, #8]
+ 249:.\BLEApplication.c ****     	PressureNotificationHandle.value.val = PressureNotificationData;
+ 505              		.loc 1 249 0
+ 506 0012 084B     		ldr	r3, .L26+4
+ 507 0014 084A     		ldr	r2, .L26+8
+ 508 0016 1A60     		str	r2, [r3]
+ 250:.\BLEApplication.c ****     	PressureNotificationHandle.value.len = sizeof(PressureNotificationData);
+ 509              		.loc 1 250 0
+ 510 0018 064B     		ldr	r3, .L26+4
+ 511 001a 0422     		mov	r2, #4
+ 512 001c 9A80     		strh	r2, [r3, #4]
+ 251:.\BLEApplication.c ****     	
+ 252:.\BLEApplication.c ****     	/* Send the updated handle as part of attribute for notifications */
+ 253:.\BLEApplication.c ****     	CyBle_GattsNotification(ConnectionHandle, &PressureNotificationHandle);
+ 513              		.loc 1 253 0
+ 514 001e 074B     		ldr	r3, .L26+12
+ 515 0020 044A     		ldr	r2, .L26+4
+ 516 0022 1868     		ldr	r0, [r3]
+ 517 0024 111C     		mov	r1, r2
+ 518 0026 FFF7FEFF 		bl	CyBle_GattsNotification
+ 519              	.L24:
+ 254:.\BLEApplication.c ****     }
+ 255:.\BLEApplication.c **** }
+ 520              		.loc 1 255 0
+ 521 002a BD46     		mov	sp, r7
+ 522              		@ sp needed
+ 523 002c 80BD     		pop	{r7, pc}
+ 524              	.L27:
+ 525 002e C046     		.align	2
+ 526              	.L26:
+ 527 0030 00000000 		.word	BLEStackStatus
+ 528 0034 20000000 		.word	PressureNotificationHandle
+ 529 0038 00000000 		.word	PressureNotificationData
+ 530 003c 0C000000 		.word	ConnectionHandle
+ 531              		.cfi_endproc
+ 532              	.LFE39:
+ 533              		.size	SendPressureOverNotification, .-SendPressureOverNotification
+ 534              		.section	.text.SendAltitudeOverNotification,"ax",%progbits
+ 535              		.align	2
+ 536              		.global	SendAltitudeOverNotification
+ 537              		.code	16
+ 538              		.thumb_func
+ 539              		.type	SendAltitudeOverNotification, %function
+ 540              	SendAltitudeOverNotification:
+ 541              	.LFB40:
+ 256:.\BLEApplication.c **** /**************************************************************************************************
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 16
+
+
+ 257:.\BLEApplication.c **** 
+ 258:.\BLEApplication.c **** /**************************************************************************************************
+ 259:.\BLEApplication.c **** * Function Name: SendAltitudeOverNotification
+ 260:.\BLEApplication.c **** ***************************************************************************************************
+ 261:.\BLEApplication.c **** * Summary: This function sends the altitude data as BLE notification.
+ 262:.\BLEApplication.c **** * It updates the notification handle with altitude data and triggers the BLE component to send noti
+ 263:.\BLEApplication.c **** *
+ 264:.\BLEApplication.c **** * Parameters:
+ 265:.\BLEApplication.c **** *  void
+ 266:.\BLEApplication.c **** *
+ 267:.\BLEApplication.c **** * Return:
+ 268:.\BLEApplication.c **** *  void
+ 269:.\BLEApplication.c **** *
+ 270:.\BLEApplication.c **** ***************************************************************************************************
+ 271:.\BLEApplication.c **** void SendAltitudeOverNotification(void)
+ 272:.\BLEApplication.c **** {
+ 542              		.loc 1 272 0
+ 543              		.cfi_startproc
+ 544 0000 80B5     		push	{r7, lr}
+ 545              		.cfi_def_cfa_offset 8
+ 546              		.cfi_offset 7, -8
+ 547              		.cfi_offset 14, -4
+ 548 0002 00AF     		add	r7, sp, #0
+ 549              		.cfi_def_cfa_register 7
+ 273:.\BLEApplication.c **** 	/* If stack is not busy, then send the notification */
+ 274:.\BLEApplication.c ****     if(BLEStackStatus == CYBLE_STACK_STATE_FREE)
+ 550              		.loc 1 274 0
+ 551 0004 0A4B     		ldr	r3, .L30
+ 552 0006 1B78     		ldrb	r3, [r3]
+ 553 0008 002B     		cmp	r3, #0
+ 554 000a 0ED1     		bne	.L28
+ 275:.\BLEApplication.c ****     {
+ 276:.\BLEApplication.c ****         /* Update notification handle with altitude data */
+ 277:.\BLEApplication.c ****     	AltitudeNotificationHandle.attrHandle = CYBLE_BMP180_ALTITUDE_CHAR_HANDLE;
+ 555              		.loc 1 277 0
+ 556 000c 094B     		ldr	r3, .L30+4
+ 557 000e 1622     		mov	r2, #22
+ 558 0010 1A81     		strh	r2, [r3, #8]
+ 278:.\BLEApplication.c ****     	AltitudeNotificationHandle.value.val = AltitudeNotificationData;
+ 559              		.loc 1 278 0
+ 560 0012 084B     		ldr	r3, .L30+4
+ 561 0014 084A     		ldr	r2, .L30+8
+ 562 0016 1A60     		str	r2, [r3]
+ 279:.\BLEApplication.c ****     	AltitudeNotificationHandle.value.len = sizeof(AltitudeNotificationData);
+ 563              		.loc 1 279 0
+ 564 0018 064B     		ldr	r3, .L30+4
+ 565 001a 0422     		mov	r2, #4
+ 566 001c 9A80     		strh	r2, [r3, #4]
+ 280:.\BLEApplication.c ****     	
+ 281:.\BLEApplication.c ****     	/* Send the updated handle as part of attribute for notifications */
+ 282:.\BLEApplication.c ****     	CyBle_GattsNotification(ConnectionHandle, &AltitudeNotificationHandle);
+ 567              		.loc 1 282 0
+ 568 001e 074B     		ldr	r3, .L30+12
+ 569 0020 044A     		ldr	r2, .L30+4
+ 570 0022 1868     		ldr	r0, [r3]
+ 571 0024 111C     		mov	r1, r2
+ 572 0026 FFF7FEFF 		bl	CyBle_GattsNotification
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 17
+
+
+ 573              	.L28:
+ 283:.\BLEApplication.c ****     }
+ 284:.\BLEApplication.c **** }
+ 574              		.loc 1 284 0
+ 575 002a BD46     		mov	sp, r7
+ 576              		@ sp needed
+ 577 002c 80BD     		pop	{r7, pc}
+ 578              	.L31:
+ 579 002e C046     		.align	2
+ 580              	.L30:
+ 581 0030 00000000 		.word	BLEStackStatus
+ 582 0034 2C000000 		.word	AltitudeNotificationHandle
+ 583 0038 00000000 		.word	AltitudeNotificationData
+ 584 003c 0C000000 		.word	ConnectionHandle
+ 585              		.cfi_endproc
+ 586              	.LFE40:
+ 587              		.size	SendAltitudeOverNotification, .-SendAltitudeOverNotification
+ 588              		.section	.text.UpdateNotificationCCCDAttribute,"ax",%progbits
+ 589              		.align	2
+ 590              		.global	UpdateNotificationCCCDAttribute
+ 591              		.code	16
+ 592              		.thumb_func
+ 593              		.type	UpdateNotificationCCCDAttribute, %function
+ 594              	UpdateNotificationCCCDAttribute:
+ 595              	.LFB41:
+ 285:.\BLEApplication.c **** /**************************************************************************************************
+ 286:.\BLEApplication.c **** 
+ 287:.\BLEApplication.c **** /**************************************************************************************************
+ 288:.\BLEApplication.c **** * Function Name: UpdateNotificationCCCDAttribute
+ 289:.\BLEApplication.c **** ***************************************************************************************************
+ 290:.\BLEApplication.c **** * Summary: This function updates the notification handle status and reports 
+ 291:.\BLEApplication.c **** * it to BLE component database so that it can be read by Central device.
+ 292:.\BLEApplication.c **** *
+ 293:.\BLEApplication.c **** * Parameters:
+ 294:.\BLEApplication.c **** *  void
+ 295:.\BLEApplication.c **** *
+ 296:.\BLEApplication.c **** * Return:
+ 297:.\BLEApplication.c **** *  void
+ 298:.\BLEApplication.c **** *
+ 299:.\BLEApplication.c **** ***************************************************************************************************
+ 300:.\BLEApplication.c **** void UpdateNotificationCCCDAttribute(void)
+ 301:.\BLEApplication.c **** {
+ 596              		.loc 1 301 0
+ 597              		.cfi_startproc
+ 598 0000 80B5     		push	{r7, lr}
+ 599              		.cfi_def_cfa_offset 8
+ 600              		.cfi_offset 7, -8
+ 601              		.cfi_offset 14, -4
+ 602 0002 00AF     		add	r7, sp, #0
+ 603              		.cfi_def_cfa_register 7
+ 302:.\BLEApplication.c **** 	/* Update notification attribute only when there is change in temperature CCCD */
+ 303:.\BLEApplication.c ****     if(UpdateTemperatureNotificationAttribute)
+ 604              		.loc 1 303 0
+ 605 0004 2F4B     		ldr	r3, .L36
+ 606 0006 1B78     		ldrb	r3, [r3]
+ 607 0008 002B     		cmp	r3, #0
+ 608 000a 1AD0     		beq	.L33
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 18
+
+
+ 304:.\BLEApplication.c ****     {
+ 305:.\BLEApplication.c ****         UpdateTemperatureNotificationAttribute = FALSE; //Clear the flag
+ 609              		.loc 1 305 0
+ 610 000c 2D4B     		ldr	r3, .L36
+ 611 000e 0022     		mov	r2, #0
+ 612 0010 1A70     		strb	r2, [r3]
+ 306:.\BLEApplication.c ****         
+ 307:.\BLEApplication.c ****         /* Write the current temperature notification status to the local variable */
+ 308:.\BLEApplication.c ****         TemperatureNotificationCCCDValue[0x00] = TemperatureNotificationEnabled;
+ 613              		.loc 1 308 0
+ 614 0012 2D4B     		ldr	r3, .L36+4
+ 615 0014 1A78     		ldrb	r2, [r3]
+ 616 0016 2D4B     		ldr	r3, .L36+8
+ 617 0018 1A70     		strb	r2, [r3]
+ 309:.\BLEApplication.c ****         TemperatureNotificationCCCDValue[0x01] = ZERO;
+ 618              		.loc 1 309 0
+ 619 001a 2C4B     		ldr	r3, .L36+8
+ 620 001c 0022     		mov	r2, #0
+ 621 001e 5A70     		strb	r2, [r3, #1]
+ 310:.\BLEApplication.c ****         
+ 311:.\BLEApplication.c ****         /* Update CCCD handle with notification status data */
+ 312:.\BLEApplication.c ****     	TemperatureNotificationCCCDHandle.attrHandle = CYBLE_BMP180_TEMPERATURE_CLIENT_CHARACTERISTIC_
+ 622              		.loc 1 312 0
+ 623 0020 2B4B     		ldr	r3, .L36+12
+ 624 0022 0F22     		mov	r2, #15
+ 625 0024 1A81     		strh	r2, [r3, #8]
+ 313:.\BLEApplication.c ****     	TemperatureNotificationCCCDHandle.value.val = TemperatureNotificationCCCDValue;
+ 626              		.loc 1 313 0
+ 627 0026 2A4B     		ldr	r3, .L36+12
+ 628 0028 284A     		ldr	r2, .L36+8
+ 629 002a 1A60     		str	r2, [r3]
+ 314:.\BLEApplication.c ****     	TemperatureNotificationCCCDHandle.value.len = sizeof(TemperatureNotificationCCCDValue);
+ 630              		.loc 1 314 0
+ 631 002c 284B     		ldr	r3, .L36+12
+ 632 002e 0222     		mov	r2, #2
+ 633 0030 9A80     		strh	r2, [r3, #4]
+ 315:.\BLEApplication.c ****     	
+ 316:.\BLEApplication.c ****     	/* Send the updated handle as part of attribute for notifications */
+ 317:.\BLEApplication.c ****     	CyBle_GattsWriteAttributeValue(&TemperatureNotificationCCCDHandle, 0x00, &ConnectionHandle, CY
+ 634              		.loc 1 317 0
+ 635 0032 274A     		ldr	r2, .L36+12
+ 636 0034 274B     		ldr	r3, .L36+16
+ 637 0036 101C     		mov	r0, r2
+ 638 0038 0021     		mov	r1, #0
+ 639 003a 1A1C     		mov	r2, r3
+ 640 003c 0023     		mov	r3, #0
+ 641 003e FFF7FEFF 		bl	CyBle_GattsWriteAttributeValue
+ 642              	.L33:
+ 318:.\BLEApplication.c ****     }
+ 319:.\BLEApplication.c ****     
+ 320:.\BLEApplication.c ****     /* Update notification attribute only when there is change in pressure CCCD */
+ 321:.\BLEApplication.c ****     if(UpdatePressureNotificationAttribute)
+ 643              		.loc 1 321 0
+ 644 0042 254B     		ldr	r3, .L36+20
+ 645 0044 1B78     		ldrb	r3, [r3]
+ 646 0046 002B     		cmp	r3, #0
+ 647 0048 1AD0     		beq	.L34
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 19
+
+
+ 322:.\BLEApplication.c ****     {
+ 323:.\BLEApplication.c ****         UpdatePressureNotificationAttribute = FALSE; //Clear the flag
+ 648              		.loc 1 323 0
+ 649 004a 234B     		ldr	r3, .L36+20
+ 650 004c 0022     		mov	r2, #0
+ 651 004e 1A70     		strb	r2, [r3]
+ 324:.\BLEApplication.c ****         
+ 325:.\BLEApplication.c ****         /* Write the current pressure notification status to the local variable */
+ 326:.\BLEApplication.c ****         PressureNotificationCCCDValue[0x00] = PressureNotificationEnabled;
+ 652              		.loc 1 326 0
+ 653 0050 224B     		ldr	r3, .L36+24
+ 654 0052 1A78     		ldrb	r2, [r3]
+ 655 0054 224B     		ldr	r3, .L36+28
+ 656 0056 1A70     		strb	r2, [r3]
+ 327:.\BLEApplication.c ****         PressureNotificationCCCDValue[0x01] = ZERO;
+ 657              		.loc 1 327 0
+ 658 0058 214B     		ldr	r3, .L36+28
+ 659 005a 0022     		mov	r2, #0
+ 660 005c 5A70     		strb	r2, [r3, #1]
+ 328:.\BLEApplication.c ****         
+ 329:.\BLEApplication.c ****         /* Update CCCD handle with notification status data */
+ 330:.\BLEApplication.c ****     	PressureNotificationCCCDHandle.attrHandle = CYBLE_BMP180_PRESSURE_CLIENT_CHARACTERISTIC_CONFIG
+ 661              		.loc 1 330 0
+ 662 005e 214B     		ldr	r3, .L36+32
+ 663 0060 1322     		mov	r2, #19
+ 664 0062 1A81     		strh	r2, [r3, #8]
+ 331:.\BLEApplication.c ****     	PressureNotificationCCCDHandle.value.val = PressureNotificationCCCDValue;
+ 665              		.loc 1 331 0
+ 666 0064 1F4B     		ldr	r3, .L36+32
+ 667 0066 1E4A     		ldr	r2, .L36+28
+ 668 0068 1A60     		str	r2, [r3]
+ 332:.\BLEApplication.c ****     	PressureNotificationCCCDHandle.value.len = sizeof(PressureNotificationCCCDValue);
+ 669              		.loc 1 332 0
+ 670 006a 1E4B     		ldr	r3, .L36+32
+ 671 006c 0222     		mov	r2, #2
+ 672 006e 9A80     		strh	r2, [r3, #4]
+ 333:.\BLEApplication.c ****     	
+ 334:.\BLEApplication.c ****     	/* Send the updated handle as part of attribute for notifications */
+ 335:.\BLEApplication.c ****     	CyBle_GattsWriteAttributeValue(&PressureNotificationCCCDHandle, 0x00, &ConnectionHandle, CYBLE
+ 673              		.loc 1 335 0
+ 674 0070 1C4A     		ldr	r2, .L36+32
+ 675 0072 184B     		ldr	r3, .L36+16
+ 676 0074 101C     		mov	r0, r2
+ 677 0076 0021     		mov	r1, #0
+ 678 0078 1A1C     		mov	r2, r3
+ 679 007a 0023     		mov	r3, #0
+ 680 007c FFF7FEFF 		bl	CyBle_GattsWriteAttributeValue
+ 681              	.L34:
+ 336:.\BLEApplication.c ****     }
+ 337:.\BLEApplication.c ****     
+ 338:.\BLEApplication.c ****     /* Update notification attribute only when there is change in altitude CCCD */
+ 339:.\BLEApplication.c ****     if(UpdateAltitudeNotificationAttribute)
+ 682              		.loc 1 339 0
+ 683 0080 194B     		ldr	r3, .L36+36
+ 684 0082 1B78     		ldrb	r3, [r3]
+ 685 0084 002B     		cmp	r3, #0
+ 686 0086 1AD0     		beq	.L32
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 20
+
+
+ 340:.\BLEApplication.c ****     {
+ 341:.\BLEApplication.c ****         UpdateAltitudeNotificationAttribute = FALSE; //Clear the flag
+ 687              		.loc 1 341 0
+ 688 0088 174B     		ldr	r3, .L36+36
+ 689 008a 0022     		mov	r2, #0
+ 690 008c 1A70     		strb	r2, [r3]
+ 342:.\BLEApplication.c ****         
+ 343:.\BLEApplication.c ****         /* Write the current altitude notification status to the local variable */
+ 344:.\BLEApplication.c ****         AltitudeNotificationCCCDValue[0x00] = AltitudeNotificationEnabled;
+ 691              		.loc 1 344 0
+ 692 008e 174B     		ldr	r3, .L36+40
+ 693 0090 1A78     		ldrb	r2, [r3]
+ 694 0092 174B     		ldr	r3, .L36+44
+ 695 0094 1A70     		strb	r2, [r3]
+ 345:.\BLEApplication.c ****         AltitudeNotificationCCCDValue[0x01] = ZERO;
+ 696              		.loc 1 345 0
+ 697 0096 164B     		ldr	r3, .L36+44
+ 698 0098 0022     		mov	r2, #0
+ 699 009a 5A70     		strb	r2, [r3, #1]
+ 346:.\BLEApplication.c ****         
+ 347:.\BLEApplication.c ****         /* Update CCCD handle with notification status data */
+ 348:.\BLEApplication.c ****     	AltitudeNotificationCCCDHandle.attrHandle = CYBLE_BMP180_ALTITUDE_CLIENT_CHARACTERISTIC_CONFIG
+ 700              		.loc 1 348 0
+ 701 009c 154B     		ldr	r3, .L36+48
+ 702 009e 1722     		mov	r2, #23
+ 703 00a0 1A81     		strh	r2, [r3, #8]
+ 349:.\BLEApplication.c ****     	AltitudeNotificationCCCDHandle.value.val = AltitudeNotificationCCCDValue;
+ 704              		.loc 1 349 0
+ 705 00a2 144B     		ldr	r3, .L36+48
+ 706 00a4 124A     		ldr	r2, .L36+44
+ 707 00a6 1A60     		str	r2, [r3]
+ 350:.\BLEApplication.c ****     	AltitudeNotificationCCCDHandle.value.len = sizeof(AltitudeNotificationCCCDValue);
+ 708              		.loc 1 350 0
+ 709 00a8 124B     		ldr	r3, .L36+48
+ 710 00aa 0222     		mov	r2, #2
+ 711 00ac 9A80     		strh	r2, [r3, #4]
+ 351:.\BLEApplication.c ****     	
+ 352:.\BLEApplication.c ****     	/* Send the updated handle as part of attribute for notifications */
+ 353:.\BLEApplication.c ****     	CyBle_GattsWriteAttributeValue(&AltitudeNotificationCCCDHandle, 0x00, &ConnectionHandle, CYBLE
+ 712              		.loc 1 353 0
+ 713 00ae 114A     		ldr	r2, .L36+48
+ 714 00b0 084B     		ldr	r3, .L36+16
+ 715 00b2 101C     		mov	r0, r2
+ 716 00b4 0021     		mov	r1, #0
+ 717 00b6 1A1C     		mov	r2, r3
+ 718 00b8 0023     		mov	r3, #0
+ 719 00ba FFF7FEFF 		bl	CyBle_GattsWriteAttributeValue
+ 720              	.L32:
+ 354:.\BLEApplication.c ****     }
+ 355:.\BLEApplication.c **** }
+ 721              		.loc 1 355 0
+ 722 00be BD46     		mov	sp, r7
+ 723              		@ sp needed
+ 724 00c0 80BD     		pop	{r7, pc}
+ 725              	.L37:
+ 726 00c2 C046     		.align	2
+ 727              	.L36:
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 21
+
+
+ 728 00c4 00000000 		.word	UpdateTemperatureNotificationAttribute
+ 729 00c8 00000000 		.word	TemperatureNotificationEnabled
+ 730 00cc 00000000 		.word	TemperatureNotificationCCCDValue
+ 731 00d0 38000000 		.word	TemperatureNotificationCCCDHandle
+ 732 00d4 0C000000 		.word	ConnectionHandle
+ 733 00d8 00000000 		.word	UpdatePressureNotificationAttribute
+ 734 00dc 00000000 		.word	PressureNotificationEnabled
+ 735 00e0 00000000 		.word	PressureNotificationCCCDValue
+ 736 00e4 44000000 		.word	PressureNotificationCCCDHandle
+ 737 00e8 00000000 		.word	UpdateAltitudeNotificationAttribute
+ 738 00ec 00000000 		.word	AltitudeNotificationEnabled
+ 739 00f0 00000000 		.word	AltitudeNotificationCCCDValue
+ 740 00f4 50000000 		.word	AltitudeNotificationCCCDHandle
+ 741              		.cfi_endproc
+ 742              	.LFE41:
+ 743              		.size	UpdateNotificationCCCDAttribute, .-UpdateNotificationCCCDAttribute
+ 744              		.section	.text.UpdateConnectionParameters,"ax",%progbits
+ 745              		.align	2
+ 746              		.global	UpdateConnectionParameters
+ 747              		.code	16
+ 748              		.thumb_func
+ 749              		.type	UpdateConnectionParameters, %function
+ 750              	UpdateConnectionParameters:
+ 751              	.LFB42:
+ 356:.\BLEApplication.c **** /**************************************************************************************************
+ 357:.\BLEApplication.c **** 
+ 358:.\BLEApplication.c **** /**************************************************************************************************
+ 359:.\BLEApplication.c **** * Function Name: UpdateConnectionParameters
+ 360:.\BLEApplication.c **** ***************************************************************************************************
+ 361:.\BLEApplication.c **** * Summary: This function sends the Connection Parameters Update Request to the Central device
+ 362:.\BLEApplication.c **** * immediately after connected and modifies the connection interval for low power operation.
+ 363:.\BLEApplication.c **** * The Central device can accept or reject this request based on the Central device configuration.
+ 364:.\BLEApplication.c **** *
+ 365:.\BLEApplication.c **** * Parameters:
+ 366:.\BLEApplication.c **** *  void
+ 367:.\BLEApplication.c **** *
+ 368:.\BLEApplication.c **** * Return:
+ 369:.\BLEApplication.c **** *  void
+ 370:.\BLEApplication.c **** *
+ 371:.\BLEApplication.c **** ***************************************************************************************************
+ 372:.\BLEApplication.c **** void UpdateConnectionParameters(void)
+ 373:.\BLEApplication.c **** {
+ 752              		.loc 1 373 0
+ 753              		.cfi_startproc
+ 754 0000 80B5     		push	{r7, lr}
+ 755              		.cfi_def_cfa_offset 8
+ 756              		.cfi_offset 7, -8
+ 757              		.cfi_offset 14, -4
+ 758 0002 00AF     		add	r7, sp, #0
+ 759              		.cfi_def_cfa_register 7
+ 374:.\BLEApplication.c ****     if(DeviceConnected && ConnectionParametersUpdateRequired)
+ 760              		.loc 1 374 0
+ 761 0004 094B     		ldr	r3, .L40
+ 762 0006 1B78     		ldrb	r3, [r3]
+ 763 0008 002B     		cmp	r3, #0
+ 764 000a 0DD0     		beq	.L38
+ 765              		.loc 1 374 0 is_stmt 0 discriminator 1
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 22
+
+
+ 766 000c 084B     		ldr	r3, .L40+4
+ 767 000e 1B78     		ldrb	r3, [r3]
+ 768 0010 002B     		cmp	r3, #0
+ 769 0012 09D0     		beq	.L38
+ 375:.\BLEApplication.c ****     {
+ 376:.\BLEApplication.c ****         ConnectionParametersUpdateRequired = FALSE; //Clear the Connection Parameters Update flag
+ 770              		.loc 1 376 0 is_stmt 1
+ 771 0014 064B     		ldr	r3, .L40+4
+ 772 0016 0022     		mov	r2, #0
+ 773 0018 1A70     		strb	r2, [r3]
+ 377:.\BLEApplication.c ****         /* Send Connection Parameter Update request with desired parameter values */
+ 378:.\BLEApplication.c ****         CyBle_L2capLeConnectionParamUpdateRequest(ConnectionHandle.bdHandle, &ConnectionParametersH
+ 774              		.loc 1 378 0
+ 775 001a 064B     		ldr	r3, .L40+8
+ 776 001c 1A78     		ldrb	r2, [r3]
+ 777 001e 064B     		ldr	r3, .L40+12
+ 778 0020 101C     		mov	r0, r2
+ 779 0022 191C     		mov	r1, r3
+ 780 0024 FFF7FEFF 		bl	CyBle_L2capLeConnectionParamUpdateRequest
+ 781              	.L38:
+ 379:.\BLEApplication.c ****     }
+ 380:.\BLEApplication.c **** }
+ 782              		.loc 1 380 0
+ 783 0028 BD46     		mov	sp, r7
+ 784              		@ sp needed
+ 785 002a 80BD     		pop	{r7, pc}
+ 786              	.L41:
+ 787              		.align	2
+ 788              	.L40:
+ 789 002c 00000000 		.word	DeviceConnected
+ 790 0030 00000000 		.word	ConnectionParametersUpdateRequired
+ 791 0034 0C000000 		.word	ConnectionHandle
+ 792 0038 04000000 		.word	ConnectionParametersHandle
+ 793              		.cfi_endproc
+ 794              	.LFE42:
+ 795              		.size	UpdateConnectionParameters, .-UpdateConnectionParameters
+ 796              		.text
+ 797              	.Letext0:
+ 798              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 799              		.file 3 "Generated_Source\\PSoC4/BLE_StackGap.h"
+ 800              		.file 4 "Generated_Source\\PSoC4/BLE_StackGatt.h"
+ 801              		.file 5 "Generated_Source\\PSoC4/BLE_StackGattServer.h"
+ 802              		.file 6 "Generated_Source\\PSoC4/BLE_Stack.h"
+ 803              		.file 7 "Generated_Source\\PSoC4/BLE_eventHandler.h"
+ 804              		.section	.debug_info,"",%progbits
+ 805              	.Ldebug_info0:
+ 806 0000 5C060000 		.4byte	0x65c
+ 807 0004 0400     		.2byte	0x4
+ 808 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 809 000a 04       		.byte	0x4
+ 810 000b 01       		.uleb128 0x1
+ 811 000c D10D0000 		.4byte	.LASF143
+ 812 0010 01       		.byte	0x1
+ 813 0011 58020000 		.4byte	.LASF144
+ 814 0015 B70A0000 		.4byte	.LASF145
+ 815 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 816 001d 00000000 		.4byte	0
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 23
+
+
+ 817 0021 00000000 		.4byte	.Ldebug_line0
+ 818 0025 02       		.uleb128 0x2
+ 819 0026 01       		.byte	0x1
+ 820 0027 06       		.byte	0x6
+ 821 0028 58030000 		.4byte	.LASF0
+ 822 002c 02       		.uleb128 0x2
+ 823 002d 01       		.byte	0x1
+ 824 002e 08       		.byte	0x8
+ 825 002f A90A0000 		.4byte	.LASF1
+ 826 0033 02       		.uleb128 0x2
+ 827 0034 02       		.byte	0x2
+ 828 0035 05       		.byte	0x5
+ 829 0036 430B0000 		.4byte	.LASF2
+ 830 003a 02       		.uleb128 0x2
+ 831 003b 02       		.byte	0x2
+ 832 003c 07       		.byte	0x7
+ 833 003d 94060000 		.4byte	.LASF3
+ 834 0041 02       		.uleb128 0x2
+ 835 0042 04       		.byte	0x4
+ 836 0043 05       		.byte	0x5
+ 837 0044 D2010000 		.4byte	.LASF4
+ 838 0048 02       		.uleb128 0x2
+ 839 0049 04       		.byte	0x4
+ 840 004a 07       		.byte	0x7
+ 841 004b C6050000 		.4byte	.LASF5
+ 842 004f 02       		.uleb128 0x2
+ 843 0050 08       		.byte	0x8
+ 844 0051 05       		.byte	0x5
+ 845 0052 4A030000 		.4byte	.LASF6
+ 846 0056 02       		.uleb128 0x2
+ 847 0057 08       		.byte	0x8
+ 848 0058 07       		.byte	0x7
+ 849 0059 F9010000 		.4byte	.LASF7
+ 850 005d 03       		.uleb128 0x3
+ 851 005e 04       		.byte	0x4
+ 852 005f 05       		.byte	0x5
+ 853 0060 696E7400 		.ascii	"int\000"
+ 854 0064 02       		.uleb128 0x2
+ 855 0065 04       		.byte	0x4
+ 856 0066 07       		.byte	0x7
+ 857 0067 6C050000 		.4byte	.LASF8
+ 858 006b 04       		.uleb128 0x4
+ 859 006c 52040000 		.4byte	.LASF9
+ 860 0070 02       		.byte	0x2
+ 861 0071 9801     		.2byte	0x198
+ 862 0073 2C000000 		.4byte	0x2c
+ 863 0077 04       		.uleb128 0x4
+ 864 0078 0D0B0000 		.4byte	.LASF10
+ 865 007c 02       		.byte	0x2
+ 866 007d 9901     		.2byte	0x199
+ 867 007f 3A000000 		.4byte	0x3a
+ 868 0083 04       		.uleb128 0x4
+ 869 0084 FA040000 		.4byte	.LASF11
+ 870 0088 02       		.byte	0x2
+ 871 0089 9A01     		.2byte	0x19a
+ 872 008b 48000000 		.4byte	0x48
+ 873 008f 02       		.uleb128 0x2
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 24
+
+
+ 874 0090 04       		.byte	0x4
+ 875 0091 04       		.byte	0x4
+ 876 0092 4C0A0000 		.4byte	.LASF12
+ 877 0096 02       		.uleb128 0x2
+ 878 0097 08       		.byte	0x8
+ 879 0098 04       		.byte	0x4
+ 880 0099 BA040000 		.4byte	.LASF13
+ 881 009d 02       		.uleb128 0x2
+ 882 009e 01       		.byte	0x1
+ 883 009f 08       		.byte	0x8
+ 884 00a0 570C0000 		.4byte	.LASF14
+ 885 00a4 02       		.uleb128 0x2
+ 886 00a5 04       		.byte	0x4
+ 887 00a6 07       		.byte	0x7
+ 888 00a7 55080000 		.4byte	.LASF15
+ 889 00ab 05       		.uleb128 0x5
+ 890 00ac 04       		.byte	0x4
+ 891 00ad 06       		.uleb128 0x6
+ 892 00ae 01       		.byte	0x1
+ 893 00af 06       		.byte	0x6
+ 894 00b0 4201     		.2byte	0x142
+ 895 00b2 6A020000 		.4byte	0x26a
+ 896 00b6 07       		.uleb128 0x7
+ 897 00b7 A7060000 		.4byte	.LASF16
+ 898 00bb 00       		.sleb128 0
+ 899 00bc 07       		.uleb128 0x7
+ 900 00bd 64030000 		.4byte	.LASF17
+ 901 00c1 01       		.sleb128 1
+ 902 00c2 07       		.uleb128 0x7
+ 903 00c3 C0010000 		.4byte	.LASF18
+ 904 00c7 02       		.sleb128 2
+ 905 00c8 07       		.uleb128 0x7
+ 906 00c9 020D0000 		.4byte	.LASF19
+ 907 00cd 03       		.sleb128 3
+ 908 00ce 07       		.uleb128 0x7
+ 909 00cf 23020000 		.4byte	.LASF20
+ 910 00d3 04       		.sleb128 4
+ 911 00d4 07       		.uleb128 0x7
+ 912 00d5 4A000000 		.4byte	.LASF21
+ 913 00d9 05       		.sleb128 5
+ 914 00da 07       		.uleb128 0x7
+ 915 00db DC060000 		.4byte	.LASF22
+ 916 00df 06       		.sleb128 6
+ 917 00e0 07       		.uleb128 0x7
+ 918 00e1 B6070000 		.4byte	.LASF23
+ 919 00e5 20       		.sleb128 32
+ 920 00e6 07       		.uleb128 0x7
+ 921 00e7 A0030000 		.4byte	.LASF24
+ 922 00eb 21       		.sleb128 33
+ 923 00ec 07       		.uleb128 0x7
+ 924 00ed F5060000 		.4byte	.LASF25
+ 925 00f1 22       		.sleb128 34
+ 926 00f2 07       		.uleb128 0x7
+ 927 00f3 53070000 		.4byte	.LASF26
+ 928 00f7 23       		.sleb128 35
+ 929 00f8 07       		.uleb128 0x7
+ 930 00f9 56090000 		.4byte	.LASF27
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 25
+
+
+ 931 00fd 24       		.sleb128 36
+ 932 00fe 07       		.uleb128 0x7
+ 933 00ff CD080000 		.4byte	.LASF28
+ 934 0103 25       		.sleb128 37
+ 935 0104 07       		.uleb128 0x7
+ 936 0105 2A040000 		.4byte	.LASF29
+ 937 0109 26       		.sleb128 38
+ 938 010a 07       		.uleb128 0x7
+ 939 010b 19070000 		.4byte	.LASF30
+ 940 010f 27       		.sleb128 39
+ 941 0110 07       		.uleb128 0x7
+ 942 0111 F4070000 		.4byte	.LASF31
+ 943 0115 28       		.sleb128 40
+ 944 0116 07       		.uleb128 0x7
+ 945 0117 EC020000 		.4byte	.LASF32
+ 946 011b 29       		.sleb128 41
+ 947 011c 07       		.uleb128 0x7
+ 948 011d CB000000 		.4byte	.LASF33
+ 949 0121 2A       		.sleb128 42
+ 950 0122 07       		.uleb128 0x7
+ 951 0123 77030000 		.4byte	.LASF34
+ 952 0127 2B       		.sleb128 43
+ 953 0128 07       		.uleb128 0x7
+ 954 0129 15050000 		.4byte	.LASF35
+ 955 012d 2C       		.sleb128 44
+ 956 012e 07       		.uleb128 0x7
+ 957 012f 09030000 		.4byte	.LASF36
+ 958 0133 2D       		.sleb128 45
+ 959 0134 07       		.uleb128 0x7
+ 960 0135 140B0000 		.4byte	.LASF37
+ 961 0139 2E       		.sleb128 46
+ 962 013a 07       		.uleb128 0x7
+ 963 013b 15010000 		.4byte	.LASF38
+ 964 013f 2F       		.sleb128 47
+ 965 0140 07       		.uleb128 0x7
+ 966 0141 22090000 		.4byte	.LASF39
+ 967 0145 30       		.sleb128 48
+ 968 0146 07       		.uleb128 0x7
+ 969 0147 F40E0000 		.4byte	.LASF40
+ 970 014b 31       		.sleb128 49
+ 971 014c 07       		.uleb128 0x7
+ 972 014d 01090000 		.4byte	.LASF41
+ 973 0151 32       		.sleb128 50
+ 974 0152 07       		.uleb128 0x7
+ 975 0153 300C0000 		.4byte	.LASF42
+ 976 0157 33       		.sleb128 51
+ 977 0158 07       		.uleb128 0x7
+ 978 0159 160C0000 		.4byte	.LASF43
+ 979 015d C000     		.sleb128 64
+ 980 015f 07       		.uleb128 0x7
+ 981 0160 79070000 		.4byte	.LASF44
+ 982 0164 C100     		.sleb128 65
+ 983 0166 07       		.uleb128 0x7
+ 984 0167 8B0A0000 		.4byte	.LASF45
+ 985 016b C200     		.sleb128 66
+ 986 016d 07       		.uleb128 0x7
+ 987 016e 520D0000 		.4byte	.LASF46
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 26
+
+
+ 988 0172 C300     		.sleb128 67
+ 989 0174 07       		.uleb128 0x7
+ 990 0175 10060000 		.4byte	.LASF47
+ 991 0179 C400     		.sleb128 68
+ 992 017b 07       		.uleb128 0x7
+ 993 017c 7C010000 		.4byte	.LASF48
+ 994 0180 C500     		.sleb128 69
+ 995 0182 07       		.uleb128 0x7
+ 996 0183 34080000 		.4byte	.LASF49
+ 997 0187 C600     		.sleb128 70
+ 998 0189 07       		.uleb128 0x7
+ 999 018a BE060000 		.4byte	.LASF50
+ 1000 018e C700     		.sleb128 71
+ 1001 0190 07       		.uleb128 0x7
+ 1002 0191 5F0E0000 		.4byte	.LASF51
+ 1003 0195 C800     		.sleb128 72
+ 1004 0197 07       		.uleb128 0x7
+ 1005 0198 DA030000 		.4byte	.LASF52
+ 1006 019c C900     		.sleb128 73
+ 1007 019e 07       		.uleb128 0x7
+ 1008 019f 9D0D0000 		.4byte	.LASF53
+ 1009 01a3 CA00     		.sleb128 74
+ 1010 01a5 07       		.uleb128 0x7
+ 1011 01a6 3E010000 		.4byte	.LASF54
+ 1012 01aa CB00     		.sleb128 75
+ 1013 01ac 07       		.uleb128 0x7
+ 1014 01ad F6050000 		.4byte	.LASF55
+ 1015 01b1 CC00     		.sleb128 76
+ 1016 01b3 07       		.uleb128 0x7
+ 1017 01b4 E7080000 		.4byte	.LASF56
+ 1018 01b8 CD00     		.sleb128 77
+ 1019 01ba 07       		.uleb128 0x7
+ 1020 01bb F3030000 		.4byte	.LASF57
+ 1021 01bf CE00     		.sleb128 78
+ 1022 01c1 07       		.uleb128 0x7
+ 1023 01c2 D60B0000 		.4byte	.LASF58
+ 1024 01c6 CF00     		.sleb128 79
+ 1025 01c8 07       		.uleb128 0x7
+ 1026 01c9 5D010000 		.4byte	.LASF59
+ 1027 01cd D000     		.sleb128 80
+ 1028 01cf 07       		.uleb128 0x7
+ 1029 01d0 77040000 		.4byte	.LASF60
+ 1030 01d4 D100     		.sleb128 81
+ 1031 01d6 07       		.uleb128 0x7
+ 1032 01d7 9F090000 		.4byte	.LASF61
+ 1033 01db D200     		.sleb128 82
+ 1034 01dd 07       		.uleb128 0x7
+ 1035 01de 4D0B0000 		.4byte	.LASF62
+ 1036 01e2 D300     		.sleb128 83
+ 1037 01e4 07       		.uleb128 0x7
+ 1038 01e5 F50B0000 		.4byte	.LASF63
+ 1039 01e9 D400     		.sleb128 84
+ 1040 01eb 07       		.uleb128 0x7
+ 1041 01ec 2E060000 		.4byte	.LASF64
+ 1042 01f0 D500     		.sleb128 85
+ 1043 01f2 07       		.uleb128 0x7
+ 1044 01f3 4A050000 		.4byte	.LASF65
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 27
+
+
+ 1045 01f7 D600     		.sleb128 86
+ 1046 01f9 07       		.uleb128 0x7
+ 1047 01fa 920C0000 		.4byte	.LASF66
+ 1048 01fe D700     		.sleb128 87
+ 1049 0200 07       		.uleb128 0x7
+ 1050 0201 52060000 		.4byte	.LASF67
+ 1051 0205 D800     		.sleb128 88
+ 1052 0207 07       		.uleb128 0x7
+ 1053 0208 A4020000 		.4byte	.LASF68
+ 1054 020c F000     		.sleb128 112
+ 1055 020e 07       		.uleb128 0x7
+ 1056 020f 9E0E0000 		.4byte	.LASF69
+ 1057 0213 F100     		.sleb128 113
+ 1058 0215 07       		.uleb128 0x7
+ 1059 0216 9A070000 		.4byte	.LASF70
+ 1060 021a F200     		.sleb128 114
+ 1061 021c 07       		.uleb128 0x7
+ 1062 021d 16080000 		.4byte	.LASF71
+ 1063 0221 F300     		.sleb128 115
+ 1064 0223 07       		.uleb128 0x7
+ 1065 0224 220A0000 		.4byte	.LASF72
+ 1066 0228 F400     		.sleb128 116
+ 1067 022a 07       		.uleb128 0x7
+ 1068 022b C1040000 		.4byte	.LASF73
+ 1069 022f F500     		.sleb128 117
+ 1070 0231 07       		.uleb128 0x7
+ 1071 0232 F4000000 		.4byte	.LASF74
+ 1072 0236 F600     		.sleb128 118
+ 1073 0238 07       		.uleb128 0x7
+ 1074 0239 7A000000 		.4byte	.LASF75
+ 1075 023d F700     		.sleb128 119
+ 1076 023f 07       		.uleb128 0x7
+ 1077 0240 00000000 		.4byte	.LASF76
+ 1078 0244 F800     		.sleb128 120
+ 1079 0246 07       		.uleb128 0x7
+ 1080 0247 BB0C0000 		.4byte	.LASF77
+ 1081 024b F900     		.sleb128 121
+ 1082 024d 07       		.uleb128 0x7
+ 1083 024e 96040000 		.4byte	.LASF78
+ 1084 0252 FA00     		.sleb128 122
+ 1085 0254 07       		.uleb128 0x7
+ 1086 0255 6B020000 		.4byte	.LASF79
+ 1087 0259 FA01     		.sleb128 250
+ 1088 025b 07       		.uleb128 0x7
+ 1089 025c 79050000 		.4byte	.LASF80
+ 1090 0260 FB01     		.sleb128 251
+ 1091 0262 07       		.uleb128 0x7
+ 1092 0263 07050000 		.4byte	.LASF81
+ 1093 0267 FF01     		.sleb128 255
+ 1094 0269 00       		.byte	0
+ 1095 026a 08       		.uleb128 0x8
+ 1096 026b 04       		.byte	0x4
+ 1097 026c 6B000000 		.4byte	0x6b
+ 1098 0270 09       		.uleb128 0x9
+ 1099 0271 08       		.byte	0x8
+ 1100 0272 03       		.byte	0x3
+ 1101 0273 3C03     		.2byte	0x33c
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 28
+
+
+ 1102 0275 AE020000 		.4byte	0x2ae
+ 1103 0279 0A       		.uleb128 0xa
+ 1104 027a 400A0000 		.4byte	.LASF82
+ 1105 027e 03       		.byte	0x3
+ 1106 027f 4303     		.2byte	0x343
+ 1107 0281 77000000 		.4byte	0x77
+ 1108 0285 00       		.byte	0
+ 1109 0286 0A       		.uleb128 0xa
+ 1110 0287 990B0000 		.4byte	.LASF83
+ 1111 028b 03       		.byte	0x3
+ 1112 028c 4A03     		.2byte	0x34a
+ 1113 028e 77000000 		.4byte	0x77
+ 1114 0292 02       		.byte	0x2
+ 1115 0293 0A       		.uleb128 0xa
+ 1116 0294 E8070000 		.4byte	.LASF84
+ 1117 0298 03       		.byte	0x3
+ 1118 0299 4F03     		.2byte	0x34f
+ 1119 029b 77000000 		.4byte	0x77
+ 1120 029f 04       		.byte	0x4
+ 1121 02a0 0A       		.uleb128 0xa
+ 1122 02a1 75060000 		.4byte	.LASF85
+ 1123 02a5 03       		.byte	0x3
+ 1124 02a6 5503     		.2byte	0x355
+ 1125 02a8 77000000 		.4byte	0x77
+ 1126 02ac 06       		.byte	0x6
+ 1127 02ad 00       		.byte	0
+ 1128 02ae 04       		.uleb128 0x4
+ 1129 02af D8050000 		.4byte	.LASF86
+ 1130 02b3 03       		.byte	0x3
+ 1131 02b4 5703     		.2byte	0x357
+ 1132 02b6 70020000 		.4byte	0x270
+ 1133 02ba 04       		.uleb128 0x4
+ 1134 02bb 180F0000 		.4byte	.LASF87
+ 1135 02bf 04       		.byte	0x4
+ 1136 02c0 9201     		.2byte	0x192
+ 1137 02c2 77000000 		.4byte	0x77
+ 1138 02c6 09       		.uleb128 0x9
+ 1139 02c7 02       		.byte	0x2
+ 1140 02c8 04       		.byte	0x4
+ 1141 02c9 9C01     		.2byte	0x19c
+ 1142 02cb EA020000 		.4byte	0x2ea
+ 1143 02cf 0A       		.uleb128 0xa
+ 1144 02d0 950E0000 		.4byte	.LASF88
+ 1145 02d4 04       		.byte	0x4
+ 1146 02d5 A301     		.2byte	0x1a3
+ 1147 02d7 6B000000 		.4byte	0x6b
+ 1148 02db 00       		.byte	0
+ 1149 02dc 0A       		.uleb128 0xa
+ 1150 02dd 94070000 		.4byte	.LASF89
+ 1151 02e1 04       		.byte	0x4
+ 1152 02e2 A901     		.2byte	0x1a9
+ 1153 02e4 6B000000 		.4byte	0x6b
+ 1154 02e8 01       		.byte	0x1
+ 1155 02e9 00       		.byte	0
+ 1156 02ea 04       		.uleb128 0x4
+ 1157 02eb 99000000 		.4byte	.LASF90
+ 1158 02ef 04       		.byte	0x4
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 29
+
+
+ 1159 02f0 AB01     		.2byte	0x1ab
+ 1160 02f2 C6020000 		.4byte	0x2c6
+ 1161 02f6 09       		.uleb128 0x9
+ 1162 02f7 08       		.byte	0x8
+ 1163 02f8 04       		.byte	0x4
+ 1164 02f9 C701     		.2byte	0x1c7
+ 1165 02fb 27030000 		.4byte	0x327
+ 1166 02ff 0B       		.uleb128 0xb
+ 1167 0300 76616C00 		.ascii	"val\000"
+ 1168 0304 04       		.byte	0x4
+ 1169 0305 CA01     		.2byte	0x1ca
+ 1170 0307 6A020000 		.4byte	0x26a
+ 1171 030b 00       		.byte	0
+ 1172 030c 0B       		.uleb128 0xb
+ 1173 030d 6C656E00 		.ascii	"len\000"
+ 1174 0311 04       		.byte	0x4
+ 1175 0312 CD01     		.2byte	0x1cd
+ 1176 0314 77000000 		.4byte	0x77
+ 1177 0318 04       		.byte	0x4
+ 1178 0319 0A       		.uleb128 0xa
+ 1179 031a 96030000 		.4byte	.LASF91
+ 1180 031e 04       		.byte	0x4
+ 1181 031f D401     		.2byte	0x1d4
+ 1182 0321 77000000 		.4byte	0x77
+ 1183 0325 06       		.byte	0x6
+ 1184 0326 00       		.byte	0
+ 1185 0327 04       		.uleb128 0x4
+ 1186 0328 10020000 		.4byte	.LASF92
+ 1187 032c 04       		.byte	0x4
+ 1188 032d D601     		.2byte	0x1d6
+ 1189 032f F6020000 		.4byte	0x2f6
+ 1190 0333 09       		.uleb128 0x9
+ 1191 0334 0C       		.byte	0xc
+ 1192 0335 04       		.byte	0x4
+ 1193 0336 D901     		.2byte	0x1d9
+ 1194 0338 57030000 		.4byte	0x357
+ 1195 033c 0A       		.uleb128 0xa
+ 1196 033d 44050000 		.4byte	.LASF93
+ 1197 0341 04       		.byte	0x4
+ 1198 0342 DC01     		.2byte	0x1dc
+ 1199 0344 27030000 		.4byte	0x327
+ 1200 0348 00       		.byte	0
+ 1201 0349 0A       		.uleb128 0xa
+ 1202 034a 39050000 		.4byte	.LASF94
+ 1203 034e 04       		.byte	0x4
+ 1204 034f DF01     		.2byte	0x1df
+ 1205 0351 BA020000 		.4byte	0x2ba
+ 1206 0355 08       		.byte	0x8
+ 1207 0356 00       		.byte	0
+ 1208 0357 04       		.uleb128 0x4
+ 1209 0358 E4090000 		.4byte	.LASF95
+ 1210 035c 04       		.byte	0x4
+ 1211 035d E101     		.2byte	0x1e1
+ 1212 035f 33030000 		.4byte	0x333
+ 1213 0363 0C       		.uleb128 0xc
+ 1214 0364 7C080000 		.4byte	.LASF96
+ 1215 0368 05       		.byte	0x5
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 30
+
+
+ 1216 0369 34       		.byte	0x34
+ 1217 036a 57030000 		.4byte	0x357
+ 1218 036e 0D       		.uleb128 0xd
+ 1219 036f 10       		.byte	0x10
+ 1220 0370 05       		.byte	0x5
+ 1221 0371 8A       		.byte	0x8a
+ 1222 0372 8F030000 		.4byte	0x38f
+ 1223 0376 0E       		.uleb128 0xe
+ 1224 0377 380B0000 		.4byte	.LASF97
+ 1225 037b 05       		.byte	0x5
+ 1226 037c 8D       		.byte	0x8d
+ 1227 037d EA020000 		.4byte	0x2ea
+ 1228 0381 00       		.byte	0
+ 1229 0382 0E       		.uleb128 0xe
+ 1230 0383 DA070000 		.4byte	.LASF98
+ 1231 0387 05       		.byte	0x5
+ 1232 0388 90       		.byte	0x90
+ 1233 0389 57030000 		.4byte	0x357
+ 1234 038d 04       		.byte	0x4
+ 1235 038e 00       		.byte	0
+ 1236 038f 0C       		.uleb128 0xc
+ 1237 0390 5E080000 		.4byte	.LASF99
+ 1238 0394 05       		.byte	0x5
+ 1239 0395 92       		.byte	0x92
+ 1240 0396 6E030000 		.4byte	0x36e
+ 1241 039a 06       		.uleb128 0x6
+ 1242 039b 01       		.byte	0x1
+ 1243 039c 07       		.byte	0x7
+ 1244 039d BF07     		.2byte	0x7bf
+ 1245 039f C2030000 		.4byte	0x3c2
+ 1246 03a3 07       		.uleb128 0x7
+ 1247 03a4 66000000 		.4byte	.LASF100
+ 1248 03a8 00       		.sleb128 0
+ 1249 03a9 07       		.uleb128 0x7
+ 1250 03aa 9B080000 		.4byte	.LASF101
+ 1251 03ae 01       		.sleb128 1
+ 1252 03af 07       		.uleb128 0x7
+ 1253 03b0 BB0D0000 		.4byte	.LASF102
+ 1254 03b4 02       		.sleb128 2
+ 1255 03b5 07       		.uleb128 0x7
+ 1256 03b6 32030000 		.4byte	.LASF103
+ 1257 03ba 03       		.sleb128 3
+ 1258 03bb 07       		.uleb128 0x7
+ 1259 03bc 11040000 		.4byte	.LASF104
+ 1260 03c0 04       		.sleb128 4
+ 1261 03c1 00       		.byte	0
+ 1262 03c2 04       		.uleb128 0x4
+ 1263 03c3 8F0D0000 		.4byte	.LASF105
+ 1264 03c7 07       		.byte	0x7
+ 1265 03c8 CD07     		.2byte	0x7cd
+ 1266 03ca 9A030000 		.4byte	0x39a
+ 1267 03ce 0F       		.uleb128 0xf
+ 1268 03cf 43090000 		.4byte	.LASF146
+ 1269 03d3 01       		.byte	0x1
+ 1270 03d4 5A       		.byte	0x5a
+ 1271 03d5 00000000 		.4byte	.LFB37
+ 1272 03d9 F4010000 		.4byte	.LFE37-.LFB37
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 31
+
+
+ 1273 03dd 01       		.uleb128 0x1
+ 1274 03de 9C       		.byte	0x9c
+ 1275 03df 00040000 		.4byte	0x400
+ 1276 03e3 10       		.uleb128 0x10
+ 1277 03e4 01050000 		.4byte	.LASF106
+ 1278 03e8 01       		.byte	0x1
+ 1279 03e9 5A       		.byte	0x5a
+ 1280 03ea 83000000 		.4byte	0x83
+ 1281 03ee 02       		.uleb128 0x2
+ 1282 03ef 91       		.byte	0x91
+ 1283 03f0 74       		.sleb128 -12
+ 1284 03f1 10       		.uleb128 0x10
+ 1285 03f2 860E0000 		.4byte	.LASF107
+ 1286 03f6 01       		.byte	0x1
+ 1287 03f7 5A       		.byte	0x5a
+ 1288 03f8 AB000000 		.4byte	0xab
+ 1289 03fc 02       		.uleb128 0x2
+ 1290 03fd 91       		.byte	0x91
+ 1291 03fe 70       		.sleb128 -16
+ 1292 03ff 00       		.byte	0
+ 1293 0400 11       		.uleb128 0x11
+ 1294 0401 A50B0000 		.4byte	.LASF108
+ 1295 0405 01       		.byte	0x1
+ 1296 0406 D5       		.byte	0xd5
+ 1297 0407 00000000 		.4byte	.LFB38
+ 1298 040b 40000000 		.4byte	.LFE38-.LFB38
+ 1299 040f 01       		.uleb128 0x1
+ 1300 0410 9C       		.byte	0x9c
+ 1301 0411 11       		.uleb128 0x11
+ 1302 0412 A3010000 		.4byte	.LASF109
+ 1303 0416 01       		.byte	0x1
+ 1304 0417 F2       		.byte	0xf2
+ 1305 0418 00000000 		.4byte	.LFB39
+ 1306 041c 40000000 		.4byte	.LFE39-.LFB39
+ 1307 0420 01       		.uleb128 0x1
+ 1308 0421 9C       		.byte	0x9c
+ 1309 0422 12       		.uleb128 0x12
+ 1310 0423 750C0000 		.4byte	.LASF110
+ 1311 0427 01       		.byte	0x1
+ 1312 0428 0F01     		.2byte	0x10f
+ 1313 042a 00000000 		.4byte	.LFB40
+ 1314 042e 40000000 		.4byte	.LFE40-.LFB40
+ 1315 0432 01       		.uleb128 0x1
+ 1316 0433 9C       		.byte	0x9c
+ 1317 0434 12       		.uleb128 0x12
+ 1318 0435 38020000 		.4byte	.LASF111
+ 1319 0439 01       		.byte	0x1
+ 1320 043a 2C01     		.2byte	0x12c
+ 1321 043c 00000000 		.4byte	.LFB41
+ 1322 0440 F8000000 		.4byte	.LFE41-.LFB41
+ 1323 0444 01       		.uleb128 0x1
+ 1324 0445 9C       		.byte	0x9c
+ 1325 0446 12       		.uleb128 0x12
+ 1326 0447 98050000 		.4byte	.LASF112
+ 1327 044b 01       		.byte	0x1
+ 1328 044c 7401     		.2byte	0x174
+ 1329 044e 00000000 		.4byte	.LFB42
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 32
+
+
+ 1330 0452 3C000000 		.4byte	.LFE42-.LFB42
+ 1331 0456 01       		.uleb128 0x1
+ 1332 0457 9C       		.byte	0x9c
+ 1333 0458 13       		.uleb128 0x13
+ 1334 0459 C50B0000 		.4byte	.LASF113
+ 1335 045d 01       		.byte	0x1
+ 1336 045e 41       		.byte	0x41
+ 1337 045f EA020000 		.4byte	0x2ea
+ 1338 0463 05       		.uleb128 0x5
+ 1339 0464 03       		.byte	0x3
+ 1340 0465 0C000000 		.4byte	ConnectionHandle
+ 1341 0469 13       		.uleb128 0x13
+ 1342 046a E2040000 		.4byte	.LASF114
+ 1343 046e 01       		.byte	0x1
+ 1344 046f 42       		.byte	0x42
+ 1345 0470 7A040000 		.4byte	0x47a
+ 1346 0474 05       		.uleb128 0x5
+ 1347 0475 03       		.byte	0x3
+ 1348 0476 10000000 		.4byte	WriteRequestedParameter
+ 1349 047a 08       		.uleb128 0x8
+ 1350 047b 04       		.byte	0x4
+ 1351 047c 8F030000 		.4byte	0x38f
+ 1352 0480 13       		.uleb128 0x13
+ 1353 0481 340F0000 		.4byte	.LASF115
+ 1354 0485 01       		.byte	0x1
+ 1355 0486 43       		.byte	0x43
+ 1356 0487 63030000 		.4byte	0x363
+ 1357 048b 05       		.uleb128 0x5
+ 1358 048c 03       		.byte	0x3
+ 1359 048d 14000000 		.4byte	TemperatureNotificationHandle
+ 1360 0491 13       		.uleb128 0x13
+ 1361 0492 6E0B0000 		.4byte	.LASF116
+ 1362 0496 01       		.byte	0x1
+ 1363 0497 44       		.byte	0x44
+ 1364 0498 63030000 		.4byte	0x363
+ 1365 049c 05       		.uleb128 0x5
+ 1366 049d 03       		.byte	0x3
+ 1367 049e 20000000 		.4byte	PressureNotificationHandle
+ 1368 04a2 13       		.uleb128 0x13
+ 1369 04a3 89020000 		.4byte	.LASF117
+ 1370 04a7 01       		.byte	0x1
+ 1371 04a8 45       		.byte	0x45
+ 1372 04a9 63030000 		.4byte	0x363
+ 1373 04ad 05       		.uleb128 0x5
+ 1374 04ae 03       		.byte	0x3
+ 1375 04af 2C000000 		.4byte	AltitudeNotificationHandle
+ 1376 04b3 13       		.uleb128 0x13
+ 1377 04b4 CA020000 		.4byte	.LASF118
+ 1378 04b8 01       		.byte	0x1
+ 1379 04b9 46       		.byte	0x46
+ 1380 04ba 57030000 		.4byte	0x357
+ 1381 04be 05       		.uleb128 0x5
+ 1382 04bf 03       		.byte	0x3
+ 1383 04c0 38000000 		.4byte	TemperatureNotificationCCCDHandle
+ 1384 04c4 13       		.uleb128 0x13
+ 1385 04c5 700D0000 		.4byte	.LASF119
+ 1386 04c9 01       		.byte	0x1
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 33
+
+
+ 1387 04ca 47       		.byte	0x47
+ 1388 04cb 57030000 		.4byte	0x357
+ 1389 04cf 05       		.uleb128 0x5
+ 1390 04d0 03       		.byte	0x3
+ 1391 04d1 44000000 		.4byte	PressureNotificationCCCDHandle
+ 1392 04d5 13       		.uleb128 0x13
+ 1393 04d6 58040000 		.4byte	.LASF120
+ 1394 04da 01       		.byte	0x1
+ 1395 04db 48       		.byte	0x48
+ 1396 04dc 57030000 		.4byte	0x357
+ 1397 04e0 05       		.uleb128 0x5
+ 1398 04e1 03       		.byte	0x3
+ 1399 04e2 50000000 		.4byte	AltitudeNotificationCCCDHandle
+ 1400 04e6 13       		.uleb128 0x13
+ 1401 04e7 370D0000 		.4byte	.LASF121
+ 1402 04eb 01       		.byte	0x1
+ 1403 04ec 49       		.byte	0x49
+ 1404 04ed AE020000 		.4byte	0x2ae
+ 1405 04f1 05       		.uleb128 0x5
+ 1406 04f2 03       		.byte	0x3
+ 1407 04f3 04000000 		.4byte	ConnectionParametersHandle
+ 1408 04f7 14       		.uleb128 0x14
+ 1409 04f8 47070000 		.4byte	.LASF122
+ 1410 04fc 07       		.byte	0x7
+ 1411 04fd DA09     		.2byte	0x9da
+ 1412 04ff C2030000 		.4byte	0x3c2
+ 1413 0503 15       		.uleb128 0x15
+ 1414 0504 B3050000 		.4byte	.LASF123
+ 1415 0508 01       		.byte	0x1
+ 1416 0509 2D       		.byte	0x2d
+ 1417 050a 6B000000 		.4byte	0x6b
+ 1418 050e 05       		.uleb128 0x5
+ 1419 050f 03       		.byte	0x3
+ 1420 0510 00000000 		.4byte	StartAdvertisement
+ 1421 0514 15       		.uleb128 0x15
+ 1422 0515 890B0000 		.4byte	.LASF124
+ 1423 0519 01       		.byte	0x1
+ 1424 051a 2E       		.byte	0x2e
+ 1425 051b 6B000000 		.4byte	0x6b
+ 1426 051f 05       		.uleb128 0x5
+ 1427 0520 03       		.byte	0x3
+ 1428 0521 00000000 		.4byte	DeviceConnected
+ 1429 0525 15       		.uleb128 0x15
+ 1430 0526 38070000 		.4byte	.LASF125
+ 1431 052a 01       		.byte	0x1
+ 1432 052b 2F       		.byte	0x2f
+ 1433 052c 6B000000 		.4byte	0x6b
+ 1434 0530 05       		.uleb128 0x5
+ 1435 0531 03       		.byte	0x3
+ 1436 0532 00000000 		.4byte	BLEStackStatus
+ 1437 0536 15       		.uleb128 0x15
+ 1438 0537 B7030000 		.4byte	.LASF126
+ 1439 053b 01       		.byte	0x1
+ 1440 053c 30       		.byte	0x30
+ 1441 053d 6B000000 		.4byte	0x6b
+ 1442 0541 05       		.uleb128 0x5
+ 1443 0542 03       		.byte	0x3
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 34
+
+
+ 1444 0543 00000000 		.4byte	ConnectionParametersUpdateRequired
+ 1445 0547 15       		.uleb128 0x15
+ 1446 0548 030A0000 		.4byte	.LASF127
+ 1447 054c 01       		.byte	0x1
+ 1448 054d 31       		.byte	0x31
+ 1449 054e 6B000000 		.4byte	0x6b
+ 1450 0552 05       		.uleb128 0x5
+ 1451 0553 03       		.byte	0x3
+ 1452 0554 00000000 		.4byte	TemperatureNotificationEnabled
+ 1453 0558 15       		.uleb128 0x15
+ 1454 0559 1B0D0000 		.4byte	.LASF128
+ 1455 055d 01       		.byte	0x1
+ 1456 055e 32       		.byte	0x32
+ 1457 055f 6B000000 		.4byte	0x6b
+ 1458 0563 05       		.uleb128 0x5
+ 1459 0564 03       		.byte	0x3
+ 1460 0565 00000000 		.4byte	PressureNotificationEnabled
+ 1461 0569 15       		.uleb128 0x15
+ 1462 056a D80E0000 		.4byte	.LASF129
+ 1463 056e 01       		.byte	0x1
+ 1464 056f 33       		.byte	0x33
+ 1465 0570 6B000000 		.4byte	0x6b
+ 1466 0574 05       		.uleb128 0x5
+ 1467 0575 03       		.byte	0x3
+ 1468 0576 00000000 		.4byte	AltitudeNotificationEnabled
+ 1469 057a 15       		.uleb128 0x15
+ 1470 057b 23000000 		.4byte	.LASF130
+ 1471 057f 01       		.byte	0x1
+ 1472 0580 34       		.byte	0x34
+ 1473 0581 6B000000 		.4byte	0x6b
+ 1474 0585 05       		.uleb128 0x5
+ 1475 0586 03       		.byte	0x3
+ 1476 0587 00000000 		.4byte	UpdateTemperatureNotificationAttribute
+ 1477 058b 15       		.uleb128 0x15
+ 1478 058c DE0C0000 		.4byte	.LASF131
+ 1479 0590 01       		.byte	0x1
+ 1480 0591 35       		.byte	0x35
+ 1481 0592 6B000000 		.4byte	0x6b
+ 1482 0596 05       		.uleb128 0x5
+ 1483 0597 03       		.byte	0x3
+ 1484 0598 00000000 		.4byte	UpdatePressureNotificationAttribute
+ 1485 059c 15       		.uleb128 0x15
+ 1486 059d C0090000 		.4byte	.LASF132
+ 1487 05a1 01       		.byte	0x1
+ 1488 05a2 36       		.byte	0x36
+ 1489 05a3 6B000000 		.4byte	0x6b
+ 1490 05a7 05       		.uleb128 0x5
+ 1491 05a8 03       		.byte	0x3
+ 1492 05a9 00000000 		.4byte	UpdateAltitudeNotificationAttribute
+ 1493 05ad 16       		.uleb128 0x16
+ 1494 05ae 6B000000 		.4byte	0x6b
+ 1495 05b2 BD050000 		.4byte	0x5bd
+ 1496 05b6 17       		.uleb128 0x17
+ 1497 05b7 A4000000 		.4byte	0xa4
+ 1498 05bb 01       		.byte	0x1
+ 1499 05bc 00       		.byte	0
+ 1500 05bd 15       		.uleb128 0x15
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 35
+
+
+ 1501 05be 520A0000 		.4byte	.LASF133
+ 1502 05c2 01       		.byte	0x1
+ 1503 05c3 37       		.byte	0x37
+ 1504 05c4 AD050000 		.4byte	0x5ad
+ 1505 05c8 05       		.uleb128 0x5
+ 1506 05c9 03       		.byte	0x3
+ 1507 05ca 00000000 		.4byte	TemperatureNotificationCCCDValue
+ 1508 05ce 15       		.uleb128 0x15
+ 1509 05cf AD000000 		.4byte	.LASF134
+ 1510 05d3 01       		.byte	0x1
+ 1511 05d4 38       		.byte	0x38
+ 1512 05d5 AD050000 		.4byte	0x5ad
+ 1513 05d9 05       		.uleb128 0x5
+ 1514 05da 03       		.byte	0x3
+ 1515 05db 00000000 		.4byte	PressureNotificationCCCDValue
+ 1516 05df 15       		.uleb128 0x15
+ 1517 05e0 DB010000 		.4byte	.LASF135
+ 1518 05e4 01       		.byte	0x1
+ 1519 05e5 39       		.byte	0x39
+ 1520 05e6 AD050000 		.4byte	0x5ad
+ 1521 05ea 05       		.uleb128 0x5
+ 1522 05eb 03       		.byte	0x3
+ 1523 05ec 00000000 		.4byte	AltitudeNotificationCCCDValue
+ 1524 05f0 16       		.uleb128 0x16
+ 1525 05f1 6B000000 		.4byte	0x6b
+ 1526 05f5 00060000 		.4byte	0x600
+ 1527 05f9 17       		.uleb128 0x17
+ 1528 05fa A4000000 		.4byte	0xa4
+ 1529 05fe 03       		.byte	0x3
+ 1530 05ff 00       		.byte	0
+ 1531 0600 15       		.uleb128 0x15
+ 1532 0601 72090000 		.4byte	.LASF136
+ 1533 0605 01       		.byte	0x1
+ 1534 0606 3A       		.byte	0x3a
+ 1535 0607 F0050000 		.4byte	0x5f0
+ 1536 060b 05       		.uleb128 0x5
+ 1537 060c 03       		.byte	0x3
+ 1538 060d 00000000 		.4byte	TemperatureNotificationData
+ 1539 0611 15       		.uleb128 0x15
+ 1540 0612 B4080000 		.4byte	.LASF137
+ 1541 0616 01       		.byte	0x1
+ 1542 0617 3B       		.byte	0x3b
+ 1543 0618 F0050000 		.4byte	0x5f0
+ 1544 061c 05       		.uleb128 0x5
+ 1545 061d 03       		.byte	0x3
+ 1546 061e 00000000 		.4byte	PressureNotificationData
+ 1547 0622 15       		.uleb128 0x15
+ 1548 0623 5C0C0000 		.4byte	.LASF138
+ 1549 0627 01       		.byte	0x1
+ 1550 0628 3C       		.byte	0x3c
+ 1551 0629 F0050000 		.4byte	0x5f0
+ 1552 062d 05       		.uleb128 0x5
+ 1553 062e 03       		.byte	0x3
+ 1554 062f 00000000 		.4byte	AltitudeNotificationData
+ 1555 0633 18       		.uleb128 0x18
+ 1556 0634 730A0000 		.4byte	.LASF139
+ 1557 0638 01       		.byte	0x1
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 36
+
+
+ 1558 0639 3D       		.byte	0x3d
+ 1559 063a 6B000000 		.4byte	0x6b
+ 1560 063e 18       		.uleb128 0x18
+ 1561 063f C40E0000 		.4byte	.LASF140
+ 1562 0643 01       		.byte	0x1
+ 1563 0644 3E       		.byte	0x3e
+ 1564 0645 41000000 		.4byte	0x41
+ 1565 0649 18       		.uleb128 0x18
+ 1566 064a 83060000 		.4byte	.LASF141
+ 1567 064e 01       		.byte	0x1
+ 1568 064f 3F       		.byte	0x3f
+ 1569 0650 41000000 		.4byte	0x41
+ 1570 0654 18       		.uleb128 0x18
+ 1571 0655 8E090000 		.4byte	.LASF142
+ 1572 0659 01       		.byte	0x1
+ 1573 065a 40       		.byte	0x40
+ 1574 065b 41000000 		.4byte	0x41
+ 1575 065f 00       		.byte	0
+ 1576              		.section	.debug_abbrev,"",%progbits
+ 1577              	.Ldebug_abbrev0:
+ 1578 0000 01       		.uleb128 0x1
+ 1579 0001 11       		.uleb128 0x11
+ 1580 0002 01       		.byte	0x1
+ 1581 0003 25       		.uleb128 0x25
+ 1582 0004 0E       		.uleb128 0xe
+ 1583 0005 13       		.uleb128 0x13
+ 1584 0006 0B       		.uleb128 0xb
+ 1585 0007 03       		.uleb128 0x3
+ 1586 0008 0E       		.uleb128 0xe
+ 1587 0009 1B       		.uleb128 0x1b
+ 1588 000a 0E       		.uleb128 0xe
+ 1589 000b 55       		.uleb128 0x55
+ 1590 000c 17       		.uleb128 0x17
+ 1591 000d 11       		.uleb128 0x11
+ 1592 000e 01       		.uleb128 0x1
+ 1593 000f 10       		.uleb128 0x10
+ 1594 0010 17       		.uleb128 0x17
+ 1595 0011 00       		.byte	0
+ 1596 0012 00       		.byte	0
+ 1597 0013 02       		.uleb128 0x2
+ 1598 0014 24       		.uleb128 0x24
+ 1599 0015 00       		.byte	0
+ 1600 0016 0B       		.uleb128 0xb
+ 1601 0017 0B       		.uleb128 0xb
+ 1602 0018 3E       		.uleb128 0x3e
+ 1603 0019 0B       		.uleb128 0xb
+ 1604 001a 03       		.uleb128 0x3
+ 1605 001b 0E       		.uleb128 0xe
+ 1606 001c 00       		.byte	0
+ 1607 001d 00       		.byte	0
+ 1608 001e 03       		.uleb128 0x3
+ 1609 001f 24       		.uleb128 0x24
+ 1610 0020 00       		.byte	0
+ 1611 0021 0B       		.uleb128 0xb
+ 1612 0022 0B       		.uleb128 0xb
+ 1613 0023 3E       		.uleb128 0x3e
+ 1614 0024 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 37
+
+
+ 1615 0025 03       		.uleb128 0x3
+ 1616 0026 08       		.uleb128 0x8
+ 1617 0027 00       		.byte	0
+ 1618 0028 00       		.byte	0
+ 1619 0029 04       		.uleb128 0x4
+ 1620 002a 16       		.uleb128 0x16
+ 1621 002b 00       		.byte	0
+ 1622 002c 03       		.uleb128 0x3
+ 1623 002d 0E       		.uleb128 0xe
+ 1624 002e 3A       		.uleb128 0x3a
+ 1625 002f 0B       		.uleb128 0xb
+ 1626 0030 3B       		.uleb128 0x3b
+ 1627 0031 05       		.uleb128 0x5
+ 1628 0032 49       		.uleb128 0x49
+ 1629 0033 13       		.uleb128 0x13
+ 1630 0034 00       		.byte	0
+ 1631 0035 00       		.byte	0
+ 1632 0036 05       		.uleb128 0x5
+ 1633 0037 0F       		.uleb128 0xf
+ 1634 0038 00       		.byte	0
+ 1635 0039 0B       		.uleb128 0xb
+ 1636 003a 0B       		.uleb128 0xb
+ 1637 003b 00       		.byte	0
+ 1638 003c 00       		.byte	0
+ 1639 003d 06       		.uleb128 0x6
+ 1640 003e 04       		.uleb128 0x4
+ 1641 003f 01       		.byte	0x1
+ 1642 0040 0B       		.uleb128 0xb
+ 1643 0041 0B       		.uleb128 0xb
+ 1644 0042 3A       		.uleb128 0x3a
+ 1645 0043 0B       		.uleb128 0xb
+ 1646 0044 3B       		.uleb128 0x3b
+ 1647 0045 05       		.uleb128 0x5
+ 1648 0046 01       		.uleb128 0x1
+ 1649 0047 13       		.uleb128 0x13
+ 1650 0048 00       		.byte	0
+ 1651 0049 00       		.byte	0
+ 1652 004a 07       		.uleb128 0x7
+ 1653 004b 28       		.uleb128 0x28
+ 1654 004c 00       		.byte	0
+ 1655 004d 03       		.uleb128 0x3
+ 1656 004e 0E       		.uleb128 0xe
+ 1657 004f 1C       		.uleb128 0x1c
+ 1658 0050 0D       		.uleb128 0xd
+ 1659 0051 00       		.byte	0
+ 1660 0052 00       		.byte	0
+ 1661 0053 08       		.uleb128 0x8
+ 1662 0054 0F       		.uleb128 0xf
+ 1663 0055 00       		.byte	0
+ 1664 0056 0B       		.uleb128 0xb
+ 1665 0057 0B       		.uleb128 0xb
+ 1666 0058 49       		.uleb128 0x49
+ 1667 0059 13       		.uleb128 0x13
+ 1668 005a 00       		.byte	0
+ 1669 005b 00       		.byte	0
+ 1670 005c 09       		.uleb128 0x9
+ 1671 005d 13       		.uleb128 0x13
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 38
+
+
+ 1672 005e 01       		.byte	0x1
+ 1673 005f 0B       		.uleb128 0xb
+ 1674 0060 0B       		.uleb128 0xb
+ 1675 0061 3A       		.uleb128 0x3a
+ 1676 0062 0B       		.uleb128 0xb
+ 1677 0063 3B       		.uleb128 0x3b
+ 1678 0064 05       		.uleb128 0x5
+ 1679 0065 01       		.uleb128 0x1
+ 1680 0066 13       		.uleb128 0x13
+ 1681 0067 00       		.byte	0
+ 1682 0068 00       		.byte	0
+ 1683 0069 0A       		.uleb128 0xa
+ 1684 006a 0D       		.uleb128 0xd
+ 1685 006b 00       		.byte	0
+ 1686 006c 03       		.uleb128 0x3
+ 1687 006d 0E       		.uleb128 0xe
+ 1688 006e 3A       		.uleb128 0x3a
+ 1689 006f 0B       		.uleb128 0xb
+ 1690 0070 3B       		.uleb128 0x3b
+ 1691 0071 05       		.uleb128 0x5
+ 1692 0072 49       		.uleb128 0x49
+ 1693 0073 13       		.uleb128 0x13
+ 1694 0074 38       		.uleb128 0x38
+ 1695 0075 0B       		.uleb128 0xb
+ 1696 0076 00       		.byte	0
+ 1697 0077 00       		.byte	0
+ 1698 0078 0B       		.uleb128 0xb
+ 1699 0079 0D       		.uleb128 0xd
+ 1700 007a 00       		.byte	0
+ 1701 007b 03       		.uleb128 0x3
+ 1702 007c 08       		.uleb128 0x8
+ 1703 007d 3A       		.uleb128 0x3a
+ 1704 007e 0B       		.uleb128 0xb
+ 1705 007f 3B       		.uleb128 0x3b
+ 1706 0080 05       		.uleb128 0x5
+ 1707 0081 49       		.uleb128 0x49
+ 1708 0082 13       		.uleb128 0x13
+ 1709 0083 38       		.uleb128 0x38
+ 1710 0084 0B       		.uleb128 0xb
+ 1711 0085 00       		.byte	0
+ 1712 0086 00       		.byte	0
+ 1713 0087 0C       		.uleb128 0xc
+ 1714 0088 16       		.uleb128 0x16
+ 1715 0089 00       		.byte	0
+ 1716 008a 03       		.uleb128 0x3
+ 1717 008b 0E       		.uleb128 0xe
+ 1718 008c 3A       		.uleb128 0x3a
+ 1719 008d 0B       		.uleb128 0xb
+ 1720 008e 3B       		.uleb128 0x3b
+ 1721 008f 0B       		.uleb128 0xb
+ 1722 0090 49       		.uleb128 0x49
+ 1723 0091 13       		.uleb128 0x13
+ 1724 0092 00       		.byte	0
+ 1725 0093 00       		.byte	0
+ 1726 0094 0D       		.uleb128 0xd
+ 1727 0095 13       		.uleb128 0x13
+ 1728 0096 01       		.byte	0x1
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 39
+
+
+ 1729 0097 0B       		.uleb128 0xb
+ 1730 0098 0B       		.uleb128 0xb
+ 1731 0099 3A       		.uleb128 0x3a
+ 1732 009a 0B       		.uleb128 0xb
+ 1733 009b 3B       		.uleb128 0x3b
+ 1734 009c 0B       		.uleb128 0xb
+ 1735 009d 01       		.uleb128 0x1
+ 1736 009e 13       		.uleb128 0x13
+ 1737 009f 00       		.byte	0
+ 1738 00a0 00       		.byte	0
+ 1739 00a1 0E       		.uleb128 0xe
+ 1740 00a2 0D       		.uleb128 0xd
+ 1741 00a3 00       		.byte	0
+ 1742 00a4 03       		.uleb128 0x3
+ 1743 00a5 0E       		.uleb128 0xe
+ 1744 00a6 3A       		.uleb128 0x3a
+ 1745 00a7 0B       		.uleb128 0xb
+ 1746 00a8 3B       		.uleb128 0x3b
+ 1747 00a9 0B       		.uleb128 0xb
+ 1748 00aa 49       		.uleb128 0x49
+ 1749 00ab 13       		.uleb128 0x13
+ 1750 00ac 38       		.uleb128 0x38
+ 1751 00ad 0B       		.uleb128 0xb
+ 1752 00ae 00       		.byte	0
+ 1753 00af 00       		.byte	0
+ 1754 00b0 0F       		.uleb128 0xf
+ 1755 00b1 2E       		.uleb128 0x2e
+ 1756 00b2 01       		.byte	0x1
+ 1757 00b3 3F       		.uleb128 0x3f
+ 1758 00b4 19       		.uleb128 0x19
+ 1759 00b5 03       		.uleb128 0x3
+ 1760 00b6 0E       		.uleb128 0xe
+ 1761 00b7 3A       		.uleb128 0x3a
+ 1762 00b8 0B       		.uleb128 0xb
+ 1763 00b9 3B       		.uleb128 0x3b
+ 1764 00ba 0B       		.uleb128 0xb
+ 1765 00bb 27       		.uleb128 0x27
+ 1766 00bc 19       		.uleb128 0x19
+ 1767 00bd 11       		.uleb128 0x11
+ 1768 00be 01       		.uleb128 0x1
+ 1769 00bf 12       		.uleb128 0x12
+ 1770 00c0 06       		.uleb128 0x6
+ 1771 00c1 40       		.uleb128 0x40
+ 1772 00c2 18       		.uleb128 0x18
+ 1773 00c3 9642     		.uleb128 0x2116
+ 1774 00c5 19       		.uleb128 0x19
+ 1775 00c6 01       		.uleb128 0x1
+ 1776 00c7 13       		.uleb128 0x13
+ 1777 00c8 00       		.byte	0
+ 1778 00c9 00       		.byte	0
+ 1779 00ca 10       		.uleb128 0x10
+ 1780 00cb 05       		.uleb128 0x5
+ 1781 00cc 00       		.byte	0
+ 1782 00cd 03       		.uleb128 0x3
+ 1783 00ce 0E       		.uleb128 0xe
+ 1784 00cf 3A       		.uleb128 0x3a
+ 1785 00d0 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 40
+
+
+ 1786 00d1 3B       		.uleb128 0x3b
+ 1787 00d2 0B       		.uleb128 0xb
+ 1788 00d3 49       		.uleb128 0x49
+ 1789 00d4 13       		.uleb128 0x13
+ 1790 00d5 02       		.uleb128 0x2
+ 1791 00d6 18       		.uleb128 0x18
+ 1792 00d7 00       		.byte	0
+ 1793 00d8 00       		.byte	0
+ 1794 00d9 11       		.uleb128 0x11
+ 1795 00da 2E       		.uleb128 0x2e
+ 1796 00db 00       		.byte	0
+ 1797 00dc 3F       		.uleb128 0x3f
+ 1798 00dd 19       		.uleb128 0x19
+ 1799 00de 03       		.uleb128 0x3
+ 1800 00df 0E       		.uleb128 0xe
+ 1801 00e0 3A       		.uleb128 0x3a
+ 1802 00e1 0B       		.uleb128 0xb
+ 1803 00e2 3B       		.uleb128 0x3b
+ 1804 00e3 0B       		.uleb128 0xb
+ 1805 00e4 27       		.uleb128 0x27
+ 1806 00e5 19       		.uleb128 0x19
+ 1807 00e6 11       		.uleb128 0x11
+ 1808 00e7 01       		.uleb128 0x1
+ 1809 00e8 12       		.uleb128 0x12
+ 1810 00e9 06       		.uleb128 0x6
+ 1811 00ea 40       		.uleb128 0x40
+ 1812 00eb 18       		.uleb128 0x18
+ 1813 00ec 9642     		.uleb128 0x2116
+ 1814 00ee 19       		.uleb128 0x19
+ 1815 00ef 00       		.byte	0
+ 1816 00f0 00       		.byte	0
+ 1817 00f1 12       		.uleb128 0x12
+ 1818 00f2 2E       		.uleb128 0x2e
+ 1819 00f3 00       		.byte	0
+ 1820 00f4 3F       		.uleb128 0x3f
+ 1821 00f5 19       		.uleb128 0x19
+ 1822 00f6 03       		.uleb128 0x3
+ 1823 00f7 0E       		.uleb128 0xe
+ 1824 00f8 3A       		.uleb128 0x3a
+ 1825 00f9 0B       		.uleb128 0xb
+ 1826 00fa 3B       		.uleb128 0x3b
+ 1827 00fb 05       		.uleb128 0x5
+ 1828 00fc 27       		.uleb128 0x27
+ 1829 00fd 19       		.uleb128 0x19
+ 1830 00fe 11       		.uleb128 0x11
+ 1831 00ff 01       		.uleb128 0x1
+ 1832 0100 12       		.uleb128 0x12
+ 1833 0101 06       		.uleb128 0x6
+ 1834 0102 40       		.uleb128 0x40
+ 1835 0103 18       		.uleb128 0x18
+ 1836 0104 9642     		.uleb128 0x2116
+ 1837 0106 19       		.uleb128 0x19
+ 1838 0107 00       		.byte	0
+ 1839 0108 00       		.byte	0
+ 1840 0109 13       		.uleb128 0x13
+ 1841 010a 34       		.uleb128 0x34
+ 1842 010b 00       		.byte	0
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 41
+
+
+ 1843 010c 03       		.uleb128 0x3
+ 1844 010d 0E       		.uleb128 0xe
+ 1845 010e 3A       		.uleb128 0x3a
+ 1846 010f 0B       		.uleb128 0xb
+ 1847 0110 3B       		.uleb128 0x3b
+ 1848 0111 0B       		.uleb128 0xb
+ 1849 0112 49       		.uleb128 0x49
+ 1850 0113 13       		.uleb128 0x13
+ 1851 0114 02       		.uleb128 0x2
+ 1852 0115 18       		.uleb128 0x18
+ 1853 0116 00       		.byte	0
+ 1854 0117 00       		.byte	0
+ 1855 0118 14       		.uleb128 0x14
+ 1856 0119 34       		.uleb128 0x34
+ 1857 011a 00       		.byte	0
+ 1858 011b 03       		.uleb128 0x3
+ 1859 011c 0E       		.uleb128 0xe
+ 1860 011d 3A       		.uleb128 0x3a
+ 1861 011e 0B       		.uleb128 0xb
+ 1862 011f 3B       		.uleb128 0x3b
+ 1863 0120 05       		.uleb128 0x5
+ 1864 0121 49       		.uleb128 0x49
+ 1865 0122 13       		.uleb128 0x13
+ 1866 0123 3F       		.uleb128 0x3f
+ 1867 0124 19       		.uleb128 0x19
+ 1868 0125 3C       		.uleb128 0x3c
+ 1869 0126 19       		.uleb128 0x19
+ 1870 0127 00       		.byte	0
+ 1871 0128 00       		.byte	0
+ 1872 0129 15       		.uleb128 0x15
+ 1873 012a 34       		.uleb128 0x34
+ 1874 012b 00       		.byte	0
+ 1875 012c 03       		.uleb128 0x3
+ 1876 012d 0E       		.uleb128 0xe
+ 1877 012e 3A       		.uleb128 0x3a
+ 1878 012f 0B       		.uleb128 0xb
+ 1879 0130 3B       		.uleb128 0x3b
+ 1880 0131 0B       		.uleb128 0xb
+ 1881 0132 49       		.uleb128 0x49
+ 1882 0133 13       		.uleb128 0x13
+ 1883 0134 3F       		.uleb128 0x3f
+ 1884 0135 19       		.uleb128 0x19
+ 1885 0136 02       		.uleb128 0x2
+ 1886 0137 18       		.uleb128 0x18
+ 1887 0138 00       		.byte	0
+ 1888 0139 00       		.byte	0
+ 1889 013a 16       		.uleb128 0x16
+ 1890 013b 01       		.uleb128 0x1
+ 1891 013c 01       		.byte	0x1
+ 1892 013d 49       		.uleb128 0x49
+ 1893 013e 13       		.uleb128 0x13
+ 1894 013f 01       		.uleb128 0x1
+ 1895 0140 13       		.uleb128 0x13
+ 1896 0141 00       		.byte	0
+ 1897 0142 00       		.byte	0
+ 1898 0143 17       		.uleb128 0x17
+ 1899 0144 21       		.uleb128 0x21
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 42
+
+
+ 1900 0145 00       		.byte	0
+ 1901 0146 49       		.uleb128 0x49
+ 1902 0147 13       		.uleb128 0x13
+ 1903 0148 2F       		.uleb128 0x2f
+ 1904 0149 0B       		.uleb128 0xb
+ 1905 014a 00       		.byte	0
+ 1906 014b 00       		.byte	0
+ 1907 014c 18       		.uleb128 0x18
+ 1908 014d 34       		.uleb128 0x34
+ 1909 014e 00       		.byte	0
+ 1910 014f 03       		.uleb128 0x3
+ 1911 0150 0E       		.uleb128 0xe
+ 1912 0151 3A       		.uleb128 0x3a
+ 1913 0152 0B       		.uleb128 0xb
+ 1914 0153 3B       		.uleb128 0x3b
+ 1915 0154 0B       		.uleb128 0xb
+ 1916 0155 49       		.uleb128 0x49
+ 1917 0156 13       		.uleb128 0x13
+ 1918 0157 3F       		.uleb128 0x3f
+ 1919 0158 19       		.uleb128 0x19
+ 1920 0159 3C       		.uleb128 0x3c
+ 1921 015a 19       		.uleb128 0x19
+ 1922 015b 00       		.byte	0
+ 1923 015c 00       		.byte	0
+ 1924 015d 00       		.byte	0
+ 1925              		.section	.debug_aranges,"",%progbits
+ 1926 0000 44000000 		.4byte	0x44
+ 1927 0004 0200     		.2byte	0x2
+ 1928 0006 00000000 		.4byte	.Ldebug_info0
+ 1929 000a 04       		.byte	0x4
+ 1930 000b 00       		.byte	0
+ 1931 000c 0000     		.2byte	0
+ 1932 000e 0000     		.2byte	0
+ 1933 0010 00000000 		.4byte	.LFB37
+ 1934 0014 F4010000 		.4byte	.LFE37-.LFB37
+ 1935 0018 00000000 		.4byte	.LFB38
+ 1936 001c 40000000 		.4byte	.LFE38-.LFB38
+ 1937 0020 00000000 		.4byte	.LFB39
+ 1938 0024 40000000 		.4byte	.LFE39-.LFB39
+ 1939 0028 00000000 		.4byte	.LFB40
+ 1940 002c 40000000 		.4byte	.LFE40-.LFB40
+ 1941 0030 00000000 		.4byte	.LFB41
+ 1942 0034 F8000000 		.4byte	.LFE41-.LFB41
+ 1943 0038 00000000 		.4byte	.LFB42
+ 1944 003c 3C000000 		.4byte	.LFE42-.LFB42
+ 1945 0040 00000000 		.4byte	0
+ 1946 0044 00000000 		.4byte	0
+ 1947              		.section	.debug_ranges,"",%progbits
+ 1948              	.Ldebug_ranges0:
+ 1949 0000 00000000 		.4byte	.LFB37
+ 1950 0004 F4010000 		.4byte	.LFE37
+ 1951 0008 00000000 		.4byte	.LFB38
+ 1952 000c 40000000 		.4byte	.LFE38
+ 1953 0010 00000000 		.4byte	.LFB39
+ 1954 0014 40000000 		.4byte	.LFE39
+ 1955 0018 00000000 		.4byte	.LFB40
+ 1956 001c 40000000 		.4byte	.LFE40
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 43
+
+
+ 1957 0020 00000000 		.4byte	.LFB41
+ 1958 0024 F8000000 		.4byte	.LFE41
+ 1959 0028 00000000 		.4byte	.LFB42
+ 1960 002c 3C000000 		.4byte	.LFE42
+ 1961 0030 00000000 		.4byte	0
+ 1962 0034 00000000 		.4byte	0
+ 1963              		.section	.debug_line,"",%progbits
+ 1964              	.Ldebug_line0:
+ 1965 0000 91010000 		.section	.debug_str,"MS",%progbits,1
+ 1965      0200B000 
+ 1965      00000201 
+ 1965      FB0E0D00 
+ 1965      01010101 
+ 1966              	.LASF76:
+ 1967 0000 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_RX_CREDIT_IND\000"
+ 1967      455F4556 
+ 1967      545F4C32 
+ 1967      4341505F 
+ 1967      43424643 
+ 1968              	.LASF130:
+ 1969 0023 55706461 		.ascii	"UpdateTemperatureNotificationAttribute\000"
+ 1969      74655465 
+ 1969      6D706572 
+ 1969      61747572 
+ 1969      654E6F74 
+ 1970              	.LASF21:
+ 1971 004a 4359424C 		.ascii	"CYBLE_EVT_STACK_BUSY_STATUS\000"
+ 1971      455F4556 
+ 1971      545F5354 
+ 1971      41434B5F 
+ 1971      42555359 
+ 1972              	.LASF100:
+ 1973 0066 4359424C 		.ascii	"CYBLE_STATE_STOPPED\000"
+ 1973      455F5354 
+ 1973      4154455F 
+ 1973      53544F50 
+ 1973      50454400 
+ 1974              	.LASF75:
+ 1975 007a 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_READ\000"
+ 1975      455F4556 
+ 1975      545F4C32 
+ 1975      4341505F 
+ 1975      43424643 
+ 1976              	.LASF90:
+ 1977 0099 4359424C 		.ascii	"CYBLE_CONN_HANDLE_T\000"
+ 1977      455F434F 
+ 1977      4E4E5F48 
+ 1977      414E444C 
+ 1977      455F5400 
+ 1978              	.LASF134:
+ 1979 00ad 50726573 		.ascii	"PressureNotificationCCCDValue\000"
+ 1979      73757265 
+ 1979      4E6F7469 
+ 1979      66696361 
+ 1979      74696F6E 
+ 1980              	.LASF33:
+ 1981 00cb 4359424C 		.ascii	"CYBLE_EVT_GAP_CONNECTION_UPDATE_COMPLETE\000"
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 44
+
+
+ 1981      455F4556 
+ 1981      545F4741 
+ 1981      505F434F 
+ 1981      4E4E4543 
+ 1982              	.LASF74:
+ 1983 00f4 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_CNF\000"
+ 1983      455F4556 
+ 1983      545F4C32 
+ 1983      4341505F 
+ 1983      43424643 
+ 1984              	.LASF38:
+ 1985 0115 4359424C 		.ascii	"CYBLE_EVT_GAP_OOB_GENERATED_NOTIFICATION\000"
+ 1985      455F4556 
+ 1985      545F4741 
+ 1985      505F4F4F 
+ 1985      425F4745 
+ 1986              	.LASF54:
+ 1987 013e 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_MULTI_RSP\000"
+ 1987      455F4556 
+ 1987      545F4741 
+ 1987      5454435F 
+ 1987      52454144 
+ 1988              	.LASF59:
+ 1989 015d 4359424C 		.ascii	"CYBLE_EVT_GATTS_EXEC_WRITE_REQ\000"
+ 1989      455F4556 
+ 1989      545F4741 
+ 1989      5454535F 
+ 1989      45584543 
+ 1990              	.LASF48:
+ 1991 017c 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_GROUP_TYPE_RSP\000"
+ 1991      455F4556 
+ 1991      545F4741 
+ 1991      5454435F 
+ 1991      52454144 
+ 1992              	.LASF109:
+ 1993 01a3 53656E64 		.ascii	"SendPressureOverNotification\000"
+ 1993      50726573 
+ 1993      73757265 
+ 1993      4F766572 
+ 1993      4E6F7469 
+ 1994              	.LASF18:
+ 1995 01c0 4359424C 		.ascii	"CYBLE_EVT_TIMEOUT\000"
+ 1995      455F4556 
+ 1995      545F5449 
+ 1995      4D454F55 
+ 1995      5400
+ 1996              	.LASF4:
+ 1997 01d2 6C6F6E67 		.ascii	"long int\000"
+ 1997      20696E74 
+ 1997      00
+ 1998              	.LASF135:
+ 1999 01db 416C7469 		.ascii	"AltitudeNotificationCCCDValue\000"
+ 1999      74756465 
+ 1999      4E6F7469 
+ 1999      66696361 
+ 1999      74696F6E 
+ 2000              	.LASF7:
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 45
+
+
+ 2001 01f9 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2001      206C6F6E 
+ 2001      6720756E 
+ 2001      7369676E 
+ 2001      65642069 
+ 2002              	.LASF92:
+ 2003 0210 4359424C 		.ascii	"CYBLE_GATT_VALUE_T\000"
+ 2003      455F4741 
+ 2003      54545F56 
+ 2003      414C5545 
+ 2003      5F5400
+ 2004              	.LASF20:
+ 2005 0223 4359424C 		.ascii	"CYBLE_EVT_HCI_STATUS\000"
+ 2005      455F4556 
+ 2005      545F4843 
+ 2005      495F5354 
+ 2005      41545553 
+ 2006              	.LASF111:
+ 2007 0238 55706461 		.ascii	"UpdateNotificationCCCDAttribute\000"
+ 2007      74654E6F 
+ 2007      74696669 
+ 2007      63617469 
+ 2007      6F6E4343 
+ 2008              	.LASF144:
+ 2009 0258 2E5C424C 		.ascii	".\\BLEApplication.c\000"
+ 2009      45417070 
+ 2009      6C696361 
+ 2009      74696F6E 
+ 2009      2E6300
+ 2010              	.LASF79:
+ 2011 026b 4359424C 		.ascii	"CYBLE_EVT_PENDING_FLASH_WRITE\000"
+ 2011      455F4556 
+ 2011      545F5045 
+ 2011      4E44494E 
+ 2011      475F464C 
+ 2012              	.LASF117:
+ 2013 0289 416C7469 		.ascii	"AltitudeNotificationHandle\000"
+ 2013      74756465 
+ 2013      4E6F7469 
+ 2013      66696361 
+ 2013      74696F6E 
+ 2014              	.LASF68:
+ 2015 02a4 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_REQ\000"
+ 2015      455F4556 
+ 2015      545F4C32 
+ 2015      4341505F 
+ 2015      434F4E4E 
+ 2016              	.LASF118:
+ 2017 02ca 54656D70 		.ascii	"TemperatureNotificationCCCDHandle\000"
+ 2017      65726174 
+ 2017      7572654E 
+ 2017      6F746966 
+ 2017      69636174 
+ 2018              	.LASF32:
+ 2019 02ec 4359424C 		.ascii	"CYBLE_EVT_GAP_ENCRYPT_CHANGE\000"
+ 2019      455F4556 
+ 2019      545F4741 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 46
+
+
+ 2019      505F454E 
+ 2019      43525950 
+ 2020              	.LASF36:
+ 2021 0309 4359424C 		.ascii	"CYBLE_EVT_GAP_NUMERIC_COMPARISON_REQUEST\000"
+ 2021      455F4556 
+ 2021      545F4741 
+ 2021      505F4E55 
+ 2021      4D455249 
+ 2022              	.LASF103:
+ 2023 0332 4359424C 		.ascii	"CYBLE_STATE_ADVERTISING\000"
+ 2023      455F5354 
+ 2023      4154455F 
+ 2023      41445645 
+ 2023      52544953 
+ 2024              	.LASF6:
+ 2025 034a 6C6F6E67 		.ascii	"long long int\000"
+ 2025      206C6F6E 
+ 2025      6720696E 
+ 2025      7400
+ 2026              	.LASF0:
+ 2027 0358 7369676E 		.ascii	"signed char\000"
+ 2027      65642063 
+ 2027      68617200 
+ 2028              	.LASF17:
+ 2029 0364 4359424C 		.ascii	"CYBLE_EVT_STACK_ON\000"
+ 2029      455F4556 
+ 2029      545F5354 
+ 2029      41434B5F 
+ 2029      4F4E00
+ 2030              	.LASF34:
+ 2031 0377 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_START_STOP\000"
+ 2031      455F4556 
+ 2031      545F4741 
+ 2031      50435F53 
+ 2031      43414E5F 
+ 2032              	.LASF91:
+ 2033 0396 61637475 		.ascii	"actualLen\000"
+ 2033      616C4C65 
+ 2033      6E00
+ 2034              	.LASF24:
+ 2035 03a0 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_REQ\000"
+ 2035      455F4556 
+ 2035      545F4741 
+ 2035      505F4155 
+ 2035      54485F52 
+ 2036              	.LASF126:
+ 2037 03b7 436F6E6E 		.ascii	"ConnectionParametersUpdateRequired\000"
+ 2037      65637469 
+ 2037      6F6E5061 
+ 2037      72616D65 
+ 2037      74657273 
+ 2038              	.LASF52:
+ 2039 03da 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_RSP\000"
+ 2039      455F4556 
+ 2039      545F4741 
+ 2039      5454435F 
+ 2039      52454144 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 47
+
+
+ 2040              	.LASF57:
+ 2041 03f3 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_CMD_REQ\000"
+ 2041      455F4556 
+ 2041      545F4741 
+ 2041      5454535F 
+ 2041      57524954 
+ 2042              	.LASF104:
+ 2043 0411 4359424C 		.ascii	"CYBLE_STATE_DISCONNECTED\000"
+ 2043      455F5354 
+ 2043      4154455F 
+ 2043      44495343 
+ 2043      4F4E4E45 
+ 2044              	.LASF29:
+ 2045 042a 4359424C 		.ascii	"CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\000"
+ 2045      455F4556 
+ 2045      545F4741 
+ 2045      50505F41 
+ 2045      44564552 
+ 2046              	.LASF9:
+ 2047 0452 75696E74 		.ascii	"uint8\000"
+ 2047      3800
+ 2048              	.LASF120:
+ 2049 0458 416C7469 		.ascii	"AltitudeNotificationCCCDHandle\000"
+ 2049      74756465 
+ 2049      4E6F7469 
+ 2049      66696361 
+ 2049      74696F6E 
+ 2050              	.LASF60:
+ 2051 0477 4359424C 		.ascii	"CYBLE_EVT_GATTC_EXEC_WRITE_RSP\000"
+ 2051      455F4556 
+ 2051      545F4741 
+ 2051      5454435F 
+ 2051      45584543 
+ 2052              	.LASF78:
+ 2053 0496 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_WRITE_IND\000"
+ 2053      455F4556 
+ 2053      545F4C32 
+ 2053      4341505F 
+ 2053      43424643 
+ 2054              	.LASF13:
+ 2055 04ba 646F7562 		.ascii	"double\000"
+ 2055      6C6500
+ 2056              	.LASF73:
+ 2057 04c1 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_IND\000"
+ 2057      455F4556 
+ 2057      545F4C32 
+ 2057      4341505F 
+ 2057      43424643 
+ 2058              	.LASF114:
+ 2059 04e2 57726974 		.ascii	"WriteRequestedParameter\000"
+ 2059      65526571 
+ 2059      75657374 
+ 2059      65645061 
+ 2059      72616D65 
+ 2060              	.LASF11:
+ 2061 04fa 75696E74 		.ascii	"uint32\000"
+ 2061      333200
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 48
+
+
+ 2062              	.LASF106:
+ 2063 0501 4576656E 		.ascii	"Event\000"
+ 2063      7400
+ 2064              	.LASF81:
+ 2065 0507 4359424C 		.ascii	"CYBLE_EVT_MAX\000"
+ 2065      455F4556 
+ 2065      545F4D41 
+ 2065      5800
+ 2066              	.LASF35:
+ 2067 0515 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYINFO_EXCHNGE_CMPLT\000"
+ 2067      455F4556 
+ 2067      545F4741 
+ 2067      505F4B45 
+ 2067      59494E46 
+ 2068              	.LASF94:
+ 2069 0539 61747472 		.ascii	"attrHandle\000"
+ 2069      48616E64 
+ 2069      6C6500
+ 2070              	.LASF93:
+ 2071 0544 76616C75 		.ascii	"value\000"
+ 2071      6500
+ 2072              	.LASF65:
+ 2073 054a 4359424C 		.ascii	"CYBLE_EVT_GATTC_STOP_CMD_COMPLETE\000"
+ 2073      455F4556 
+ 2073      545F4741 
+ 2073      5454435F 
+ 2073      53544F50 
+ 2074              	.LASF8:
+ 2075 056c 756E7369 		.ascii	"unsigned int\000"
+ 2075      676E6564 
+ 2075      20696E74 
+ 2075      00
+ 2076              	.LASF80:
+ 2077 0579 4359424C 		.ascii	"CYBLE_EVT_LE_PING_AUTH_TIMEOUT\000"
+ 2077      455F4556 
+ 2077      545F4C45 
+ 2077      5F50494E 
+ 2077      475F4155 
+ 2078              	.LASF112:
+ 2079 0598 55706461 		.ascii	"UpdateConnectionParameters\000"
+ 2079      7465436F 
+ 2079      6E6E6563 
+ 2079      74696F6E 
+ 2079      50617261 
+ 2080              	.LASF123:
+ 2081 05b3 53746172 		.ascii	"StartAdvertisement\000"
+ 2081      74416476 
+ 2081      65727469 
+ 2081      73656D65 
+ 2081      6E7400
+ 2082              	.LASF5:
+ 2083 05c6 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2083      20756E73 
+ 2083      69676E65 
+ 2083      6420696E 
+ 2083      7400
+ 2084              	.LASF86:
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 49
+
+
+ 2085 05d8 4359424C 		.ascii	"CYBLE_GAP_CONN_UPDATE_PARAM_T\000"
+ 2085      455F4741 
+ 2085      505F434F 
+ 2085      4E4E5F55 
+ 2085      50444154 
+ 2086              	.LASF55:
+ 2087 05f6 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_REQ\000"
+ 2087      455F4556 
+ 2087      545F4741 
+ 2087      5454535F 
+ 2087      57524954 
+ 2088              	.LASF47:
+ 2089 0610 4359424C 		.ascii	"CYBLE_EVT_GATTC_XCHNG_MTU_RSP\000"
+ 2089      455F4556 
+ 2089      545F4741 
+ 2089      5454435F 
+ 2089      5843484E 
+ 2090              	.LASF64:
+ 2091 062e 4359424C 		.ascii	"CYBLE_EVT_GATTS_DATA_SIGNED_CMD_REQ\000"
+ 2091      455F4556 
+ 2091      545F4741 
+ 2091      5454535F 
+ 2091      44415441 
+ 2092              	.LASF67:
+ 2093 0652 4359424C 		.ascii	"CYBLE_EVT_GATTC_LONG_PROCEDURE_END\000"
+ 2093      455F4556 
+ 2093      545F4741 
+ 2093      5454435F 
+ 2093      4C4F4E47 
+ 2094              	.LASF85:
+ 2095 0675 73757065 		.ascii	"supervisionTO\000"
+ 2095      72766973 
+ 2095      696F6E54 
+ 2095      4F00
+ 2096              	.LASF141:
+ 2097 0683 4C617374 		.ascii	"LastPressureData\000"
+ 2097      50726573 
+ 2097      73757265 
+ 2097      44617461 
+ 2097      00
+ 2098              	.LASF3:
+ 2099 0694 73686F72 		.ascii	"short unsigned int\000"
+ 2099      7420756E 
+ 2099      7369676E 
+ 2099      65642069 
+ 2099      6E7400
+ 2100              	.LASF16:
+ 2101 06a7 4359424C 		.ascii	"CYBLE_EVT_HOST_INVALID\000"
+ 2101      455F4556 
+ 2101      545F484F 
+ 2101      53545F49 
+ 2101      4E56414C 
+ 2102              	.LASF50:
+ 2103 06be 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_INFO_RSP\000"
+ 2103      455F4556 
+ 2103      545F4741 
+ 2103      5454435F 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 50
+
+
+ 2103      46494E44 
+ 2104              	.LASF22:
+ 2105 06dc 4359424C 		.ascii	"CYBLE_EVT_MEMORY_REQUEST\000"
+ 2105      455F4556 
+ 2105      545F4D45 
+ 2105      4D4F5259 
+ 2105      5F524551 
+ 2106              	.LASF25:
+ 2107 06f5 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_ENTRY_REQUEST\000"
+ 2107      455F4556 
+ 2107      545F4741 
+ 2107      505F5041 
+ 2107      53534B45 
+ 2108              	.LASF30:
+ 2109 0719 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_CONNECTED\000"
+ 2109      455F4556 
+ 2109      545F4741 
+ 2109      505F4445 
+ 2109      56494345 
+ 2110              	.LASF125:
+ 2111 0738 424C4553 		.ascii	"BLEStackStatus\000"
+ 2111      7461636B 
+ 2111      53746174 
+ 2111      757300
+ 2112              	.LASF122:
+ 2113 0747 6379426C 		.ascii	"cyBle_state\000"
+ 2113      655F7374 
+ 2113      61746500 
+ 2114              	.LASF26:
+ 2115 0753 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_DISPLAY_REQUEST\000"
+ 2115      455F4556 
+ 2115      545F4741 
+ 2115      505F5041 
+ 2115      53534B45 
+ 2116              	.LASF44:
+ 2117 0779 4359424C 		.ascii	"CYBLE_EVT_GATT_CONNECT_IND\000"
+ 2117      455F4556 
+ 2117      545F4741 
+ 2117      54545F43 
+ 2117      4F4E4E45 
+ 2118              	.LASF89:
+ 2119 0794 61747449 		.ascii	"attId\000"
+ 2119      6400
+ 2120              	.LASF70:
+ 2121 079a 4359424C 		.ascii	"CYBLE_EVT_L2CAP_COMMAND_REJ\000"
+ 2121      455F4556 
+ 2121      545F4C32 
+ 2121      4341505F 
+ 2121      434F4D4D 
+ 2122              	.LASF23:
+ 2123 07b6 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT\000"
+ 2123      455F4556 
+ 2123      545F4741 
+ 2123      50435F53 
+ 2123      43414E5F 
+ 2124              	.LASF98:
+ 2125 07da 68616E64 		.ascii	"handleValPair\000"
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 51
+
+
+ 2125      6C655661 
+ 2125      6C506169 
+ 2125      7200
+ 2126              	.LASF84:
+ 2127 07e8 636F6E6E 		.ascii	"connLatency\000"
+ 2127      4C617465 
+ 2127      6E637900 
+ 2128              	.LASF31:
+ 2129 07f4 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_DISCONNECTED\000"
+ 2129      455F4556 
+ 2129      545F4741 
+ 2129      505F4445 
+ 2129      56494345 
+ 2130              	.LASF71:
+ 2131 0816 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_IND\000"
+ 2131      455F4556 
+ 2131      545F4C32 
+ 2131      4341505F 
+ 2131      43424643 
+ 2132              	.LASF49:
+ 2133 0834 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_TYPE_RSP\000"
+ 2133      455F4556 
+ 2133      545F4741 
+ 2133      5454435F 
+ 2133      52454144 
+ 2134              	.LASF15:
+ 2135 0855 73697A65 		.ascii	"sizetype\000"
+ 2135      74797065 
+ 2135      00
+ 2136              	.LASF99:
+ 2137 085e 4359424C 		.ascii	"CYBLE_GATTS_WRITE_REQ_PARAM_T\000"
+ 2137      455F4741 
+ 2137      5454535F 
+ 2137      57524954 
+ 2137      455F5245 
+ 2138              	.LASF96:
+ 2139 087c 4359424C 		.ascii	"CYBLE_GATTS_HANDLE_VALUE_NTF_T\000"
+ 2139      455F4741 
+ 2139      5454535F 
+ 2139      48414E44 
+ 2139      4C455F56 
+ 2140              	.LASF101:
+ 2141 089b 4359424C 		.ascii	"CYBLE_STATE_INITIALIZING\000"
+ 2141      455F5354 
+ 2141      4154455F 
+ 2141      494E4954 
+ 2141      49414C49 
+ 2142              	.LASF137:
+ 2143 08b4 50726573 		.ascii	"PressureNotificationData\000"
+ 2143      73757265 
+ 2143      4E6F7469 
+ 2143      66696361 
+ 2143      74696F6E 
+ 2144              	.LASF28:
+ 2145 08cd 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_FAILED\000"
+ 2145      455F4556 
+ 2145      545F4741 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 52
+
+
+ 2145      505F4155 
+ 2145      54485F46 
+ 2146              	.LASF56:
+ 2147 08e7 4359424C 		.ascii	"CYBLE_EVT_GATTC_WRITE_RSP\000"
+ 2147      455F4556 
+ 2147      545F4741 
+ 2147      5454435F 
+ 2147      57524954 
+ 2148              	.LASF41:
+ 2149 0901 4359424C 		.ascii	"CYBLE_EVT_GAPC_DIRECT_ADV_REPORT\000"
+ 2149      455F4556 
+ 2149      545F4741 
+ 2149      50435F44 
+ 2149      49524543 
+ 2150              	.LASF39:
+ 2151 0922 4359424C 		.ascii	"CYBLE_EVT_GAP_DATA_LENGTH_CHANGE\000"
+ 2151      455F4556 
+ 2151      545F4741 
+ 2151      505F4441 
+ 2151      54415F4C 
+ 2152              	.LASF146:
+ 2153 0943 43757374 		.ascii	"CustomEventHandler\000"
+ 2153      6F6D4576 
+ 2153      656E7448 
+ 2153      616E646C 
+ 2153      657200
+ 2154              	.LASF27:
+ 2155 0956 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_COMPLETE\000"
+ 2155      455F4556 
+ 2155      545F4741 
+ 2155      505F4155 
+ 2155      54485F43 
+ 2156              	.LASF136:
+ 2157 0972 54656D70 		.ascii	"TemperatureNotificationData\000"
+ 2157      65726174 
+ 2157      7572654E 
+ 2157      6F746966 
+ 2157      69636174 
+ 2158              	.LASF142:
+ 2159 098e 4C617374 		.ascii	"LastAltitudeData\000"
+ 2159      416C7469 
+ 2159      74756465 
+ 2159      44617461 
+ 2159      00
+ 2160              	.LASF61:
+ 2161 099f 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_NTF\000"
+ 2161      455F4556 
+ 2161      545F4741 
+ 2161      5454435F 
+ 2161      48414E44 
+ 2162              	.LASF132:
+ 2163 09c0 55706461 		.ascii	"UpdateAltitudeNotificationAttribute\000"
+ 2163      7465416C 
+ 2163      74697475 
+ 2163      64654E6F 
+ 2163      74696669 
+ 2164              	.LASF95:
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 53
+
+
+ 2165 09e4 4359424C 		.ascii	"CYBLE_GATT_HANDLE_VALUE_PAIR_T\000"
+ 2165      455F4741 
+ 2165      54545F48 
+ 2165      414E444C 
+ 2165      455F5641 
+ 2166              	.LASF127:
+ 2167 0a03 54656D70 		.ascii	"TemperatureNotificationEnabled\000"
+ 2167      65726174 
+ 2167      7572654E 
+ 2167      6F746966 
+ 2167      69636174 
+ 2168              	.LASF72:
+ 2169 0a22 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_CNF\000"
+ 2169      455F4556 
+ 2169      545F4C32 
+ 2169      4341505F 
+ 2169      43424643 
+ 2170              	.LASF82:
+ 2171 0a40 636F6E6E 		.ascii	"connIntvMin\000"
+ 2171      496E7476 
+ 2171      4D696E00 
+ 2172              	.LASF12:
+ 2173 0a4c 666C6F61 		.ascii	"float\000"
+ 2173      7400
+ 2174              	.LASF133:
+ 2175 0a52 54656D70 		.ascii	"TemperatureNotificationCCCDValue\000"
+ 2175      65726174 
+ 2175      7572654E 
+ 2175      6F746966 
+ 2175      69636174 
+ 2176              	.LASF139:
+ 2177 0a73 4368616E 		.ascii	"ChangePowerPinDriveMode\000"
+ 2177      6765506F 
+ 2177      77657250 
+ 2177      696E4472 
+ 2177      6976654D 
+ 2178              	.LASF45:
+ 2179 0a8b 4359424C 		.ascii	"CYBLE_EVT_GATT_DISCONNECT_IND\000"
+ 2179      455F4556 
+ 2179      545F4741 
+ 2179      54545F44 
+ 2179      4953434F 
+ 2180              	.LASF1:
+ 2181 0aa9 756E7369 		.ascii	"unsigned char\000"
+ 2181      676E6564 
+ 2181      20636861 
+ 2181      7200
+ 2182              	.LASF145:
+ 2183 0ab7 433A5C55 		.ascii	"C:\\Users\\Ecapable\\Desktop\\PSoC_4_BLE_Pressure_S"
+ 2183      73657273 
+ 2183      5C456361 
+ 2183      7061626C 
+ 2183      655C4465 
+ 2184 0ae6 656E736F 		.ascii	"ensor\\PSoC_4_BLE_Pressure_Sensor.cydsn\000"
+ 2184      725C5053 
+ 2184      6F435F34 
+ 2184      5F424C45 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 54
+
+
+ 2184      5F507265 
+ 2185              	.LASF10:
+ 2186 0b0d 75696E74 		.ascii	"uint16\000"
+ 2186      313600
+ 2187              	.LASF37:
+ 2188 0b14 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYPRESS_NOTIFICATION\000"
+ 2188      455F4556 
+ 2188      545F4741 
+ 2188      505F4B45 
+ 2188      59505245 
+ 2189              	.LASF97:
+ 2190 0b38 636F6E6E 		.ascii	"connHandle\000"
+ 2190      48616E64 
+ 2190      6C6500
+ 2191              	.LASF2:
+ 2192 0b43 73686F72 		.ascii	"short int\000"
+ 2192      7420696E 
+ 2192      7400
+ 2193              	.LASF62:
+ 2194 0b4d 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_IND\000"
+ 2194      455F4556 
+ 2194      545F4741 
+ 2194      5454435F 
+ 2194      48414E44 
+ 2195              	.LASF116:
+ 2196 0b6e 50726573 		.ascii	"PressureNotificationHandle\000"
+ 2196      73757265 
+ 2196      4E6F7469 
+ 2196      66696361 
+ 2196      74696F6E 
+ 2197              	.LASF124:
+ 2198 0b89 44657669 		.ascii	"DeviceConnected\000"
+ 2198      6365436F 
+ 2198      6E6E6563 
+ 2198      74656400 
+ 2199              	.LASF83:
+ 2200 0b99 636F6E6E 		.ascii	"connIntvMax\000"
+ 2200      496E7476 
+ 2200      4D617800 
+ 2201              	.LASF108:
+ 2202 0ba5 53656E64 		.ascii	"SendTemperatureOverNotification\000"
+ 2202      54656D70 
+ 2202      65726174 
+ 2202      7572654F 
+ 2202      7665724E 
+ 2203              	.LASF113:
+ 2204 0bc5 436F6E6E 		.ascii	"ConnectionHandle\000"
+ 2204      65637469 
+ 2204      6F6E4861 
+ 2204      6E646C65 
+ 2204      00
+ 2205              	.LASF58:
+ 2206 0bd6 4359424C 		.ascii	"CYBLE_EVT_GATTS_PREP_WRITE_REQ\000"
+ 2206      455F4556 
+ 2206      545F4741 
+ 2206      5454535F 
+ 2206      50524550 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 55
+
+
+ 2207              	.LASF63:
+ 2208 0bf5 4359424C 		.ascii	"CYBLE_EVT_GATTS_HANDLE_VALUE_CNF\000"
+ 2208      455F4556 
+ 2208      545F4741 
+ 2208      5454535F 
+ 2208      48414E44 
+ 2209              	.LASF43:
+ 2210 0c16 4359424C 		.ascii	"CYBLE_EVT_GATTC_ERROR_RSP\000"
+ 2210      455F4556 
+ 2210      545F4741 
+ 2210      5454435F 
+ 2210      4552524F 
+ 2211              	.LASF42:
+ 2212 0c30 4359424C 		.ascii	"CYBLE_EVT_GAP_SMP_NEGOTIATED_AUTH_INFO\000"
+ 2212      455F4556 
+ 2212      545F4741 
+ 2212      505F534D 
+ 2212      505F4E45 
+ 2213              	.LASF14:
+ 2214 0c57 63686172 		.ascii	"char\000"
+ 2214      00
+ 2215              	.LASF138:
+ 2216 0c5c 416C7469 		.ascii	"AltitudeNotificationData\000"
+ 2216      74756465 
+ 2216      4E6F7469 
+ 2216      66696361 
+ 2216      74696F6E 
+ 2217              	.LASF110:
+ 2218 0c75 53656E64 		.ascii	"SendAltitudeOverNotification\000"
+ 2218      416C7469 
+ 2218      74756465 
+ 2218      4F766572 
+ 2218      4E6F7469 
+ 2219              	.LASF66:
+ 2220 0c92 4359424C 		.ascii	"CYBLE_EVT_GATTS_READ_CHAR_VAL_ACCESS_REQ\000"
+ 2220      455F4556 
+ 2220      545F4741 
+ 2220      5454535F 
+ 2220      52454144 
+ 2221              	.LASF77:
+ 2222 0cbb 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_TX_CREDIT_IND\000"
+ 2222      455F4556 
+ 2222      545F4C32 
+ 2222      4341505F 
+ 2222      43424643 
+ 2223              	.LASF131:
+ 2224 0cde 55706461 		.ascii	"UpdatePressureNotificationAttribute\000"
+ 2224      74655072 
+ 2224      65737375 
+ 2224      72654E6F 
+ 2224      74696669 
+ 2225              	.LASF19:
+ 2226 0d02 4359424C 		.ascii	"CYBLE_EVT_HARDWARE_ERROR\000"
+ 2226      455F4556 
+ 2226      545F4841 
+ 2226      52445741 
+ 2226      52455F45 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 56
+
+
+ 2227              	.LASF128:
+ 2228 0d1b 50726573 		.ascii	"PressureNotificationEnabled\000"
+ 2228      73757265 
+ 2228      4E6F7469 
+ 2228      66696361 
+ 2228      74696F6E 
+ 2229              	.LASF121:
+ 2230 0d37 436F6E6E 		.ascii	"ConnectionParametersHandle\000"
+ 2230      65637469 
+ 2230      6F6E5061 
+ 2230      72616D65 
+ 2230      74657273 
+ 2231              	.LASF46:
+ 2232 0d52 4359424C 		.ascii	"CYBLE_EVT_GATTS_XCNHG_MTU_REQ\000"
+ 2232      455F4556 
+ 2232      545F4741 
+ 2232      5454535F 
+ 2232      58434E48 
+ 2233              	.LASF119:
+ 2234 0d70 50726573 		.ascii	"PressureNotificationCCCDHandle\000"
+ 2234      73757265 
+ 2234      4E6F7469 
+ 2234      66696361 
+ 2234      74696F6E 
+ 2235              	.LASF105:
+ 2236 0d8f 4359424C 		.ascii	"CYBLE_STATE_T\000"
+ 2236      455F5354 
+ 2236      4154455F 
+ 2236      5400
+ 2237              	.LASF53:
+ 2238 0d9d 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BLOB_RSP\000"
+ 2238      455F4556 
+ 2238      545F4741 
+ 2238      5454435F 
+ 2238      52454144 
+ 2239              	.LASF102:
+ 2240 0dbb 4359424C 		.ascii	"CYBLE_STATE_CONNECTED\000"
+ 2240      455F5354 
+ 2240      4154455F 
+ 2240      434F4E4E 
+ 2240      45435445 
+ 2241              	.LASF143:
+ 2242 0dd1 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 2242      4320342E 
+ 2242      392E3320 
+ 2242      32303135 
+ 2242      30333033 
+ 2243 0e04 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
+ 2243      20726576 
+ 2243      6973696F 
+ 2243      6E203232 
+ 2243      31323230 
+ 2244 0e37 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 2244      66756E63 
+ 2244      74696F6E 
+ 2244      2D736563 
+ 2244      74696F6E 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\cc12s5fi.s 			page 57
+
+
+ 2245              	.LASF51:
+ 2246 0e5f 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_BY_TYPE_VALUE_RSP\000"
+ 2246      455F4556 
+ 2246      545F4741 
+ 2246      5454435F 
+ 2246      46494E44 
+ 2247              	.LASF107:
+ 2248 0e86 4576656E 		.ascii	"EventParameter\000"
+ 2248      74506172 
+ 2248      616D6574 
+ 2248      657200
+ 2249              	.LASF88:
+ 2250 0e95 62644861 		.ascii	"bdHandle\000"
+ 2250      6E646C65 
+ 2250      00
+ 2251              	.LASF69:
+ 2252 0e9e 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_RSP\000"
+ 2252      455F4556 
+ 2252      545F4C32 
+ 2252      4341505F 
+ 2252      434F4E4E 
+ 2253              	.LASF140:
+ 2254 0ec4 4C617374 		.ascii	"LastTemperatureData\000"
+ 2254      54656D70 
+ 2254      65726174 
+ 2254      75726544 
+ 2254      61746100 
+ 2255              	.LASF129:
+ 2256 0ed8 416C7469 		.ascii	"AltitudeNotificationEnabled\000"
+ 2256      74756465 
+ 2256      4E6F7469 
+ 2256      66696361 
+ 2256      74696F6E 
+ 2257              	.LASF40:
+ 2258 0ef4 4359424C 		.ascii	"CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE\000"
+ 2258      455F4556 
+ 2258      545F4741 
+ 2258      505F454E 
+ 2258      48414E43 
+ 2259              	.LASF87:
+ 2260 0f18 4359424C 		.ascii	"CYBLE_GATT_DB_ATTR_HANDLE_T\000"
+ 2260      455F4741 
+ 2260      54545F44 
+ 2260      425F4154 
+ 2260      54525F48 
+ 2261              	.LASF115:
+ 2262 0f34 54656D70 		.ascii	"TemperatureNotificationHandle\000"
+ 2262      65726174 
+ 2262      7572654E 
+ 2262      6F746966 
+ 2262      69636174 
+ 2263              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br

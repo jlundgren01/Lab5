@@ -1,0 +1,5 @@
+C:\Users\Ecapable\Desktop\PSoC_4_BLE_Pressure_Sensor\PSoC_4_BLE_Pressure_Sensor.cydsn\PSoC_4_BLE_Pressure_Sensor.cyprj|3aa52d7b-c1b4-461a-80bc-a36f6f0c534b
+C:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|c27557fc-aebd-4ffe-b939-5d9611f8b67b
+C:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|bbd03e59-32c7-4e48-8c0b-8ec25396b7e0
+C:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|6d69f437-f17c-46bd-975b-ebeba45a2a42
+C:\Program Files (x86)\Cypress\PSoC Creator\3.3\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|9c9c9f00-3d78-4b92-9b19-375859ab2558

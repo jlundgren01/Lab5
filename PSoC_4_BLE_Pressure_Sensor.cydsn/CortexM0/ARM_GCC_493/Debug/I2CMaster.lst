@@ -1,0 +1,2931 @@
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 34, 0
+  11              		.eabi_attribute 18, 4
+  12              		.code	16
+  13              		.file	"I2CMaster.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.comm	SensorCalibrationData,22,4
+  18              		.comm	X1,4,4
+  19              		.comm	X2,4,4
+  20              		.comm	X3,4,4
+  21              		.comm	B3,4,4
+  22              		.comm	B5,4,4
+  23              		.comm	B6,4,4
+  24              		.comm	UT,4,4
+  25              		.comm	UP,4,4
+  26              		.comm	B4,4,4
+  27              		.comm	B7,4,4
+  28              		.comm	AC1,2,2
+  29              		.comm	AC2,2,2
+  30              		.comm	AC3,2,2
+  31              		.comm	B1,2,2
+  32              		.comm	B2,2,2
+  33              		.comm	MC,2,2
+  34              		.comm	MD,2,2
+  35              		.comm	AC4,2,2
+  36              		.comm	AC5,2,2
+  37              		.comm	AC6,2,2
+  38              		.comm	Temperature,4,4
+  39              		.comm	Pressure,4,4
+  40              		.comm	Altitude,4,4
+  41              		.global	PressureAtSeaLevel
+  42              		.data
+  43              		.align	3
+  44              		.type	PressureAtSeaLevel, %object
+  45              		.size	PressureAtSeaLevel, 8
+  46              	PressureAtSeaLevel:
+  47 0000 00000000 		.word	0
+  48 0004 D0BCF840 		.word	1090043088
+  49              		.global	CalibrationDataAvailable
+  50              		.bss
+  51              		.type	CalibrationDataAvailable, %object
+  52              		.size	CalibrationDataAvailable, 1
+  53              	CalibrationDataAvailable:
+  54 0000 00       		.space	1
+  55              		.section	.text.ReadSensorCalibrationData,"ax",%progbits
+  56              		.align	2
+  57              		.global	ReadSensorCalibrationData
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 2
+
+
+  58              		.code	16
+  59              		.thumb_func
+  60              		.type	ReadSensorCalibrationData, %function
+  61              	ReadSensorCalibrationData:
+  62              	.LFB37:
+  63              		.file 1 ".\\I2CMaster.c"
+   1:.\I2CMaster.c **** /**************************************************************************************************
+   2:.\I2CMaster.c **** * Project Name		: PSoC_4_BLE_Pressure_Sensor
+   3:.\I2CMaster.c **** * File Name			: I2CMaster.c
+   4:.\I2CMaster.c **** * Version 			: 1.0
+   5:.\I2CMaster.c **** * Device Used		: CY8C4247LQI-BL483
+   6:.\I2CMaster.c **** * Software Used		: PSoC Creator 3.1
+   7:.\I2CMaster.c **** * Compiler    		: ARM GCC 4.8.4
+   8:.\I2CMaster.c **** * Related Hardware	: CY8CKIT-042-BLE Bluetooth Low Energy Pioneer Kit
+   9:.\I2CMaster.c **** ***************************************************************************************************
+  10:.\I2CMaster.c **** 
+  11:.\I2CMaster.c **** /**************************************************************************************************
+  12:.\I2CMaster.c **** * Copyright (2015), Cypress Semiconductor Corporation. All Rights Reserved.
+  13:.\I2CMaster.c **** ***************************************************************************************************
+  14:.\I2CMaster.c **** * This software, including source code, documentation and related materials
+  15:.\I2CMaster.c **** * ("Software") is owned by Cypress Semiconductor Corporation (Cypress) and is
+  16:.\I2CMaster.c **** * protected by and subject to worldwide patent protection (United States and 
+  17:.\I2CMaster.c **** * foreign), United States copyright laws and international treaty provisions. 
+  18:.\I2CMaster.c **** * Cypress hereby grants to licensee a personal, non-exclusive, non-transferable
+  19:.\I2CMaster.c **** * license to copy, use, modify, create derivative works of, and compile the 
+  20:.\I2CMaster.c **** * Cypress source code and derivative works for the sole purpose of creating 
+  21:.\I2CMaster.c **** * custom software in support of licensee product, such licensee product to be
+  22:.\I2CMaster.c **** * used only in conjunction with Cypress's integrated circuit as specified in the
+  23:.\I2CMaster.c **** * applicable agreement. Any reproduction, modification, translation, compilation,
+  24:.\I2CMaster.c **** * or representation of this Software except as specified above is prohibited 
+  25:.\I2CMaster.c **** * without the express written permission of Cypress.
+  26:.\I2CMaster.c **** * 
+  27:.\I2CMaster.c **** * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND, 
+  28:.\I2CMaster.c **** * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED 
+  29:.\I2CMaster.c **** * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  30:.\I2CMaster.c **** * Cypress reserves the right to make changes to the Software without notice. 
+  31:.\I2CMaster.c **** * Cypress does not assume any liability arising out of the application or use
+  32:.\I2CMaster.c **** * of Software or any product or circuit described in the Software. Cypress does
+  33:.\I2CMaster.c **** * not authorize its products for use as critical components in any products 
+  34:.\I2CMaster.c **** * where a malfunction or failure may reasonably be expected to result in 
+  35:.\I2CMaster.c **** * significant injury or death ("ACTIVE Risk Product"). By including Cypress's 
+  36:.\I2CMaster.c **** * product in a ACTIVE Risk Product, the manufacturer of such system or application
+  37:.\I2CMaster.c **** * assumes all risk of such use and in doing so indemnifies Cypress against all
+  38:.\I2CMaster.c **** * liability. Use of this Software may be limited by and subject to the applicable
+  39:.\I2CMaster.c **** * Cypress software license agreement.
+  40:.\I2CMaster.c **** ***************************************************************************************************
+  41:.\I2CMaster.c **** 
+  42:.\I2CMaster.c **** #include <I2CMaster.h>
+  43:.\I2CMaster.c **** 
+  44:.\I2CMaster.c **** /*************************Variables Declaration****************************************************
+  45:.\I2CMaster.c **** uint8 SensorCalibrationData[0x16]; //Calibration data is stored in this array
+  46:.\I2CMaster.c **** long X1, X2, X3, B3, B5, B6, UT, UP; //Variables to store calibration coefficients
+  47:.\I2CMaster.c **** unsigned long B4, B7; //Variables to store calibration coefficients
+  48:.\I2CMaster.c **** short AC1, AC2, AC3, B1, B2, MC, MD; //Variables to store calibration coefficients
+  49:.\I2CMaster.c **** unsigned short AC4, AC5, AC6; //Variables to store calibration coefficients
+  50:.\I2CMaster.c **** long UT, UP; //Variables to store uncompensated temperature and pressure data
+  51:.\I2CMaster.c **** long Temperature, Pressure, Altitude; //Variables to store the true temperature, pressure and altit
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 3
+
+
+  52:.\I2CMaster.c **** double PressureAtSeaLevel = 101325.0; //Pressure at sea level in Pascal
+  53:.\I2CMaster.c **** uint8 CalibrationDataAvailable = FALSE; //This flag is to whether the calibration data is available
+  54:.\I2CMaster.c **** /**************************************************************************************************
+  55:.\I2CMaster.c **** 
+  56:.\I2CMaster.c **** /**************************************************************************************************
+  57:.\I2CMaster.c **** * Function Name: ReadSensorCalibrationData
+  58:.\I2CMaster.c **** ***************************************************************************************************
+  59:.\I2CMaster.c **** * Summary: This function reads the sensor calibration data over I2C and
+  60:.\I2CMaster.c **** * assigns it to the appropriate sensor coefficient variables.
+  61:.\I2CMaster.c **** *
+  62:.\I2CMaster.c **** * Parameters:
+  63:.\I2CMaster.c **** *  void
+  64:.\I2CMaster.c **** *
+  65:.\I2CMaster.c **** * Return:
+  66:.\I2CMaster.c **** *  void
+  67:.\I2CMaster.c **** *
+  68:.\I2CMaster.c **** ***************************************************************************************************
+  69:.\I2CMaster.c **** void ReadSensorCalibrationData(void)
+  70:.\I2CMaster.c **** {
+  64              		.loc 1 70 0
+  65              		.cfi_startproc
+  66 0000 80B5     		push	{r7, lr}
+  67              		.cfi_def_cfa_offset 8
+  68              		.cfi_offset 7, -8
+  69              		.cfi_offset 14, -4
+  70 0002 00AF     		add	r7, sp, #0
+  71              		.cfi_def_cfa_register 7
+  71:.\I2CMaster.c ****     static uint8 I2CWriteBuffer[0x01] = {0xAA}; //Location from which the calibration data is to be
+  72:.\I2CMaster.c ****     
+  73:.\I2CMaster.c ****     /* Do a write operation with the memory address bytes to get calibration data */
+  74:.\I2CMaster.c **** 	I2C_I2CMasterWriteBuf(I2CSlaveAddress, (uint8 *) I2CWriteBuffer, sizeof(I2CWriteBuffer), I2C_I2C_M
+  72              		.loc 1 74 0
+  73 0004 4A4B     		ldr	r3, .L4
+  74 0006 7720     		mov	r0, #119
+  75 0008 191C     		mov	r1, r3
+  76 000a 0122     		mov	r2, #1
+  77 000c 0023     		mov	r3, #0
+  78 000e FFF7FEFF 		bl	I2C_I2CMasterWriteBuf
+  75:.\I2CMaster.c ****     while(!(I2C_I2CMasterStatus() & I2C_I2C_MSTAT_WR_CMPLT)); //Wait till the master completes writ
+  79              		.loc 1 75 0
+  80 0012 C046     		mov	r8, r8
+  81              	.L2:
+  82              		.loc 1 75 0 is_stmt 0 discriminator 1
+  83 0014 FFF7FEFF 		bl	I2C_I2CMasterStatus
+  84 0018 021C     		mov	r2, r0
+  85 001a 0223     		mov	r3, #2
+  86 001c 1340     		and	r3, r2
+  87 001e F9D0     		beq	.L2
+  76:.\I2CMaster.c ****     I2C_I2CMasterClearStatus(); //Clear I2C master status
+  88              		.loc 1 76 0 is_stmt 1
+  89 0020 FFF7FEFF 		bl	I2C_I2CMasterClearStatus
+  77:.\I2CMaster.c ****     
+  78:.\I2CMaster.c ****     /* Read calibration from the sensor EEPROM and store it in a buffer */
+  79:.\I2CMaster.c **** 	I2C_I2CMasterReadBuf(I2CSlaveAddress, (uint8 *) SensorCalibrationData, sizeof(SensorCalibrationDat
+  90              		.loc 1 79 0
+  91 0024 434B     		ldr	r3, .L4+4
+  92 0026 7720     		mov	r0, #119
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 4
+
+
+  93 0028 191C     		mov	r1, r3
+  94 002a 1622     		mov	r2, #22
+  95 002c 0023     		mov	r3, #0
+  96 002e FFF7FEFF 		bl	I2C_I2CMasterReadBuf
+  80:.\I2CMaster.c ****     while(!(I2C_I2CMasterStatus() & I2C_I2C_MSTAT_RD_CMPLT)); //Wait till the master completes read
+  97              		.loc 1 80 0
+  98 0032 C046     		mov	r8, r8
+  99              	.L3:
+ 100              		.loc 1 80 0 is_stmt 0 discriminator 1
+ 101 0034 FFF7FEFF 		bl	I2C_I2CMasterStatus
+ 102 0038 021C     		mov	r2, r0
+ 103 003a 0123     		mov	r3, #1
+ 104 003c 1340     		and	r3, r2
+ 105 003e F9D0     		beq	.L3
+  81:.\I2CMaster.c ****     I2C_I2CMasterClearStatus(); //Clear I2C master status
+ 106              		.loc 1 81 0 is_stmt 1
+ 107 0040 FFF7FEFF 		bl	I2C_I2CMasterClearStatus
+  82:.\I2CMaster.c ****     
+  83:.\I2CMaster.c ****     CalibrationDataAvailable = TRUE; //Set sensor calibration data available flag
+ 108              		.loc 1 83 0
+ 109 0044 3C4B     		ldr	r3, .L4+8
+ 110 0046 0122     		mov	r2, #1
+ 111 0048 1A70     		strb	r2, [r3]
+  84:.\I2CMaster.c ****     
+  85:.\I2CMaster.c ****     /* Assign calibration data to coefficient variables as described in sensor datasheet */
+  86:.\I2CMaster.c ****     AC1 = (SensorCalibrationData[0x00] << 0x08) | SensorCalibrationData[0x01];
+ 112              		.loc 1 86 0
+ 113 004a 3A4B     		ldr	r3, .L4+4
+ 114 004c 1B78     		ldrb	r3, [r3]
+ 115 004e 1B02     		lsl	r3, r3, #8
+ 116 0050 9AB2     		uxth	r2, r3
+ 117 0052 384B     		ldr	r3, .L4+4
+ 118 0054 5B78     		ldrb	r3, [r3, #1]
+ 119 0056 9BB2     		uxth	r3, r3
+ 120 0058 1343     		orr	r3, r2
+ 121 005a 9AB2     		uxth	r2, r3
+ 122 005c 374B     		ldr	r3, .L4+12
+ 123 005e 1A80     		strh	r2, [r3]
+  87:.\I2CMaster.c ****     AC2 = (SensorCalibrationData[0x02] << 0x08) | SensorCalibrationData[0x03];
+ 124              		.loc 1 87 0
+ 125 0060 344B     		ldr	r3, .L4+4
+ 126 0062 9B78     		ldrb	r3, [r3, #2]
+ 127 0064 1B02     		lsl	r3, r3, #8
+ 128 0066 9AB2     		uxth	r2, r3
+ 129 0068 324B     		ldr	r3, .L4+4
+ 130 006a DB78     		ldrb	r3, [r3, #3]
+ 131 006c 9BB2     		uxth	r3, r3
+ 132 006e 1343     		orr	r3, r2
+ 133 0070 9AB2     		uxth	r2, r3
+ 134 0072 334B     		ldr	r3, .L4+16
+ 135 0074 1A80     		strh	r2, [r3]
+  88:.\I2CMaster.c ****     AC3 = (SensorCalibrationData[0x04] << 0x08) | SensorCalibrationData[0x05];
+ 136              		.loc 1 88 0
+ 137 0076 2F4B     		ldr	r3, .L4+4
+ 138 0078 1B79     		ldrb	r3, [r3, #4]
+ 139 007a 1B02     		lsl	r3, r3, #8
+ 140 007c 9AB2     		uxth	r2, r3
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 5
+
+
+ 141 007e 2D4B     		ldr	r3, .L4+4
+ 142 0080 5B79     		ldrb	r3, [r3, #5]
+ 143 0082 9BB2     		uxth	r3, r3
+ 144 0084 1343     		orr	r3, r2
+ 145 0086 9AB2     		uxth	r2, r3
+ 146 0088 2E4B     		ldr	r3, .L4+20
+ 147 008a 1A80     		strh	r2, [r3]
+  89:.\I2CMaster.c ****     AC4 = (SensorCalibrationData[0x06] << 0x08) | SensorCalibrationData[0x07];
+ 148              		.loc 1 89 0
+ 149 008c 294B     		ldr	r3, .L4+4
+ 150 008e 9B79     		ldrb	r3, [r3, #6]
+ 151 0090 1B02     		lsl	r3, r3, #8
+ 152 0092 9AB2     		uxth	r2, r3
+ 153 0094 274B     		ldr	r3, .L4+4
+ 154 0096 DB79     		ldrb	r3, [r3, #7]
+ 155 0098 9BB2     		uxth	r3, r3
+ 156 009a 1343     		orr	r3, r2
+ 157 009c 9BB2     		uxth	r3, r3
+ 158 009e 9AB2     		uxth	r2, r3
+ 159 00a0 294B     		ldr	r3, .L4+24
+ 160 00a2 1A80     		strh	r2, [r3]
+  90:.\I2CMaster.c ****     AC5 = (SensorCalibrationData[0x08] << 0x08) | SensorCalibrationData[0x09];
+ 161              		.loc 1 90 0
+ 162 00a4 234B     		ldr	r3, .L4+4
+ 163 00a6 1B7A     		ldrb	r3, [r3, #8]
+ 164 00a8 1B02     		lsl	r3, r3, #8
+ 165 00aa 9AB2     		uxth	r2, r3
+ 166 00ac 214B     		ldr	r3, .L4+4
+ 167 00ae 5B7A     		ldrb	r3, [r3, #9]
+ 168 00b0 9BB2     		uxth	r3, r3
+ 169 00b2 1343     		orr	r3, r2
+ 170 00b4 9BB2     		uxth	r3, r3
+ 171 00b6 9AB2     		uxth	r2, r3
+ 172 00b8 244B     		ldr	r3, .L4+28
+ 173 00ba 1A80     		strh	r2, [r3]
+  91:.\I2CMaster.c ****     AC6 = (SensorCalibrationData[0x0A] << 0x08) | SensorCalibrationData[0x0B];
+ 174              		.loc 1 91 0
+ 175 00bc 1D4B     		ldr	r3, .L4+4
+ 176 00be 9B7A     		ldrb	r3, [r3, #10]
+ 177 00c0 1B02     		lsl	r3, r3, #8
+ 178 00c2 9AB2     		uxth	r2, r3
+ 179 00c4 1B4B     		ldr	r3, .L4+4
+ 180 00c6 DB7A     		ldrb	r3, [r3, #11]
+ 181 00c8 9BB2     		uxth	r3, r3
+ 182 00ca 1343     		orr	r3, r2
+ 183 00cc 9BB2     		uxth	r3, r3
+ 184 00ce 9AB2     		uxth	r2, r3
+ 185 00d0 1F4B     		ldr	r3, .L4+32
+ 186 00d2 1A80     		strh	r2, [r3]
+  92:.\I2CMaster.c ****     B1 = (SensorCalibrationData[0x0C] << 0x08) | SensorCalibrationData[0x0D];
+ 187              		.loc 1 92 0
+ 188 00d4 174B     		ldr	r3, .L4+4
+ 189 00d6 1B7B     		ldrb	r3, [r3, #12]
+ 190 00d8 1B02     		lsl	r3, r3, #8
+ 191 00da 9AB2     		uxth	r2, r3
+ 192 00dc 154B     		ldr	r3, .L4+4
+ 193 00de 5B7B     		ldrb	r3, [r3, #13]
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 6
+
+
+ 194 00e0 9BB2     		uxth	r3, r3
+ 195 00e2 1343     		orr	r3, r2
+ 196 00e4 9AB2     		uxth	r2, r3
+ 197 00e6 1B4B     		ldr	r3, .L4+36
+ 198 00e8 1A80     		strh	r2, [r3]
+  93:.\I2CMaster.c ****     B2 = (SensorCalibrationData[0x0E] << 0x08) | SensorCalibrationData[0x0F];
+ 199              		.loc 1 93 0
+ 200 00ea 124B     		ldr	r3, .L4+4
+ 201 00ec 9B7B     		ldrb	r3, [r3, #14]
+ 202 00ee 1B02     		lsl	r3, r3, #8
+ 203 00f0 9AB2     		uxth	r2, r3
+ 204 00f2 104B     		ldr	r3, .L4+4
+ 205 00f4 DB7B     		ldrb	r3, [r3, #15]
+ 206 00f6 9BB2     		uxth	r3, r3
+ 207 00f8 1343     		orr	r3, r2
+ 208 00fa 9AB2     		uxth	r2, r3
+ 209 00fc 164B     		ldr	r3, .L4+40
+ 210 00fe 1A80     		strh	r2, [r3]
+  94:.\I2CMaster.c ****     MC = (SensorCalibrationData[0x012] << 0x08) | SensorCalibrationData[0x013];
+ 211              		.loc 1 94 0
+ 212 0100 0C4B     		ldr	r3, .L4+4
+ 213 0102 9B7C     		ldrb	r3, [r3, #18]
+ 214 0104 1B02     		lsl	r3, r3, #8
+ 215 0106 9AB2     		uxth	r2, r3
+ 216 0108 0A4B     		ldr	r3, .L4+4
+ 217 010a DB7C     		ldrb	r3, [r3, #19]
+ 218 010c 9BB2     		uxth	r3, r3
+ 219 010e 1343     		orr	r3, r2
+ 220 0110 9AB2     		uxth	r2, r3
+ 221 0112 124B     		ldr	r3, .L4+44
+ 222 0114 1A80     		strh	r2, [r3]
+  95:.\I2CMaster.c ****     MD = (SensorCalibrationData[0x014] << 0x08) | SensorCalibrationData[0x015];
+ 223              		.loc 1 95 0
+ 224 0116 074B     		ldr	r3, .L4+4
+ 225 0118 1B7D     		ldrb	r3, [r3, #20]
+ 226 011a 1B02     		lsl	r3, r3, #8
+ 227 011c 9AB2     		uxth	r2, r3
+ 228 011e 054B     		ldr	r3, .L4+4
+ 229 0120 5B7D     		ldrb	r3, [r3, #21]
+ 230 0122 9BB2     		uxth	r3, r3
+ 231 0124 1343     		orr	r3, r2
+ 232 0126 9AB2     		uxth	r2, r3
+ 233 0128 0D4B     		ldr	r3, .L4+48
+ 234 012a 1A80     		strh	r2, [r3]
+  96:.\I2CMaster.c **** }
+ 235              		.loc 1 96 0
+ 236 012c BD46     		mov	sp, r7
+ 237              		@ sp needed
+ 238 012e 80BD     		pop	{r7, pc}
+ 239              	.L5:
+ 240              		.align	2
+ 241              	.L4:
+ 242 0130 08000000 		.word	I2CWriteBuffer.7455
+ 243 0134 00000000 		.word	SensorCalibrationData
+ 244 0138 00000000 		.word	CalibrationDataAvailable
+ 245 013c 00000000 		.word	AC1
+ 246 0140 00000000 		.word	AC2
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 7
+
+
+ 247 0144 00000000 		.word	AC3
+ 248 0148 00000000 		.word	AC4
+ 249 014c 00000000 		.word	AC5
+ 250 0150 00000000 		.word	AC6
+ 251 0154 00000000 		.word	B1
+ 252 0158 00000000 		.word	B2
+ 253 015c 00000000 		.word	MC
+ 254 0160 00000000 		.word	MD
+ 255              		.cfi_endproc
+ 256              	.LFE37:
+ 257              		.size	ReadSensorCalibrationData, .-ReadSensorCalibrationData
+ 258              		.section	.text.ReadUncompensatedTemperature,"ax",%progbits
+ 259              		.align	2
+ 260              		.global	ReadUncompensatedTemperature
+ 261              		.code	16
+ 262              		.thumb_func
+ 263              		.type	ReadUncompensatedTemperature, %function
+ 264              	ReadUncompensatedTemperature:
+ 265              	.LFB38:
+  97:.\I2CMaster.c **** /**************************************************************************************************
+  98:.\I2CMaster.c **** 
+  99:.\I2CMaster.c **** /**************************************************************************************************
+ 100:.\I2CMaster.c **** * Function Name: ReadUncompensatedTemperature
+ 101:.\I2CMaster.c **** ***************************************************************************************************
+ 102:.\I2CMaster.c **** * Summary: This function writes the temperature conversion command to the sensor and
+ 103:.\I2CMaster.c **** * waits for conversion to complete, and then reads the converted data (uncompensated temperature) a
+ 104:.\I2CMaster.c **** *
+ 105:.\I2CMaster.c **** * Parameters:
+ 106:.\I2CMaster.c **** *  void
+ 107:.\I2CMaster.c **** *
+ 108:.\I2CMaster.c **** * Return:
+ 109:.\I2CMaster.c **** *  void
+ 110:.\I2CMaster.c **** *
+ 111:.\I2CMaster.c **** ***************************************************************************************************
+ 112:.\I2CMaster.c **** void ReadUncompensatedTemperature(void)
+ 113:.\I2CMaster.c **** {
+ 266              		.loc 1 113 0
+ 267              		.cfi_startproc
+ 268 0000 80B5     		push	{r7, lr}
+ 269              		.cfi_def_cfa_offset 8
+ 270              		.cfi_offset 7, -8
+ 271              		.cfi_offset 14, -4
+ 272 0002 00AF     		add	r7, sp, #0
+ 273              		.cfi_def_cfa_register 7
+ 114:.\I2CMaster.c ****     static uint8 I2CReadBuffer[0x02]; //The uncompensated temperature read from the sensor is store
+ 115:.\I2CMaster.c ****     static uint8 I2CWriteBuffer[0x02] = {0xF4, 0x2E}; //Command for temperature conversion - Regist
+ 116:.\I2CMaster.c ****     static uint8 SetReadAddressBuffer[0x01] = {0xF6}; //Register address from which the data is rea
+ 117:.\I2CMaster.c ****     
+ 118:.\I2CMaster.c ****     /* Do a write operation with the memory address bytes to get temperature data */
+ 119:.\I2CMaster.c **** 	I2C_I2CMasterWriteBuf(I2CSlaveAddress, (uint8 *) I2CWriteBuffer, sizeof(I2CWriteBuffer), I2C_I2C_M
+ 274              		.loc 1 119 0
+ 275 0004 1E4B     		ldr	r3, .L10
+ 276 0006 7720     		mov	r0, #119
+ 277 0008 191C     		mov	r1, r3
+ 278 000a 0222     		mov	r2, #2
+ 279 000c 0023     		mov	r3, #0
+ 280 000e FFF7FEFF 		bl	I2C_I2CMasterWriteBuf
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 8
+
+
+ 120:.\I2CMaster.c ****     while(!(I2C_I2CMasterStatus() & I2C_I2C_MSTAT_WR_CMPLT)); //Wait till the master completes writ
+ 281              		.loc 1 120 0
+ 282 0012 C046     		mov	r8, r8
+ 283              	.L7:
+ 284              		.loc 1 120 0 is_stmt 0 discriminator 1
+ 285 0014 FFF7FEFF 		bl	I2C_I2CMasterStatus
+ 286 0018 021C     		mov	r2, r0
+ 287 001a 0223     		mov	r3, #2
+ 288 001c 1340     		and	r3, r2
+ 289 001e F9D0     		beq	.L7
+ 121:.\I2CMaster.c ****     I2C_I2CMasterClearStatus(); //Clear I2C master status
+ 290              		.loc 1 121 0 is_stmt 1
+ 291 0020 FFF7FEFF 		bl	I2C_I2CMasterClearStatus
+ 122:.\I2CMaster.c ****     
+ 123:.\I2CMaster.c ****     CyDelay(5); //Wait for 5ms temperature conversion
+ 292              		.loc 1 123 0
+ 293 0024 0520     		mov	r0, #5
+ 294 0026 FFF7FEFF 		bl	CyDelay
+ 124:.\I2CMaster.c ****     
+ 125:.\I2CMaster.c ****     /* In order to do a read from a specific address, do a write operation with the memory address 
+ 126:.\I2CMaster.c **** 	I2C_I2CMasterWriteBuf(I2CSlaveAddress, (uint8 *) SetReadAddressBuffer, sizeof(SetReadAddressBuffer
+ 295              		.loc 1 126 0
+ 296 002a 164B     		ldr	r3, .L10+4
+ 297 002c 7720     		mov	r0, #119
+ 298 002e 191C     		mov	r1, r3
+ 299 0030 0122     		mov	r2, #1
+ 300 0032 0023     		mov	r3, #0
+ 301 0034 FFF7FEFF 		bl	I2C_I2CMasterWriteBuf
+ 127:.\I2CMaster.c ****     while(!(I2C_I2CMasterStatus() & I2C_I2C_MSTAT_WR_CMPLT)); //Wait till the master completes writ
+ 302              		.loc 1 127 0
+ 303 0038 C046     		mov	r8, r8
+ 304              	.L8:
+ 305              		.loc 1 127 0 is_stmt 0 discriminator 1
+ 306 003a FFF7FEFF 		bl	I2C_I2CMasterStatus
+ 307 003e 021C     		mov	r2, r0
+ 308 0040 0223     		mov	r3, #2
+ 309 0042 1340     		and	r3, r2
+ 310 0044 F9D0     		beq	.L8
+ 128:.\I2CMaster.c ****     I2C_I2CMasterClearStatus(); //Clear I2C master status
+ 311              		.loc 1 128 0 is_stmt 1
+ 312 0046 FFF7FEFF 		bl	I2C_I2CMasterClearStatus
+ 129:.\I2CMaster.c ****     
+ 130:.\I2CMaster.c ****     /* Read temperature from the sensor and store it in a buffer */
+ 131:.\I2CMaster.c **** 	I2C_I2CMasterReadBuf(I2CSlaveAddress, (uint8 *) I2CReadBuffer, sizeof(I2CReadBuffer), I2C_I2C_MODE
+ 313              		.loc 1 131 0
+ 314 004a 0F4B     		ldr	r3, .L10+8
+ 315 004c 7720     		mov	r0, #119
+ 316 004e 191C     		mov	r1, r3
+ 317 0050 0222     		mov	r2, #2
+ 318 0052 0023     		mov	r3, #0
+ 319 0054 FFF7FEFF 		bl	I2C_I2CMasterReadBuf
+ 132:.\I2CMaster.c ****     while(!(I2C_I2CMasterStatus() & I2C_I2C_MSTAT_RD_CMPLT)); //Wait till the master completes read
+ 320              		.loc 1 132 0
+ 321 0058 C046     		mov	r8, r8
+ 322              	.L9:
+ 323              		.loc 1 132 0 is_stmt 0 discriminator 1
+ 324 005a FFF7FEFF 		bl	I2C_I2CMasterStatus
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 9
+
+
+ 325 005e 021C     		mov	r2, r0
+ 326 0060 0123     		mov	r3, #1
+ 327 0062 1340     		and	r3, r2
+ 328 0064 F9D0     		beq	.L9
+ 133:.\I2CMaster.c ****     I2C_I2CMasterClearStatus(); //Clear I2C master status
+ 329              		.loc 1 133 0 is_stmt 1
+ 330 0066 FFF7FEFF 		bl	I2C_I2CMasterClearStatus
+ 134:.\I2CMaster.c ****     
+ 135:.\I2CMaster.c **** 	UT = (I2CReadBuffer[0x00] << 0x08) | I2CReadBuffer[0x01]; //Return uncompensated temperature value
+ 331              		.loc 1 135 0
+ 332 006a 074B     		ldr	r3, .L10+8
+ 333 006c 1B78     		ldrb	r3, [r3]
+ 334 006e 1B02     		lsl	r3, r3, #8
+ 335 0070 054A     		ldr	r2, .L10+8
+ 336 0072 5278     		ldrb	r2, [r2, #1]
+ 337 0074 1A43     		orr	r2, r3
+ 338 0076 054B     		ldr	r3, .L10+12
+ 339 0078 1A60     		str	r2, [r3]
+ 136:.\I2CMaster.c **** }
+ 340              		.loc 1 136 0
+ 341 007a BD46     		mov	sp, r7
+ 342              		@ sp needed
+ 343 007c 80BD     		pop	{r7, pc}
+ 344              	.L11:
+ 345 007e C046     		.align	2
+ 346              	.L10:
+ 347 0080 0C000000 		.word	I2CWriteBuffer.7466
+ 348 0084 10000000 		.word	SetReadAddressBuffer.7467
+ 349 0088 04000000 		.word	I2CReadBuffer.7465
+ 350 008c 00000000 		.word	UT
+ 351              		.cfi_endproc
+ 352              	.LFE38:
+ 353              		.size	ReadUncompensatedTemperature, .-ReadUncompensatedTemperature
+ 354              		.section	.text.ReadUncompensatedPressure,"ax",%progbits
+ 355              		.align	2
+ 356              		.global	ReadUncompensatedPressure
+ 357              		.code	16
+ 358              		.thumb_func
+ 359              		.type	ReadUncompensatedPressure, %function
+ 360              	ReadUncompensatedPressure:
+ 361              	.LFB39:
+ 137:.\I2CMaster.c **** /**************************************************************************************************
+ 138:.\I2CMaster.c **** 
+ 139:.\I2CMaster.c **** /**************************************************************************************************
+ 140:.\I2CMaster.c **** * Function Name: ReadUncompensatedPressure
+ 141:.\I2CMaster.c **** ***************************************************************************************************
+ 142:.\I2CMaster.c **** * Summary: This function writes the pressure conversion command to the sensor and
+ 143:.\I2CMaster.c **** * waits for conversion to complete, and then reads the converted data (uncompensated pressure) and 
+ 144:.\I2CMaster.c **** *
+ 145:.\I2CMaster.c **** * Parameters:
+ 146:.\I2CMaster.c **** *  void
+ 147:.\I2CMaster.c **** *
+ 148:.\I2CMaster.c **** * Return:
+ 149:.\I2CMaster.c **** *  void
+ 150:.\I2CMaster.c **** *
+ 151:.\I2CMaster.c **** ***************************************************************************************************
+ 152:.\I2CMaster.c **** void ReadUncompensatedPressure(void)
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 10
+
+
+ 153:.\I2CMaster.c **** {
+ 362              		.loc 1 153 0
+ 363              		.cfi_startproc
+ 364 0000 80B5     		push	{r7, lr}
+ 365              		.cfi_def_cfa_offset 8
+ 366              		.cfi_offset 7, -8
+ 367              		.cfi_offset 14, -4
+ 368 0002 00AF     		add	r7, sp, #0
+ 369              		.cfi_def_cfa_register 7
+ 154:.\I2CMaster.c ****     static uint8 I2CReadBuffer[0x03]; //The uncompensated pressure read from the sensor is stored h
+ 155:.\I2CMaster.c ****     static uint8 I2CWriteBuffer[0x02] = {0xF4, 0x34 + (OSS << 0x06)}; //Command for pressure conver
+ 156:.\I2CMaster.c ****     static uint8 SetReadAddressBuffer[0x01] = {0xF6}; //Register address from which the data is rea
+ 157:.\I2CMaster.c ****     
+ 158:.\I2CMaster.c ****     /* Do a write operation with the memory address bytes to get pressure data */
+ 159:.\I2CMaster.c **** 	I2C_I2CMasterWriteBuf(I2CSlaveAddress, (uint8 *) I2CWriteBuffer, sizeof(I2CWriteBuffer), I2C_I2C_M
+ 370              		.loc 1 159 0
+ 371 0004 204B     		ldr	r3, .L16
+ 372 0006 7720     		mov	r0, #119
+ 373 0008 191C     		mov	r1, r3
+ 374 000a 0222     		mov	r2, #2
+ 375 000c 0023     		mov	r3, #0
+ 376 000e FFF7FEFF 		bl	I2C_I2CMasterWriteBuf
+ 160:.\I2CMaster.c ****     while(!(I2C_I2CMasterStatus() & I2C_I2C_MSTAT_WR_CMPLT)); //Wait till the master completes writ
+ 377              		.loc 1 160 0
+ 378 0012 C046     		mov	r8, r8
+ 379              	.L13:
+ 380              		.loc 1 160 0 is_stmt 0 discriminator 1
+ 381 0014 FFF7FEFF 		bl	I2C_I2CMasterStatus
+ 382 0018 021C     		mov	r2, r0
+ 383 001a 0223     		mov	r3, #2
+ 384 001c 1340     		and	r3, r2
+ 385 001e F9D0     		beq	.L13
+ 161:.\I2CMaster.c ****     I2C_I2CMasterClearStatus(); //Clear I2C master status
+ 386              		.loc 1 161 0 is_stmt 1
+ 387 0020 FFF7FEFF 		bl	I2C_I2CMasterClearStatus
+ 162:.\I2CMaster.c ****     
+ 163:.\I2CMaster.c ****     CyDelay(26); //Wait for 26ms pressure conversion
+ 388              		.loc 1 163 0
+ 389 0024 1A20     		mov	r0, #26
+ 390 0026 FFF7FEFF 		bl	CyDelay
+ 164:.\I2CMaster.c ****     
+ 165:.\I2CMaster.c ****     /* In order to do a read from a specific address, do a write operation with the memory address 
+ 166:.\I2CMaster.c **** 	I2C_I2CMasterWriteBuf(I2CSlaveAddress, (uint8 *) SetReadAddressBuffer, sizeof(SetReadAddressBuffer
+ 391              		.loc 1 166 0
+ 392 002a 184B     		ldr	r3, .L16+4
+ 393 002c 7720     		mov	r0, #119
+ 394 002e 191C     		mov	r1, r3
+ 395 0030 0122     		mov	r2, #1
+ 396 0032 0023     		mov	r3, #0
+ 397 0034 FFF7FEFF 		bl	I2C_I2CMasterWriteBuf
+ 167:.\I2CMaster.c ****     while(!(I2C_I2CMasterStatus() & I2C_I2C_MSTAT_WR_CMPLT)); //Wait till the master completes writ
+ 398              		.loc 1 167 0
+ 399 0038 C046     		mov	r8, r8
+ 400              	.L14:
+ 401              		.loc 1 167 0 is_stmt 0 discriminator 1
+ 402 003a FFF7FEFF 		bl	I2C_I2CMasterStatus
+ 403 003e 021C     		mov	r2, r0
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 11
+
+
+ 404 0040 0223     		mov	r3, #2
+ 405 0042 1340     		and	r3, r2
+ 406 0044 F9D0     		beq	.L14
+ 168:.\I2CMaster.c ****     I2C_I2CMasterClearStatus(); //Clear I2C master status
+ 407              		.loc 1 168 0 is_stmt 1
+ 408 0046 FFF7FEFF 		bl	I2C_I2CMasterClearStatus
+ 169:.\I2CMaster.c ****     
+ 170:.\I2CMaster.c ****     /* Read pressure from the sensor and store it in a buffer */
+ 171:.\I2CMaster.c **** 	I2C_I2CMasterReadBuf(I2CSlaveAddress, (uint8 *) I2CReadBuffer, sizeof(I2CReadBuffer), I2C_I2C_MODE
+ 409              		.loc 1 171 0
+ 410 004a 114B     		ldr	r3, .L16+8
+ 411 004c 7720     		mov	r0, #119
+ 412 004e 191C     		mov	r1, r3
+ 413 0050 0322     		mov	r2, #3
+ 414 0052 0023     		mov	r3, #0
+ 415 0054 FFF7FEFF 		bl	I2C_I2CMasterReadBuf
+ 172:.\I2CMaster.c ****     while(!(I2C_I2CMasterStatus() & I2C_I2C_MSTAT_RD_CMPLT)); //Wait till the master completes read
+ 416              		.loc 1 172 0
+ 417 0058 C046     		mov	r8, r8
+ 418              	.L15:
+ 419              		.loc 1 172 0 is_stmt 0 discriminator 1
+ 420 005a FFF7FEFF 		bl	I2C_I2CMasterStatus
+ 421 005e 021C     		mov	r2, r0
+ 422 0060 0123     		mov	r3, #1
+ 423 0062 1340     		and	r3, r2
+ 424 0064 F9D0     		beq	.L15
+ 173:.\I2CMaster.c ****     I2C_I2CMasterClearStatus(); //Clear I2C master status
+ 425              		.loc 1 173 0 is_stmt 1
+ 426 0066 FFF7FEFF 		bl	I2C_I2CMasterClearStatus
+ 174:.\I2CMaster.c ****     
+ 175:.\I2CMaster.c **** 	UP = ((I2CReadBuffer[0x00] << 0x10) | (I2CReadBuffer[0x01] << 0x08) | I2CReadBuffer[0x02]) >> (0x0
+ 427              		.loc 1 175 0
+ 428 006a 094B     		ldr	r3, .L16+8
+ 429 006c 1B78     		ldrb	r3, [r3]
+ 430 006e 1A04     		lsl	r2, r3, #16
+ 431 0070 074B     		ldr	r3, .L16+8
+ 432 0072 5B78     		ldrb	r3, [r3, #1]
+ 433 0074 1B02     		lsl	r3, r3, #8
+ 434 0076 1343     		orr	r3, r2
+ 435 0078 054A     		ldr	r2, .L16+8
+ 436 007a 9278     		ldrb	r2, [r2, #2]
+ 437 007c 1343     		orr	r3, r2
+ 438 007e 5A11     		asr	r2, r3, #5
+ 439 0080 044B     		ldr	r3, .L16+12
+ 440 0082 1A60     		str	r2, [r3]
+ 176:.\I2CMaster.c **** }
+ 441              		.loc 1 176 0
+ 442 0084 BD46     		mov	sp, r7
+ 443              		@ sp needed
+ 444 0086 80BD     		pop	{r7, pc}
+ 445              	.L17:
+ 446              		.align	2
+ 447              	.L16:
+ 448 0088 14000000 		.word	I2CWriteBuffer.7481
+ 449 008c 18000000 		.word	SetReadAddressBuffer.7482
+ 450 0090 08000000 		.word	I2CReadBuffer.7480
+ 451 0094 00000000 		.word	UP
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 12
+
+
+ 452              		.cfi_endproc
+ 453              	.LFE39:
+ 454              		.size	ReadUncompensatedPressure, .-ReadUncompensatedPressure
+ 455              		.global	__aeabi_i2d
+ 456              		.global	__aeabi_ddiv
+ 457              		.global	__aeabi_d2iz
+ 458              		.global	__aeabi_dmul
+ 459              		.global	__aeabi_ui2d
+ 460              		.global	__aeabi_d2uiz
+ 461              		.global	__aeabi_uidiv
+ 462              		.global	__aeabi_dadd
+ 463              		.global	__aeabi_dsub
+ 464              		.section	.text.ReadAndCalculateSensorData,"ax",%progbits
+ 465              		.align	2
+ 466              		.global	ReadAndCalculateSensorData
+ 467              		.code	16
+ 468              		.thumb_func
+ 469              		.type	ReadAndCalculateSensorData, %function
+ 470              	ReadAndCalculateSensorData:
+ 471              	.LFB40:
+ 177:.\I2CMaster.c **** /**************************************************************************************************
+ 178:.\I2CMaster.c **** 
+ 179:.\I2CMaster.c **** /**************************************************************************************************
+ 180:.\I2CMaster.c **** * Function Name: ReadCalculateSensorData
+ 181:.\I2CMaster.c **** ***************************************************************************************************
+ 182:.\I2CMaster.c **** * Summary: This function reads the uncompensated temperature and pressure value and converts it
+ 183:.\I2CMaster.c **** * into true temperature, pressure and altitude using the algorithm given in the sensor datasheet.
+ 184:.\I2CMaster.c **** *
+ 185:.\I2CMaster.c **** * Parameters:
+ 186:.\I2CMaster.c **** *  void
+ 187:.\I2CMaster.c **** *
+ 188:.\I2CMaster.c **** * Return:
+ 189:.\I2CMaster.c **** *  void
+ 190:.\I2CMaster.c **** *
+ 191:.\I2CMaster.c **** ***************************************************************************************************
+ 192:.\I2CMaster.c **** void ReadAndCalculateSensorData(void)
+ 193:.\I2CMaster.c **** {
+ 472              		.loc 1 193 0
+ 473              		.cfi_startproc
+ 474 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 475              		.cfi_def_cfa_offset 24
+ 476              		.cfi_offset 3, -24
+ 477              		.cfi_offset 4, -20
+ 478              		.cfi_offset 5, -16
+ 479              		.cfi_offset 6, -12
+ 480              		.cfi_offset 7, -8
+ 481              		.cfi_offset 14, -4
+ 482 0002 00AF     		add	r7, sp, #0
+ 483              		.cfi_def_cfa_register 7
+ 194:.\I2CMaster.c ****     /* Read the sensor calibration data if not already available */
+ 195:.\I2CMaster.c **** 	if(!CalibrationDataAvailable)
+ 484              		.loc 1 195 0
+ 485 0004 BB4B     		ldr	r3, .L23
+ 486 0006 1B78     		ldrb	r3, [r3]
+ 487 0008 002B     		cmp	r3, #0
+ 488 000a 01D1     		bne	.L19
+ 196:.\I2CMaster.c ****     {
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 13
+
+
+ 197:.\I2CMaster.c ****         ReadSensorCalibrationData(); //Read sensor calibration data
+ 489              		.loc 1 197 0
+ 490 000c FFF7FEFF 		bl	ReadSensorCalibrationData
+ 491              	.L19:
+ 198:.\I2CMaster.c ****     }
+ 199:.\I2CMaster.c ****     
+ 200:.\I2CMaster.c ****     ReadUncompensatedTemperature(); //Read the uncompensated temperature value
+ 492              		.loc 1 200 0
+ 493 0010 FFF7FEFF 		bl	ReadUncompensatedTemperature
+ 201:.\I2CMaster.c ****     ReadUncompensatedPressure(); //Read the uncompensated pressure value
+ 494              		.loc 1 201 0
+ 495 0014 FFF7FEFF 		bl	ReadUncompensatedPressure
+ 202:.\I2CMaster.c ****     
+ 203:.\I2CMaster.c ****     /* Calculate the true temperature as described in sensor datasheet */
+ 204:.\I2CMaster.c ****     X1 = (UT - AC6) * AC5 / pow(2, 15);
+ 496              		.loc 1 204 0
+ 497 0018 B74B     		ldr	r3, .L23+4
+ 498 001a 1B68     		ldr	r3, [r3]
+ 499 001c B74A     		ldr	r2, .L23+8
+ 500 001e 1288     		ldrh	r2, [r2]
+ 501 0020 9B1A     		sub	r3, r3, r2
+ 502 0022 B74A     		ldr	r2, .L23+12
+ 503 0024 1288     		ldrh	r2, [r2]
+ 504 0026 5343     		mul	r3, r2
+ 505 0028 181C     		mov	r0, r3
+ 506 002a FFF7FEFF 		bl	__aeabi_i2d
+ 507 002e 031C     		mov	r3, r0
+ 508 0030 0C1C     		mov	r4, r1
+ 509 0032 181C     		mov	r0, r3
+ 510 0034 211C     		mov	r1, r4
+ 511 0036 0022     		mov	r2, #0
+ 512 0038 B24B     		ldr	r3, .L23+16
+ 513 003a FFF7FEFF 		bl	__aeabi_ddiv
+ 514 003e 031C     		mov	r3, r0
+ 515 0040 0C1C     		mov	r4, r1
+ 516 0042 181C     		mov	r0, r3
+ 517 0044 211C     		mov	r1, r4
+ 518 0046 FFF7FEFF 		bl	__aeabi_d2iz
+ 519 004a 021C     		mov	r2, r0
+ 520 004c AE4B     		ldr	r3, .L23+20
+ 521 004e 1A60     		str	r2, [r3]
+ 205:.\I2CMaster.c ****     X2 = MC * pow(2, 11) / (X1 + MD);
+ 522              		.loc 1 205 0
+ 523 0050 AE4B     		ldr	r3, .L23+24
+ 524 0052 1B88     		ldrh	r3, [r3]
+ 525 0054 1BB2     		sxth	r3, r3
+ 526 0056 181C     		mov	r0, r3
+ 527 0058 FFF7FEFF 		bl	__aeabi_i2d
+ 528 005c 031C     		mov	r3, r0
+ 529 005e 0C1C     		mov	r4, r1
+ 530 0060 181C     		mov	r0, r3
+ 531 0062 211C     		mov	r1, r4
+ 532 0064 0022     		mov	r2, #0
+ 533 0066 AA4B     		ldr	r3, .L23+28
+ 534 0068 FFF7FEFF 		bl	__aeabi_dmul
+ 535 006c 031C     		mov	r3, r0
+ 536 006e 0C1C     		mov	r4, r1
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 14
+
+
+ 537 0070 1D1C     		mov	r5, r3
+ 538 0072 261C     		mov	r6, r4
+ 539 0074 A74B     		ldr	r3, .L23+32
+ 540 0076 1B88     		ldrh	r3, [r3]
+ 541 0078 1AB2     		sxth	r2, r3
+ 542 007a A34B     		ldr	r3, .L23+20
+ 543 007c 1B68     		ldr	r3, [r3]
+ 544 007e D318     		add	r3, r2, r3
+ 545 0080 181C     		mov	r0, r3
+ 546 0082 FFF7FEFF 		bl	__aeabi_i2d
+ 547 0086 031C     		mov	r3, r0
+ 548 0088 0C1C     		mov	r4, r1
+ 549 008a 281C     		mov	r0, r5
+ 550 008c 311C     		mov	r1, r6
+ 551 008e 1A1C     		mov	r2, r3
+ 552 0090 231C     		mov	r3, r4
+ 553 0092 FFF7FEFF 		bl	__aeabi_ddiv
+ 554 0096 031C     		mov	r3, r0
+ 555 0098 0C1C     		mov	r4, r1
+ 556 009a 181C     		mov	r0, r3
+ 557 009c 211C     		mov	r1, r4
+ 558 009e FFF7FEFF 		bl	__aeabi_d2iz
+ 559 00a2 021C     		mov	r2, r0
+ 560 00a4 9C4B     		ldr	r3, .L23+36
+ 561 00a6 1A60     		str	r2, [r3]
+ 206:.\I2CMaster.c ****     B5 = X1 + X2;
+ 562              		.loc 1 206 0
+ 563 00a8 974B     		ldr	r3, .L23+20
+ 564 00aa 1A68     		ldr	r2, [r3]
+ 565 00ac 9A4B     		ldr	r3, .L23+36
+ 566 00ae 1B68     		ldr	r3, [r3]
+ 567 00b0 D218     		add	r2, r2, r3
+ 568 00b2 9A4B     		ldr	r3, .L23+40
+ 569 00b4 1A60     		str	r2, [r3]
+ 207:.\I2CMaster.c ****     Temperature = (B5 + 8) / pow(2, 4);
+ 570              		.loc 1 207 0
+ 571 00b6 994B     		ldr	r3, .L23+40
+ 572 00b8 1B68     		ldr	r3, [r3]
+ 573 00ba 0833     		add	r3, r3, #8
+ 574 00bc 181C     		mov	r0, r3
+ 575 00be FFF7FEFF 		bl	__aeabi_i2d
+ 576 00c2 031C     		mov	r3, r0
+ 577 00c4 0C1C     		mov	r4, r1
+ 578 00c6 181C     		mov	r0, r3
+ 579 00c8 211C     		mov	r1, r4
+ 580 00ca 0022     		mov	r2, #0
+ 581 00cc 944B     		ldr	r3, .L23+44
+ 582 00ce FFF7FEFF 		bl	__aeabi_ddiv
+ 583 00d2 031C     		mov	r3, r0
+ 584 00d4 0C1C     		mov	r4, r1
+ 585 00d6 181C     		mov	r0, r3
+ 586 00d8 211C     		mov	r1, r4
+ 587 00da FFF7FEFF 		bl	__aeabi_d2iz
+ 588 00de 021C     		mov	r2, r0
+ 589 00e0 904B     		ldr	r3, .L23+48
+ 590 00e2 1A60     		str	r2, [r3]
+ 208:.\I2CMaster.c ****     
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 15
+
+
+ 209:.\I2CMaster.c ****     /* Calculate the true barometric pressure as described in sensor datasheet */
+ 210:.\I2CMaster.c ****     B6 = B5 - 4000;
+ 591              		.loc 1 210 0
+ 592 00e4 8D4B     		ldr	r3, .L23+40
+ 593 00e6 1B68     		ldr	r3, [r3]
+ 594 00e8 8F4A     		ldr	r2, .L23+52
+ 595 00ea 9A18     		add	r2, r3, r2
+ 596 00ec 8F4B     		ldr	r3, .L23+56
+ 597 00ee 1A60     		str	r2, [r3]
+ 211:.\I2CMaster.c ****     X1 = (B2 * (B6 * B6 / pow(2, 12))) / pow(2, 11);
+ 598              		.loc 1 211 0
+ 599 00f0 8F4B     		ldr	r3, .L23+60
+ 600 00f2 1B88     		ldrh	r3, [r3]
+ 601 00f4 1BB2     		sxth	r3, r3
+ 602 00f6 181C     		mov	r0, r3
+ 603 00f8 FFF7FEFF 		bl	__aeabi_i2d
+ 604 00fc 051C     		mov	r5, r0
+ 605 00fe 0E1C     		mov	r6, r1
+ 606 0100 8A4B     		ldr	r3, .L23+56
+ 607 0102 1A68     		ldr	r2, [r3]
+ 608 0104 894B     		ldr	r3, .L23+56
+ 609 0106 1B68     		ldr	r3, [r3]
+ 610 0108 5343     		mul	r3, r2
+ 611 010a 181C     		mov	r0, r3
+ 612 010c FFF7FEFF 		bl	__aeabi_i2d
+ 613 0110 031C     		mov	r3, r0
+ 614 0112 0C1C     		mov	r4, r1
+ 615 0114 181C     		mov	r0, r3
+ 616 0116 211C     		mov	r1, r4
+ 617 0118 0022     		mov	r2, #0
+ 618 011a 864B     		ldr	r3, .L23+64
+ 619 011c FFF7FEFF 		bl	__aeabi_ddiv
+ 620 0120 031C     		mov	r3, r0
+ 621 0122 0C1C     		mov	r4, r1
+ 622 0124 281C     		mov	r0, r5
+ 623 0126 311C     		mov	r1, r6
+ 624 0128 1A1C     		mov	r2, r3
+ 625 012a 231C     		mov	r3, r4
+ 626 012c FFF7FEFF 		bl	__aeabi_dmul
+ 627 0130 031C     		mov	r3, r0
+ 628 0132 0C1C     		mov	r4, r1
+ 629 0134 181C     		mov	r0, r3
+ 630 0136 211C     		mov	r1, r4
+ 631 0138 0022     		mov	r2, #0
+ 632 013a 754B     		ldr	r3, .L23+28
+ 633 013c FFF7FEFF 		bl	__aeabi_ddiv
+ 634 0140 031C     		mov	r3, r0
+ 635 0142 0C1C     		mov	r4, r1
+ 636 0144 181C     		mov	r0, r3
+ 637 0146 211C     		mov	r1, r4
+ 638 0148 FFF7FEFF 		bl	__aeabi_d2iz
+ 639 014c 021C     		mov	r2, r0
+ 640 014e 6E4B     		ldr	r3, .L23+20
+ 641 0150 1A60     		str	r2, [r3]
+ 212:.\I2CMaster.c ****     X2 = AC2 * B6 / pow(2, 11);
+ 642              		.loc 1 212 0
+ 643 0152 794B     		ldr	r3, .L23+68
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 16
+
+
+ 644 0154 1B88     		ldrh	r3, [r3]
+ 645 0156 1AB2     		sxth	r2, r3
+ 646 0158 744B     		ldr	r3, .L23+56
+ 647 015a 1B68     		ldr	r3, [r3]
+ 648 015c 5343     		mul	r3, r2
+ 649 015e 181C     		mov	r0, r3
+ 650 0160 FFF7FEFF 		bl	__aeabi_i2d
+ 651 0164 031C     		mov	r3, r0
+ 652 0166 0C1C     		mov	r4, r1
+ 653 0168 181C     		mov	r0, r3
+ 654 016a 211C     		mov	r1, r4
+ 655 016c 0022     		mov	r2, #0
+ 656 016e 684B     		ldr	r3, .L23+28
+ 657 0170 FFF7FEFF 		bl	__aeabi_ddiv
+ 658 0174 031C     		mov	r3, r0
+ 659 0176 0C1C     		mov	r4, r1
+ 660 0178 181C     		mov	r0, r3
+ 661 017a 211C     		mov	r1, r4
+ 662 017c FFF7FEFF 		bl	__aeabi_d2iz
+ 663 0180 021C     		mov	r2, r0
+ 664 0182 654B     		ldr	r3, .L23+36
+ 665 0184 1A60     		str	r2, [r3]
+ 213:.\I2CMaster.c ****     X3 = X1 + X2;
+ 666              		.loc 1 213 0
+ 667 0186 604B     		ldr	r3, .L23+20
+ 668 0188 1A68     		ldr	r2, [r3]
+ 669 018a 634B     		ldr	r3, .L23+36
+ 670 018c 1B68     		ldr	r3, [r3]
+ 671 018e D218     		add	r2, r2, r3
+ 672 0190 6A4B     		ldr	r3, .L23+72
+ 673 0192 1A60     		str	r2, [r3]
+ 214:.\I2CMaster.c ****     B3 = (((AC1 * 4 + X3) << OSS) + 2) / 4;
+ 674              		.loc 1 214 0
+ 675 0194 6A4B     		ldr	r3, .L23+76
+ 676 0196 1B88     		ldrh	r3, [r3]
+ 677 0198 1BB2     		sxth	r3, r3
+ 678 019a 9A00     		lsl	r2, r3, #2
+ 679 019c 674B     		ldr	r3, .L23+72
+ 680 019e 1B68     		ldr	r3, [r3]
+ 681 01a0 D318     		add	r3, r2, r3
+ 682 01a2 DB00     		lsl	r3, r3, #3
+ 683 01a4 0233     		add	r3, r3, #2
+ 684 01a6 002B     		cmp	r3, #0
+ 685 01a8 00DA     		bge	.L20
+ 686 01aa 0333     		add	r3, r3, #3
+ 687              	.L20:
+ 688 01ac 9B10     		asr	r3, r3, #2
+ 689 01ae 1A1C     		mov	r2, r3
+ 690 01b0 644B     		ldr	r3, .L23+80
+ 691 01b2 1A60     		str	r2, [r3]
+ 215:.\I2CMaster.c ****     X1 = AC3 * B6 / pow(2, 13);
+ 692              		.loc 1 215 0
+ 693 01b4 644B     		ldr	r3, .L23+84
+ 694 01b6 1B88     		ldrh	r3, [r3]
+ 695 01b8 1AB2     		sxth	r2, r3
+ 696 01ba 5C4B     		ldr	r3, .L23+56
+ 697 01bc 1B68     		ldr	r3, [r3]
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 17
+
+
+ 698 01be 5343     		mul	r3, r2
+ 699 01c0 181C     		mov	r0, r3
+ 700 01c2 FFF7FEFF 		bl	__aeabi_i2d
+ 701 01c6 031C     		mov	r3, r0
+ 702 01c8 0C1C     		mov	r4, r1
+ 703 01ca 181C     		mov	r0, r3
+ 704 01cc 211C     		mov	r1, r4
+ 705 01ce 0022     		mov	r2, #0
+ 706 01d0 5E4B     		ldr	r3, .L23+88
+ 707 01d2 FFF7FEFF 		bl	__aeabi_ddiv
+ 708 01d6 031C     		mov	r3, r0
+ 709 01d8 0C1C     		mov	r4, r1
+ 710 01da 181C     		mov	r0, r3
+ 711 01dc 211C     		mov	r1, r4
+ 712 01de FFF7FEFF 		bl	__aeabi_d2iz
+ 713 01e2 021C     		mov	r2, r0
+ 714 01e4 484B     		ldr	r3, .L23+20
+ 715 01e6 1A60     		str	r2, [r3]
+ 216:.\I2CMaster.c ****     X2 = (B1 * (B6 * B6 / pow(2, 12))) / pow(2, 16);
+ 716              		.loc 1 216 0
+ 717 01e8 594B     		ldr	r3, .L23+92
+ 718 01ea 1B88     		ldrh	r3, [r3]
+ 719 01ec 1BB2     		sxth	r3, r3
+ 720 01ee 181C     		mov	r0, r3
+ 721 01f0 FFF7FEFF 		bl	__aeabi_i2d
+ 722 01f4 051C     		mov	r5, r0
+ 723 01f6 0E1C     		mov	r6, r1
+ 724 01f8 4C4B     		ldr	r3, .L23+56
+ 725 01fa 1A68     		ldr	r2, [r3]
+ 726 01fc 4B4B     		ldr	r3, .L23+56
+ 727 01fe 1B68     		ldr	r3, [r3]
+ 728 0200 5343     		mul	r3, r2
+ 729 0202 181C     		mov	r0, r3
+ 730 0204 FFF7FEFF 		bl	__aeabi_i2d
+ 731 0208 031C     		mov	r3, r0
+ 732 020a 0C1C     		mov	r4, r1
+ 733 020c 181C     		mov	r0, r3
+ 734 020e 211C     		mov	r1, r4
+ 735 0210 0022     		mov	r2, #0
+ 736 0212 484B     		ldr	r3, .L23+64
+ 737 0214 FFF7FEFF 		bl	__aeabi_ddiv
+ 738 0218 031C     		mov	r3, r0
+ 739 021a 0C1C     		mov	r4, r1
+ 740 021c 281C     		mov	r0, r5
+ 741 021e 311C     		mov	r1, r6
+ 742 0220 1A1C     		mov	r2, r3
+ 743 0222 231C     		mov	r3, r4
+ 744 0224 FFF7FEFF 		bl	__aeabi_dmul
+ 745 0228 031C     		mov	r3, r0
+ 746 022a 0C1C     		mov	r4, r1
+ 747 022c 181C     		mov	r0, r3
+ 748 022e 211C     		mov	r1, r4
+ 749 0230 0022     		mov	r2, #0
+ 750 0232 484B     		ldr	r3, .L23+96
+ 751 0234 FFF7FEFF 		bl	__aeabi_ddiv
+ 752 0238 031C     		mov	r3, r0
+ 753 023a 0C1C     		mov	r4, r1
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 18
+
+
+ 754 023c 181C     		mov	r0, r3
+ 755 023e 211C     		mov	r1, r4
+ 756 0240 FFF7FEFF 		bl	__aeabi_d2iz
+ 757 0244 021C     		mov	r2, r0
+ 758 0246 344B     		ldr	r3, .L23+36
+ 759 0248 1A60     		str	r2, [r3]
+ 217:.\I2CMaster.c ****     X3 = ((X1 + X2) + 2) / pow(2, 2);
+ 760              		.loc 1 217 0
+ 761 024a 2F4B     		ldr	r3, .L23+20
+ 762 024c 1A68     		ldr	r2, [r3]
+ 763 024e 324B     		ldr	r3, .L23+36
+ 764 0250 1B68     		ldr	r3, [r3]
+ 765 0252 D318     		add	r3, r2, r3
+ 766 0254 0233     		add	r3, r3, #2
+ 767 0256 181C     		mov	r0, r3
+ 768 0258 FFF7FEFF 		bl	__aeabi_i2d
+ 769 025c 031C     		mov	r3, r0
+ 770 025e 0C1C     		mov	r4, r1
+ 771 0260 181C     		mov	r0, r3
+ 772 0262 211C     		mov	r1, r4
+ 773 0264 0022     		mov	r2, #0
+ 774 0266 3C4B     		ldr	r3, .L23+100
+ 775 0268 FFF7FEFF 		bl	__aeabi_ddiv
+ 776 026c 031C     		mov	r3, r0
+ 777 026e 0C1C     		mov	r4, r1
+ 778 0270 181C     		mov	r0, r3
+ 779 0272 211C     		mov	r1, r4
+ 780 0274 FFF7FEFF 		bl	__aeabi_d2iz
+ 781 0278 021C     		mov	r2, r0
+ 782 027a 304B     		ldr	r3, .L23+72
+ 783 027c 1A60     		str	r2, [r3]
+ 218:.\I2CMaster.c ****     B4 = (AC4 * (unsigned long)(X3 + 32768)) / pow(2, 15);
+ 784              		.loc 1 218 0
+ 785 027e 374B     		ldr	r3, .L23+104
+ 786 0280 1B88     		ldrh	r3, [r3]
+ 787 0282 1A1C     		mov	r2, r3
+ 788 0284 2D4B     		ldr	r3, .L23+72
+ 789 0286 1B68     		ldr	r3, [r3]
+ 790 0288 8021     		mov	r1, #128
+ 791 028a 0902     		lsl	r1, r1, #8
+ 792 028c 8C46     		mov	ip, r1
+ 793 028e 6344     		add	r3, r3, ip
+ 794 0290 5343     		mul	r3, r2
+ 795 0292 181C     		mov	r0, r3
+ 796 0294 FFF7FEFF 		bl	__aeabi_ui2d
+ 797 0298 031C     		mov	r3, r0
+ 798 029a 0C1C     		mov	r4, r1
+ 799 029c 181C     		mov	r0, r3
+ 800 029e 211C     		mov	r1, r4
+ 801 02a0 0022     		mov	r2, #0
+ 802 02a2 184B     		ldr	r3, .L23+16
+ 803 02a4 FFF7FEFF 		bl	__aeabi_ddiv
+ 804 02a8 031C     		mov	r3, r0
+ 805 02aa 0C1C     		mov	r4, r1
+ 806 02ac 181C     		mov	r0, r3
+ 807 02ae 211C     		mov	r1, r4
+ 808 02b0 FFF7FEFF 		bl	__aeabi_d2uiz
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 19
+
+
+ 809 02b4 021C     		mov	r2, r0
+ 810 02b6 2A4B     		ldr	r3, .L23+108
+ 811 02b8 1A60     		str	r2, [r3]
+ 219:.\I2CMaster.c ****     B7 = ((unsigned long)UP - B3) * (50000 >> OSS);
+ 812              		.loc 1 219 0
+ 813 02ba 2A4B     		ldr	r3, .L23+112
+ 814 02bc 1B68     		ldr	r3, [r3]
+ 815 02be 1A1C     		mov	r2, r3
+ 816 02c0 204B     		ldr	r3, .L23+80
+ 817 02c2 1B68     		ldr	r3, [r3]
+ 818 02c4 D31A     		sub	r3, r2, r3
+ 819 02c6 284A     		ldr	r2, .L23+116
+ 820 02c8 5A43     		mul	r2, r3
+ 821 02ca 284B     		ldr	r3, .L23+120
+ 822 02cc 1A60     		str	r2, [r3]
+ 220:.\I2CMaster.c ****     if(B7 < 0x80000000)
+ 823              		.loc 1 220 0
+ 824 02ce 274B     		ldr	r3, .L23+120
+ 825 02d0 1B68     		ldr	r3, [r3]
+ 826 02d2 002B     		cmp	r3, #0
+ 827 02d4 4EDB     		blt	.L21
+ 221:.\I2CMaster.c ****     {
+ 222:.\I2CMaster.c ****         Pressure = (B7 *2) / B4;
+ 828              		.loc 1 222 0
+ 829 02d6 254B     		ldr	r3, .L23+120
+ 830 02d8 1B68     		ldr	r3, [r3]
+ 831 02da 5A00     		lsl	r2, r3, #1
+ 832 02dc 204B     		ldr	r3, .L23+108
+ 833 02de 1B68     		ldr	r3, [r3]
+ 834 02e0 101C     		mov	r0, r2
+ 835 02e2 191C     		mov	r1, r3
+ 836 02e4 FFF7FEFF 		bl	__aeabi_uidiv
+ 837 02e8 031C     		mov	r3, r0
+ 838 02ea 1A1C     		mov	r2, r3
+ 839 02ec 204B     		ldr	r3, .L23+124
+ 840 02ee 1A60     		str	r2, [r3]
+ 841 02f0 4DE0     		b	.L22
+ 842              	.L24:
+ 843 02f2 C046     		.align	2
+ 844              	.L23:
+ 845 02f4 00000000 		.word	CalibrationDataAvailable
+ 846 02f8 00000000 		.word	UT
+ 847 02fc 00000000 		.word	AC6
+ 848 0300 00000000 		.word	AC5
+ 849 0304 0000E040 		.word	1088421888
+ 850 0308 00000000 		.word	X1
+ 851 030c 00000000 		.word	MC
+ 852 0310 0000A040 		.word	1084227584
+ 853 0314 00000000 		.word	MD
+ 854 0318 00000000 		.word	X2
+ 855 031c 00000000 		.word	B5
+ 856 0320 00003040 		.word	1076887552
+ 857 0324 00000000 		.word	Temperature
+ 858 0328 60F0FFFF 		.word	-4000
+ 859 032c 00000000 		.word	B6
+ 860 0330 00000000 		.word	B2
+ 861 0334 0000B040 		.word	1085276160
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 20
+
+
+ 862 0338 00000000 		.word	AC2
+ 863 033c 00000000 		.word	X3
+ 864 0340 00000000 		.word	AC1
+ 865 0344 00000000 		.word	B3
+ 866 0348 00000000 		.word	AC3
+ 867 034c 0000C040 		.word	1086324736
+ 868 0350 00000000 		.word	B1
+ 869 0354 0000F040 		.word	1089470464
+ 870 0358 00001040 		.word	1074790400
+ 871 035c 00000000 		.word	AC4
+ 872 0360 00000000 		.word	B4
+ 873 0364 00000000 		.word	UP
+ 874 0368 6A180000 		.word	6250
+ 875 036c 00000000 		.word	B7
+ 876 0370 00000000 		.word	Pressure
+ 877              	.L21:
+ 223:.\I2CMaster.c ****     }
+ 224:.\I2CMaster.c ****     else 
+ 225:.\I2CMaster.c ****     {
+ 226:.\I2CMaster.c ****         Pressure = (B7 / B4) *2;
+ 878              		.loc 1 226 0
+ 879 0374 664B     		ldr	r3, .L25
+ 880 0376 1A68     		ldr	r2, [r3]
+ 881 0378 664B     		ldr	r3, .L25+4
+ 882 037a 1B68     		ldr	r3, [r3]
+ 883 037c 101C     		mov	r0, r2
+ 884 037e 191C     		mov	r1, r3
+ 885 0380 FFF7FEFF 		bl	__aeabi_uidiv
+ 886 0384 031C     		mov	r3, r0
+ 887 0386 5B00     		lsl	r3, r3, #1
+ 888 0388 1A1C     		mov	r2, r3
+ 889 038a 634B     		ldr	r3, .L25+8
+ 890 038c 1A60     		str	r2, [r3]
+ 891              	.L22:
+ 227:.\I2CMaster.c ****     }
+ 228:.\I2CMaster.c ****     X1 = (Pressure / pow(2, 8)) * (Pressure / pow(2, 8));
+ 892              		.loc 1 228 0
+ 893 038e 624B     		ldr	r3, .L25+8
+ 894 0390 1B68     		ldr	r3, [r3]
+ 895 0392 181C     		mov	r0, r3
+ 896 0394 FFF7FEFF 		bl	__aeabi_i2d
+ 897 0398 031C     		mov	r3, r0
+ 898 039a 0C1C     		mov	r4, r1
+ 899 039c 181C     		mov	r0, r3
+ 900 039e 211C     		mov	r1, r4
+ 901 03a0 0022     		mov	r2, #0
+ 902 03a2 5E4B     		ldr	r3, .L25+12
+ 903 03a4 FFF7FEFF 		bl	__aeabi_ddiv
+ 904 03a8 031C     		mov	r3, r0
+ 905 03aa 0C1C     		mov	r4, r1
+ 906 03ac 1D1C     		mov	r5, r3
+ 907 03ae 261C     		mov	r6, r4
+ 908 03b0 594B     		ldr	r3, .L25+8
+ 909 03b2 1B68     		ldr	r3, [r3]
+ 910 03b4 181C     		mov	r0, r3
+ 911 03b6 FFF7FEFF 		bl	__aeabi_i2d
+ 912 03ba 031C     		mov	r3, r0
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 21
+
+
+ 913 03bc 0C1C     		mov	r4, r1
+ 914 03be 181C     		mov	r0, r3
+ 915 03c0 211C     		mov	r1, r4
+ 916 03c2 0022     		mov	r2, #0
+ 917 03c4 554B     		ldr	r3, .L25+12
+ 918 03c6 FFF7FEFF 		bl	__aeabi_ddiv
+ 919 03ca 031C     		mov	r3, r0
+ 920 03cc 0C1C     		mov	r4, r1
+ 921 03ce 281C     		mov	r0, r5
+ 922 03d0 311C     		mov	r1, r6
+ 923 03d2 1A1C     		mov	r2, r3
+ 924 03d4 231C     		mov	r3, r4
+ 925 03d6 FFF7FEFF 		bl	__aeabi_dmul
+ 926 03da 031C     		mov	r3, r0
+ 927 03dc 0C1C     		mov	r4, r1
+ 928 03de 181C     		mov	r0, r3
+ 929 03e0 211C     		mov	r1, r4
+ 930 03e2 FFF7FEFF 		bl	__aeabi_d2iz
+ 931 03e6 021C     		mov	r2, r0
+ 932 03e8 4D4B     		ldr	r3, .L25+16
+ 933 03ea 1A60     		str	r2, [r3]
+ 229:.\I2CMaster.c ****     X1 = (X1 * 3038) / pow(2, 16);
+ 934              		.loc 1 229 0
+ 935 03ec 4C4B     		ldr	r3, .L25+16
+ 936 03ee 1B68     		ldr	r3, [r3]
+ 937 03f0 4C4A     		ldr	r2, .L25+20
+ 938 03f2 5343     		mul	r3, r2
+ 939 03f4 181C     		mov	r0, r3
+ 940 03f6 FFF7FEFF 		bl	__aeabi_i2d
+ 941 03fa 031C     		mov	r3, r0
+ 942 03fc 0C1C     		mov	r4, r1
+ 943 03fe 181C     		mov	r0, r3
+ 944 0400 211C     		mov	r1, r4
+ 945 0402 0022     		mov	r2, #0
+ 946 0404 484B     		ldr	r3, .L25+24
+ 947 0406 FFF7FEFF 		bl	__aeabi_ddiv
+ 948 040a 031C     		mov	r3, r0
+ 949 040c 0C1C     		mov	r4, r1
+ 950 040e 181C     		mov	r0, r3
+ 951 0410 211C     		mov	r1, r4
+ 952 0412 FFF7FEFF 		bl	__aeabi_d2iz
+ 953 0416 021C     		mov	r2, r0
+ 954 0418 414B     		ldr	r3, .L25+16
+ 955 041a 1A60     		str	r2, [r3]
+ 230:.\I2CMaster.c ****     X2 = (-7357 * Pressure) / pow(2, 16);
+ 956              		.loc 1 230 0
+ 957 041c 3E4B     		ldr	r3, .L25+8
+ 958 041e 1B68     		ldr	r3, [r3]
+ 959 0420 424A     		ldr	r2, .L25+28
+ 960 0422 5343     		mul	r3, r2
+ 961 0424 181C     		mov	r0, r3
+ 962 0426 FFF7FEFF 		bl	__aeabi_i2d
+ 963 042a 031C     		mov	r3, r0
+ 964 042c 0C1C     		mov	r4, r1
+ 965 042e 181C     		mov	r0, r3
+ 966 0430 211C     		mov	r1, r4
+ 967 0432 0022     		mov	r2, #0
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 22
+
+
+ 968 0434 3C4B     		ldr	r3, .L25+24
+ 969 0436 FFF7FEFF 		bl	__aeabi_ddiv
+ 970 043a 031C     		mov	r3, r0
+ 971 043c 0C1C     		mov	r4, r1
+ 972 043e 181C     		mov	r0, r3
+ 973 0440 211C     		mov	r1, r4
+ 974 0442 FFF7FEFF 		bl	__aeabi_d2iz
+ 975 0446 021C     		mov	r2, r0
+ 976 0448 394B     		ldr	r3, .L25+32
+ 977 044a 1A60     		str	r2, [r3]
+ 231:.\I2CMaster.c ****     Pressure = Pressure + (X1 + X2 + 3791) / pow(2, 4);
+ 978              		.loc 1 231 0
+ 979 044c 324B     		ldr	r3, .L25+8
+ 980 044e 1B68     		ldr	r3, [r3]
+ 981 0450 181C     		mov	r0, r3
+ 982 0452 FFF7FEFF 		bl	__aeabi_i2d
+ 983 0456 051C     		mov	r5, r0
+ 984 0458 0E1C     		mov	r6, r1
+ 985 045a 314B     		ldr	r3, .L25+16
+ 986 045c 1A68     		ldr	r2, [r3]
+ 987 045e 344B     		ldr	r3, .L25+32
+ 988 0460 1B68     		ldr	r3, [r3]
+ 989 0462 D318     		add	r3, r2, r3
+ 990 0464 334A     		ldr	r2, .L25+36
+ 991 0466 9446     		mov	ip, r2
+ 992 0468 6344     		add	r3, r3, ip
+ 993 046a 181C     		mov	r0, r3
+ 994 046c FFF7FEFF 		bl	__aeabi_i2d
+ 995 0470 031C     		mov	r3, r0
+ 996 0472 0C1C     		mov	r4, r1
+ 997 0474 181C     		mov	r0, r3
+ 998 0476 211C     		mov	r1, r4
+ 999 0478 0022     		mov	r2, #0
+ 1000 047a 2F4B     		ldr	r3, .L25+40
+ 1001 047c FFF7FEFF 		bl	__aeabi_ddiv
+ 1002 0480 031C     		mov	r3, r0
+ 1003 0482 0C1C     		mov	r4, r1
+ 1004 0484 281C     		mov	r0, r5
+ 1005 0486 311C     		mov	r1, r6
+ 1006 0488 1A1C     		mov	r2, r3
+ 1007 048a 231C     		mov	r3, r4
+ 1008 048c FFF7FEFF 		bl	__aeabi_dadd
+ 1009 0490 031C     		mov	r3, r0
+ 1010 0492 0C1C     		mov	r4, r1
+ 1011 0494 181C     		mov	r0, r3
+ 1012 0496 211C     		mov	r1, r4
+ 1013 0498 FFF7FEFF 		bl	__aeabi_d2iz
+ 1014 049c 021C     		mov	r2, r0
+ 1015 049e 1E4B     		ldr	r3, .L25+8
+ 1016 04a0 1A60     		str	r2, [r3]
+ 232:.\I2CMaster.c ****     
+ 233:.\I2CMaster.c ****     /* Calculate the true altitude based on pressure at sea level as described in sensor datasheet 
+ 234:.\I2CMaster.c ****     Altitude = 44330 * (1 - (pow(Pressure/PressureAtSeaLevel, 1/5.255)));
+ 1017              		.loc 1 234 0
+ 1018 04a2 1D4B     		ldr	r3, .L25+8
+ 1019 04a4 1B68     		ldr	r3, [r3]
+ 1020 04a6 181C     		mov	r0, r3
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 23
+
+
+ 1021 04a8 FFF7FEFF 		bl	__aeabi_i2d
+ 1022 04ac 0A1C     		mov	r2, r1
+ 1023 04ae 011C     		mov	r1, r0
+ 1024 04b0 224B     		ldr	r3, .L25+44
+ 1025 04b2 5C68     		ldr	r4, [r3, #4]
+ 1026 04b4 1B68     		ldr	r3, [r3]
+ 1027 04b6 081C     		mov	r0, r1
+ 1028 04b8 111C     		mov	r1, r2
+ 1029 04ba 1A1C     		mov	r2, r3
+ 1030 04bc 231C     		mov	r3, r4
+ 1031 04be FFF7FEFF 		bl	__aeabi_ddiv
+ 1032 04c2 031C     		mov	r3, r0
+ 1033 04c4 0C1C     		mov	r4, r1
+ 1034 04c6 191C     		mov	r1, r3
+ 1035 04c8 221C     		mov	r2, r4
+ 1036 04ca 1D4B     		ldr	r3, .L25+48
+ 1037 04cc 1D4C     		ldr	r4, .L25+52
+ 1038 04ce 081C     		mov	r0, r1
+ 1039 04d0 111C     		mov	r1, r2
+ 1040 04d2 1A1C     		mov	r2, r3
+ 1041 04d4 231C     		mov	r3, r4
+ 1042 04d6 FFF7FEFF 		bl	pow
+ 1043 04da 031C     		mov	r3, r0
+ 1044 04dc 0C1C     		mov	r4, r1
+ 1045 04de 0020     		mov	r0, #0
+ 1046 04e0 1949     		ldr	r1, .L25+56
+ 1047 04e2 1A1C     		mov	r2, r3
+ 1048 04e4 231C     		mov	r3, r4
+ 1049 04e6 FFF7FEFF 		bl	__aeabi_dsub
+ 1050 04ea 031C     		mov	r3, r0
+ 1051 04ec 0C1C     		mov	r4, r1
+ 1052 04ee 181C     		mov	r0, r3
+ 1053 04f0 211C     		mov	r1, r4
+ 1054 04f2 0022     		mov	r2, #0
+ 1055 04f4 154B     		ldr	r3, .L25+60
+ 1056 04f6 FFF7FEFF 		bl	__aeabi_dmul
+ 1057 04fa 031C     		mov	r3, r0
+ 1058 04fc 0C1C     		mov	r4, r1
+ 1059 04fe 181C     		mov	r0, r3
+ 1060 0500 211C     		mov	r1, r4
+ 1061 0502 FFF7FEFF 		bl	__aeabi_d2iz
+ 1062 0506 021C     		mov	r2, r0
+ 1063 0508 114B     		ldr	r3, .L25+64
+ 1064 050a 1A60     		str	r2, [r3]
+ 235:.\I2CMaster.c **** }
+ 1065              		.loc 1 235 0
+ 1066 050c BD46     		mov	sp, r7
+ 1067              		@ sp needed
+ 1068 050e F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 1069              	.L26:
+ 1070              		.align	2
+ 1071              	.L25:
+ 1072 0510 00000000 		.word	B7
+ 1073 0514 00000000 		.word	B4
+ 1074 0518 00000000 		.word	Pressure
+ 1075 051c 00007040 		.word	1081081856
+ 1076 0520 00000000 		.word	X1
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 24
+
+
+ 1077 0524 DE0B0000 		.word	3038
+ 1078 0528 0000F040 		.word	1089470464
+ 1079 052c 43E3FFFF 		.word	-7357
+ 1080 0530 00000000 		.word	X2
+ 1081 0534 CF0E0000 		.word	3791
+ 1082 0538 00003040 		.word	1076887552
+ 1083 053c 00000000 		.word	PressureAtSeaLevel
+ 1084 0540 6C45D9CC 		.word	-858176148
+ 1085 0544 955BC83F 		.word	1070095253
+ 1086 0548 0000F03F 		.word	1072693248
+ 1087 054c 40A5E540 		.word	1088791872
+ 1088 0550 00000000 		.word	Altitude
+ 1089              		.cfi_endproc
+ 1090              	.LFE40:
+ 1091              		.size	ReadAndCalculateSensorData, .-ReadAndCalculateSensorData
+ 1092              		.data
+ 1093              		.align	2
+ 1094              		.type	I2CWriteBuffer.7455, %object
+ 1095              		.size	I2CWriteBuffer.7455, 1
+ 1096              	I2CWriteBuffer.7455:
+ 1097 0008 AA       		.byte	-86
+ 1098 0009 000000   		.align	2
+ 1099              		.type	I2CWriteBuffer.7466, %object
+ 1100              		.size	I2CWriteBuffer.7466, 2
+ 1101              	I2CWriteBuffer.7466:
+ 1102 000c F4       		.byte	-12
+ 1103 000d 2E       		.byte	46
+ 1104 000e 0000     		.align	2
+ 1105              		.type	SetReadAddressBuffer.7467, %object
+ 1106              		.size	SetReadAddressBuffer.7467, 1
+ 1107              	SetReadAddressBuffer.7467:
+ 1108 0010 F6       		.byte	-10
+ 1109              		.bss
+ 1110 0001 000000   		.align	2
+ 1111              	I2CReadBuffer.7465:
+ 1112 0004 0000     		.space	2
+ 1113              		.data
+ 1114 0011 000000   		.align	2
+ 1115              		.type	I2CWriteBuffer.7481, %object
+ 1116              		.size	I2CWriteBuffer.7481, 2
+ 1117              	I2CWriteBuffer.7481:
+ 1118 0014 F4       		.byte	-12
+ 1119 0015 F4       		.byte	-12
+ 1120 0016 0000     		.align	2
+ 1121              		.type	SetReadAddressBuffer.7482, %object
+ 1122              		.size	SetReadAddressBuffer.7482, 1
+ 1123              	SetReadAddressBuffer.7482:
+ 1124 0018 F6       		.byte	-10
+ 1125 0019 00000000 		.bss
+ 1125      000000
+ 1126 0006 0000     		.align	2
+ 1127              	I2CReadBuffer.7480:
+ 1128 0008 000000   		.space	3
+ 1129 000b 00       		.text
+ 1130              	.Letext0:
+ 1131              		.file 2 "Generated_Source\\PSoC4/cytypes.h"
+ 1132              		.file 3 "Generated_Source\\PSoC4/BLE_Stack.h"
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 25
+
+
+ 1133              		.section	.debug_info,"",%progbits
+ 1134              	.Ldebug_info0:
+ 1135 0000 16050000 		.4byte	0x516
+ 1136 0004 0400     		.2byte	0x4
+ 1137 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 1138 000a 04       		.byte	0x4
+ 1139 000b 01       		.uleb128 0x1
+ 1140 000c 12070000 		.4byte	.LASF94
+ 1141 0010 01       		.byte	0x1
+ 1142 0011 9B040000 		.4byte	.LASF95
+ 1143 0015 17030000 		.4byte	.LASF96
+ 1144 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 1145 001d 00000000 		.4byte	0
+ 1146 0021 00000000 		.4byte	.Ldebug_line0
+ 1147 0025 02       		.uleb128 0x2
+ 1148 0026 01       		.byte	0x1
+ 1149 0027 06       		.byte	0x6
+ 1150 0028 59050000 		.4byte	.LASF0
+ 1151 002c 02       		.uleb128 0x2
+ 1152 002d 01       		.byte	0x1
+ 1153 002e 08       		.byte	0x8
+ 1154 002f 30050000 		.4byte	.LASF1
+ 1155 0033 02       		.uleb128 0x2
+ 1156 0034 02       		.byte	0x2
+ 1157 0035 05       		.byte	0x5
+ 1158 0036 C0000000 		.4byte	.LASF2
+ 1159 003a 02       		.uleb128 0x2
+ 1160 003b 02       		.byte	0x2
+ 1161 003c 07       		.byte	0x7
+ 1162 003d BC070000 		.4byte	.LASF3
+ 1163 0041 02       		.uleb128 0x2
+ 1164 0042 04       		.byte	0x4
+ 1165 0043 05       		.byte	0x5
+ 1166 0044 6D030000 		.4byte	.LASF4
+ 1167 0048 02       		.uleb128 0x2
+ 1168 0049 04       		.byte	0x4
+ 1169 004a 07       		.byte	0x7
+ 1170 004b 00060000 		.4byte	.LASF5
+ 1171 004f 02       		.uleb128 0x2
+ 1172 0050 08       		.byte	0x8
+ 1173 0051 05       		.byte	0x5
+ 1174 0052 35010000 		.4byte	.LASF6
+ 1175 0056 02       		.uleb128 0x2
+ 1176 0057 08       		.byte	0x8
+ 1177 0058 07       		.byte	0x7
+ 1178 0059 EB020000 		.4byte	.LASF7
+ 1179 005d 03       		.uleb128 0x3
+ 1180 005e 04       		.byte	0x4
+ 1181 005f 05       		.byte	0x5
+ 1182 0060 696E7400 		.ascii	"int\000"
+ 1183 0064 02       		.uleb128 0x2
+ 1184 0065 04       		.byte	0x4
+ 1185 0066 07       		.byte	0x7
+ 1186 0067 C2050000 		.4byte	.LASF8
+ 1187 006b 04       		.uleb128 0x4
+ 1188 006c CF070000 		.4byte	.LASF9
+ 1189 0070 02       		.byte	0x2
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 26
+
+
+ 1190 0071 9801     		.2byte	0x198
+ 1191 0073 2C000000 		.4byte	0x2c
+ 1192 0077 04       		.uleb128 0x4
+ 1193 0078 B8010000 		.4byte	.LASF10
+ 1194 007c 02       		.byte	0x2
+ 1195 007d 9901     		.2byte	0x199
+ 1196 007f 3A000000 		.4byte	0x3a
+ 1197 0083 02       		.uleb128 0x2
+ 1198 0084 04       		.byte	0x4
+ 1199 0085 04       		.byte	0x4
+ 1200 0086 5E020000 		.4byte	.LASF11
+ 1201 008a 02       		.uleb128 0x2
+ 1202 008b 08       		.byte	0x8
+ 1203 008c 04       		.byte	0x4
+ 1204 008d 72080000 		.4byte	.LASF12
+ 1205 0091 02       		.uleb128 0x2
+ 1206 0092 01       		.byte	0x1
+ 1207 0093 08       		.byte	0x8
+ 1208 0094 0D070000 		.4byte	.LASF13
+ 1209 0098 02       		.uleb128 0x2
+ 1210 0099 04       		.byte	0x4
+ 1211 009a 07       		.byte	0x7
+ 1212 009b 02010000 		.4byte	.LASF14
+ 1213 009f 05       		.uleb128 0x5
+ 1214 00a0 01       		.byte	0x1
+ 1215 00a1 03       		.byte	0x3
+ 1216 00a2 4201     		.2byte	0x142
+ 1217 00a4 5C020000 		.4byte	0x25c
+ 1218 00a8 06       		.uleb128 0x6
+ 1219 00a9 08020000 		.4byte	.LASF15
+ 1220 00ad 00       		.sleb128 0
+ 1221 00ae 06       		.uleb128 0x6
+ 1222 00af 87010000 		.4byte	.LASF16
+ 1223 00b3 01       		.sleb128 1
+ 1224 00b4 06       		.uleb128 0x6
+ 1225 00b5 96090000 		.4byte	.LASF17
+ 1226 00b9 02       		.sleb128 2
+ 1227 00ba 06       		.uleb128 0x6
+ 1228 00bb 9C080000 		.4byte	.LASF18
+ 1229 00bf 03       		.sleb128 3
+ 1230 00c0 06       		.uleb128 0x6
+ 1231 00c1 51010000 		.4byte	.LASF19
+ 1232 00c5 04       		.sleb128 4
+ 1233 00c6 06       		.uleb128 0x6
+ 1234 00c7 18040000 		.4byte	.LASF20
+ 1235 00cb 05       		.sleb128 5
+ 1236 00cc 06       		.uleb128 0x6
+ 1237 00cd 69000000 		.4byte	.LASF21
+ 1238 00d1 06       		.sleb128 6
+ 1239 00d2 06       		.uleb128 0x6
+ 1240 00d3 64020000 		.4byte	.LASF22
+ 1241 00d7 20       		.sleb128 32
+ 1242 00d8 06       		.uleb128 0x6
+ 1243 00d9 12060000 		.4byte	.LASF23
+ 1244 00dd 21       		.sleb128 33
+ 1245 00de 06       		.uleb128 0x6
+ 1246 00df 0C000000 		.4byte	.LASF24
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 27
+
+
+ 1247 00e3 22       		.sleb128 34
+ 1248 00e4 06       		.uleb128 0x6
+ 1249 00e5 51040000 		.4byte	.LASF25
+ 1250 00e9 23       		.sleb128 35
+ 1251 00ea 06       		.uleb128 0x6
+ 1252 00eb A6050000 		.4byte	.LASF26
+ 1253 00ef 24       		.sleb128 36
+ 1254 00f0 06       		.uleb128 0x6
+ 1255 00f1 CA000000 		.4byte	.LASF27
+ 1256 00f5 25       		.sleb128 37
+ 1257 00f6 06       		.uleb128 0x6
+ 1258 00f7 CF030000 		.4byte	.LASF28
+ 1259 00fb 26       		.sleb128 38
+ 1260 00fc 06       		.uleb128 0x6
+ 1261 00fd B0030000 		.4byte	.LASF29
+ 1262 0101 27       		.sleb128 39
+ 1263 0102 06       		.uleb128 0x6
+ 1264 0103 3E0A0000 		.4byte	.LASF30
+ 1265 0107 28       		.sleb128 40
+ 1266 0108 06       		.uleb128 0x6
+ 1267 0109 4A060000 		.4byte	.LASF31
+ 1268 010d 29       		.sleb128 41
+ 1269 010e 06       		.uleb128 0x6
+ 1270 010f BD060000 		.4byte	.LASF32
+ 1271 0113 2A       		.sleb128 42
+ 1272 0114 06       		.uleb128 0x6
+ 1273 0115 12080000 		.4byte	.LASF33
+ 1274 0119 2B       		.sleb128 43
+ 1275 011a 06       		.uleb128 0x6
+ 1276 011b 8A060000 		.4byte	.LASF34
+ 1277 011f 2C       		.sleb128 44
+ 1278 0120 06       		.uleb128 0x6
+ 1279 0121 A1020000 		.4byte	.LASF35
+ 1280 0125 2D       		.sleb128 45
+ 1281 0126 06       		.uleb128 0x6
+ 1282 0127 9C000000 		.4byte	.LASF36
+ 1283 012b 2E       		.sleb128 46
+ 1284 012c 06       		.uleb128 0x6
+ 1285 012d 9E0A0000 		.4byte	.LASF37
+ 1286 0131 2F       		.sleb128 47
+ 1287 0132 06       		.uleb128 0x6
+ 1288 0133 0B010000 		.4byte	.LASF38
+ 1289 0137 30       		.sleb128 48
+ 1290 0138 06       		.uleb128 0x6
+ 1291 0139 C7040000 		.4byte	.LASF39
+ 1292 013d 31       		.sleb128 49
+ 1293 013e 06       		.uleb128 0x6
+ 1294 013f CA020000 		.4byte	.LASF40
+ 1295 0143 32       		.sleb128 50
+ 1296 0144 06       		.uleb128 0x6
+ 1297 0145 E6060000 		.4byte	.LASF41
+ 1298 0149 33       		.sleb128 51
+ 1299 014a 06       		.uleb128 0x6
+ 1300 014b 82000000 		.4byte	.LASF42
+ 1301 014f C000     		.sleb128 64
+ 1302 0151 06       		.uleb128 0x6
+ 1303 0152 E5050000 		.4byte	.LASF43
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 28
+
+
+ 1304 0156 C100     		.sleb128 65
+ 1305 0158 06       		.uleb128 0x6
+ 1306 0159 E4000000 		.4byte	.LASF44
+ 1307 015d C200     		.sleb128 66
+ 1308 015f 06       		.uleb128 0x6
+ 1309 0160 9A010000 		.4byte	.LASF45
+ 1310 0164 C300     		.sleb128 67
+ 1311 0166 06       		.uleb128 0x6
+ 1312 0167 6C090000 		.4byte	.LASF46
+ 1313 016b C400     		.sleb128 68
+ 1314 016d 06       		.uleb128 0x6
+ 1315 016e 27090000 		.4byte	.LASF47
+ 1316 0172 C500     		.sleb128 69
+ 1317 0174 06       		.uleb128 0x6
+ 1318 0175 66010000 		.4byte	.LASF48
+ 1319 0179 C600     		.sleb128 70
+ 1320 017b 06       		.uleb128 0x6
+ 1321 017c DF090000 		.4byte	.LASF49
+ 1322 0180 C700     		.sleb128 71
+ 1323 0182 06       		.uleb128 0x6
+ 1324 0183 7F050000 		.4byte	.LASF50
+ 1325 0187 C800     		.sleb128 72
+ 1326 0189 06       		.uleb128 0x6
+ 1327 018a 88020000 		.4byte	.LASF51
+ 1328 018e C900     		.sleb128 73
+ 1329 0190 06       		.uleb128 0x6
+ 1330 0191 D5070000 		.4byte	.LASF52
+ 1331 0195 CA00     		.sleb128 74
+ 1332 0197 06       		.uleb128 0x6
+ 1333 0198 C8010000 		.4byte	.LASF53
+ 1334 019c CB00     		.sleb128 75
+ 1335 019e 06       		.uleb128 0x6
+ 1336 019f 65050000 		.4byte	.LASF54
+ 1337 01a3 CC00     		.sleb128 76
+ 1338 01a5 06       		.uleb128 0x6
+ 1339 01a6 4F000000 		.4byte	.LASF55
+ 1340 01aa CD00     		.sleb128 77
+ 1341 01ac 06       		.uleb128 0x6
+ 1342 01ad 4E090000 		.4byte	.LASF56
+ 1343 01b1 CE00     		.sleb128 78
+ 1344 01b3 06       		.uleb128 0x6
+ 1345 01b4 30000000 		.4byte	.LASF57
+ 1346 01b8 CF00     		.sleb128 79
+ 1347 01ba 06       		.uleb128 0x6
+ 1348 01bb 1F0A0000 		.4byte	.LASF58
+ 1349 01bf D000     		.sleb128 80
+ 1350 01c1 06       		.uleb128 0x6
+ 1351 01c2 F3070000 		.4byte	.LASF59
+ 1352 01c6 D100     		.sleb128 81
+ 1353 01c8 06       		.uleb128 0x6
+ 1354 01c9 F7030000 		.4byte	.LASF60
+ 1355 01cd D200     		.sleb128 82
+ 1356 01cf 06       		.uleb128 0x6
+ 1357 01d0 76030000 		.4byte	.LASF61
+ 1358 01d4 D300     		.sleb128 83
+ 1359 01d6 06       		.uleb128 0x6
+ 1360 01d7 E7010000 		.4byte	.LASF62
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 29
+
+
+ 1361 01db D400     		.sleb128 84
+ 1362 01dd 06       		.uleb128 0x6
+ 1363 01de 600A0000 		.4byte	.LASF63
+ 1364 01e2 D500     		.sleb128 85
+ 1365 01e4 06       		.uleb128 0x6
+ 1366 01e5 FD090000 		.4byte	.LASF64
+ 1367 01e9 D600     		.sleb128 86
+ 1368 01eb 06       		.uleb128 0x6
+ 1369 01ec B6090000 		.4byte	.LASF65
+ 1370 01f0 D700     		.sleb128 87
+ 1371 01f2 06       		.uleb128 0x6
+ 1372 01f3 67060000 		.4byte	.LASF66
+ 1373 01f7 D800     		.sleb128 88
+ 1374 01f9 06       		.uleb128 0x6
+ 1375 01fa 0A050000 		.4byte	.LASF67
+ 1376 01fe F000     		.sleb128 112
+ 1377 0200 06       		.uleb128 0x6
+ 1378 0201 D4080000 		.4byte	.LASF68
+ 1379 0205 F100     		.sleb128 113
+ 1380 0207 06       		.uleb128 0x6
+ 1381 0208 A0070000 		.4byte	.LASF69
+ 1382 020c F200     		.sleb128 114
+ 1383 020e 06       		.uleb128 0x6
+ 1384 020f 1F020000 		.4byte	.LASF70
+ 1385 0213 F300     		.sleb128 115
+ 1386 0215 06       		.uleb128 0x6
+ 1387 0216 A9040000 		.4byte	.LASF71
+ 1388 021a F400     		.sleb128 116
+ 1389 021c 06       		.uleb128 0x6
+ 1390 021d 29060000 		.4byte	.LASF72
+ 1391 0221 F500     		.sleb128 117
+ 1392 0223 06       		.uleb128 0x6
+ 1393 0224 3D020000 		.4byte	.LASF73
+ 1394 0228 F600     		.sleb128 118
+ 1395 022a 06       		.uleb128 0x6
+ 1396 022b B5080000 		.4byte	.LASF74
+ 1397 022f F700     		.sleb128 119
+ 1398 0231 06       		.uleb128 0x6
+ 1399 0232 4F080000 		.4byte	.LASF75
+ 1400 0236 F800     		.sleb128 120
+ 1401 0238 06       		.uleb128 0x6
+ 1402 0239 79080000 		.4byte	.LASF76
+ 1403 023d F900     		.sleb128 121
+ 1404 023f 06       		.uleb128 0x6
+ 1405 0240 77040000 		.4byte	.LASF77
+ 1406 0244 FA00     		.sleb128 122
+ 1407 0246 06       		.uleb128 0x6
+ 1408 0247 31080000 		.4byte	.LASF78
+ 1409 024b FA01     		.sleb128 250
+ 1410 024d 06       		.uleb128 0x6
+ 1411 024e EB040000 		.4byte	.LASF79
+ 1412 0252 FB01     		.sleb128 251
+ 1413 0254 06       		.uleb128 0x6
+ 1414 0255 A8090000 		.4byte	.LASF80
+ 1415 0259 FF01     		.sleb128 255
+ 1416 025b 00       		.byte	0
+ 1417 025c 02       		.uleb128 0x2
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 30
+
+
+ 1418 025d 08       		.byte	0x8
+ 1419 025e 04       		.byte	0x4
+ 1420 025f 00000000 		.4byte	.LASF81
+ 1421 0263 07       		.uleb128 0x7
+ 1422 0264 FA080000 		.4byte	.LASF82
+ 1423 0268 01       		.byte	0x1
+ 1424 0269 45       		.byte	0x45
+ 1425 026a 00000000 		.4byte	.LFB37
+ 1426 026e 64010000 		.4byte	.LFE37-.LFB37
+ 1427 0272 01       		.uleb128 0x1
+ 1428 0273 9C       		.byte	0x9c
+ 1429 0274 8A020000 		.4byte	0x28a
+ 1430 0278 08       		.uleb128 0x8
+ 1431 0279 AE060000 		.4byte	.LASF84
+ 1432 027d 01       		.byte	0x1
+ 1433 027e 47       		.byte	0x47
+ 1434 027f 8A020000 		.4byte	0x28a
+ 1435 0283 05       		.uleb128 0x5
+ 1436 0284 03       		.byte	0x3
+ 1437 0285 08000000 		.4byte	I2CWriteBuffer.7455
+ 1438 0289 00       		.byte	0
+ 1439 028a 09       		.uleb128 0x9
+ 1440 028b 6B000000 		.4byte	0x6b
+ 1441 028f 9A020000 		.4byte	0x29a
+ 1442 0293 0A       		.uleb128 0xa
+ 1443 0294 98000000 		.4byte	0x98
+ 1444 0298 00       		.byte	0
+ 1445 0299 00       		.byte	0
+ 1446 029a 07       		.uleb128 0x7
+ 1447 029b 34040000 		.4byte	.LASF83
+ 1448 029f 01       		.byte	0x1
+ 1449 02a0 70       		.byte	0x70
+ 1450 02a1 00000000 		.4byte	.LFB38
+ 1451 02a5 90000000 		.4byte	.LFE38-.LFB38
+ 1452 02a9 01       		.uleb128 0x1
+ 1453 02aa 9C       		.byte	0x9c
+ 1454 02ab E3020000 		.4byte	0x2e3
+ 1455 02af 08       		.uleb128 0x8
+ 1456 02b0 43010000 		.4byte	.LASF85
+ 1457 02b4 01       		.byte	0x1
+ 1458 02b5 72       		.byte	0x72
+ 1459 02b6 E3020000 		.4byte	0x2e3
+ 1460 02ba 05       		.uleb128 0x5
+ 1461 02bb 03       		.byte	0x3
+ 1462 02bc 04000000 		.4byte	I2CReadBuffer.7465
+ 1463 02c0 08       		.uleb128 0x8
+ 1464 02c1 AE060000 		.4byte	.LASF84
+ 1465 02c5 01       		.byte	0x1
+ 1466 02c6 73       		.byte	0x73
+ 1467 02c7 E3020000 		.4byte	0x2e3
+ 1468 02cb 05       		.uleb128 0x5
+ 1469 02cc 03       		.byte	0x3
+ 1470 02cd 0C000000 		.4byte	I2CWriteBuffer.7466
+ 1471 02d1 08       		.uleb128 0x8
+ 1472 02d2 02030000 		.4byte	.LASF86
+ 1473 02d6 01       		.byte	0x1
+ 1474 02d7 74       		.byte	0x74
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 31
+
+
+ 1475 02d8 8A020000 		.4byte	0x28a
+ 1476 02dc 05       		.uleb128 0x5
+ 1477 02dd 03       		.byte	0x3
+ 1478 02de 10000000 		.4byte	SetReadAddressBuffer.7467
+ 1479 02e2 00       		.byte	0
+ 1480 02e3 09       		.uleb128 0x9
+ 1481 02e4 6B000000 		.4byte	0x6b
+ 1482 02e8 F3020000 		.4byte	0x2f3
+ 1483 02ec 0A       		.uleb128 0xa
+ 1484 02ed 98000000 		.4byte	0x98
+ 1485 02f1 01       		.byte	0x1
+ 1486 02f2 00       		.byte	0
+ 1487 02f3 07       		.uleb128 0x7
+ 1488 02f4 840A0000 		.4byte	.LASF87
+ 1489 02f8 01       		.byte	0x1
+ 1490 02f9 98       		.byte	0x98
+ 1491 02fa 00000000 		.4byte	.LFB39
+ 1492 02fe 98000000 		.4byte	.LFE39-.LFB39
+ 1493 0302 01       		.uleb128 0x1
+ 1494 0303 9C       		.byte	0x9c
+ 1495 0304 3C030000 		.4byte	0x33c
+ 1496 0308 08       		.uleb128 0x8
+ 1497 0309 43010000 		.4byte	.LASF85
+ 1498 030d 01       		.byte	0x1
+ 1499 030e 9A       		.byte	0x9a
+ 1500 030f 3C030000 		.4byte	0x33c
+ 1501 0313 05       		.uleb128 0x5
+ 1502 0314 03       		.byte	0x3
+ 1503 0315 08000000 		.4byte	I2CReadBuffer.7480
+ 1504 0319 08       		.uleb128 0x8
+ 1505 031a AE060000 		.4byte	.LASF84
+ 1506 031e 01       		.byte	0x1
+ 1507 031f 9B       		.byte	0x9b
+ 1508 0320 E3020000 		.4byte	0x2e3
+ 1509 0324 05       		.uleb128 0x5
+ 1510 0325 03       		.byte	0x3
+ 1511 0326 14000000 		.4byte	I2CWriteBuffer.7481
+ 1512 032a 08       		.uleb128 0x8
+ 1513 032b 02030000 		.4byte	.LASF86
+ 1514 032f 01       		.byte	0x1
+ 1515 0330 9C       		.byte	0x9c
+ 1516 0331 8A020000 		.4byte	0x28a
+ 1517 0335 05       		.uleb128 0x5
+ 1518 0336 03       		.byte	0x3
+ 1519 0337 18000000 		.4byte	SetReadAddressBuffer.7482
+ 1520 033b 00       		.byte	0
+ 1521 033c 09       		.uleb128 0x9
+ 1522 033d 6B000000 		.4byte	0x6b
+ 1523 0341 4C030000 		.4byte	0x34c
+ 1524 0345 0A       		.uleb128 0xa
+ 1525 0346 98000000 		.4byte	0x98
+ 1526 034a 02       		.byte	0x2
+ 1527 034b 00       		.byte	0
+ 1528 034c 0B       		.uleb128 0xb
+ 1529 034d 3E050000 		.4byte	.LASF97
+ 1530 0351 01       		.byte	0x1
+ 1531 0352 C0       		.byte	0xc0
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 32
+
+
+ 1532 0353 00000000 		.4byte	.LFB40
+ 1533 0357 54050000 		.4byte	.LFE40-.LFB40
+ 1534 035b 01       		.uleb128 0x1
+ 1535 035c 9C       		.byte	0x9c
+ 1536 035d 09       		.uleb128 0x9
+ 1537 035e 6B000000 		.4byte	0x6b
+ 1538 0362 6D030000 		.4byte	0x36d
+ 1539 0366 0A       		.uleb128 0xa
+ 1540 0367 98000000 		.4byte	0x98
+ 1541 036b 15       		.byte	0x15
+ 1542 036c 00       		.byte	0
+ 1543 036d 0C       		.uleb128 0xc
+ 1544 036e CF050000 		.4byte	.LASF88
+ 1545 0372 01       		.byte	0x1
+ 1546 0373 2D       		.byte	0x2d
+ 1547 0374 5D030000 		.4byte	0x35d
+ 1548 0378 05       		.uleb128 0x5
+ 1549 0379 03       		.byte	0x3
+ 1550 037a 00000000 		.4byte	SensorCalibrationData
+ 1551 037e 0D       		.uleb128 0xd
+ 1552 037f 583100   		.ascii	"X1\000"
+ 1553 0382 01       		.byte	0x1
+ 1554 0383 2E       		.byte	0x2e
+ 1555 0384 41000000 		.4byte	0x41
+ 1556 0388 05       		.uleb128 0x5
+ 1557 0389 03       		.byte	0x3
+ 1558 038a 00000000 		.4byte	X1
+ 1559 038e 0D       		.uleb128 0xd
+ 1560 038f 583200   		.ascii	"X2\000"
+ 1561 0392 01       		.byte	0x1
+ 1562 0393 2E       		.byte	0x2e
+ 1563 0394 41000000 		.4byte	0x41
+ 1564 0398 05       		.uleb128 0x5
+ 1565 0399 03       		.byte	0x3
+ 1566 039a 00000000 		.4byte	X2
+ 1567 039e 0D       		.uleb128 0xd
+ 1568 039f 583300   		.ascii	"X3\000"
+ 1569 03a2 01       		.byte	0x1
+ 1570 03a3 2E       		.byte	0x2e
+ 1571 03a4 41000000 		.4byte	0x41
+ 1572 03a8 05       		.uleb128 0x5
+ 1573 03a9 03       		.byte	0x3
+ 1574 03aa 00000000 		.4byte	X3
+ 1575 03ae 0D       		.uleb128 0xd
+ 1576 03af 423300   		.ascii	"B3\000"
+ 1577 03b2 01       		.byte	0x1
+ 1578 03b3 2E       		.byte	0x2e
+ 1579 03b4 41000000 		.4byte	0x41
+ 1580 03b8 05       		.uleb128 0x5
+ 1581 03b9 03       		.byte	0x3
+ 1582 03ba 00000000 		.4byte	B3
+ 1583 03be 0D       		.uleb128 0xd
+ 1584 03bf 423500   		.ascii	"B5\000"
+ 1585 03c2 01       		.byte	0x1
+ 1586 03c3 2E       		.byte	0x2e
+ 1587 03c4 41000000 		.4byte	0x41
+ 1588 03c8 05       		.uleb128 0x5
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 33
+
+
+ 1589 03c9 03       		.byte	0x3
+ 1590 03ca 00000000 		.4byte	B5
+ 1591 03ce 0D       		.uleb128 0xd
+ 1592 03cf 423600   		.ascii	"B6\000"
+ 1593 03d2 01       		.byte	0x1
+ 1594 03d3 2E       		.byte	0x2e
+ 1595 03d4 41000000 		.4byte	0x41
+ 1596 03d8 05       		.uleb128 0x5
+ 1597 03d9 03       		.byte	0x3
+ 1598 03da 00000000 		.4byte	B6
+ 1599 03de 0D       		.uleb128 0xd
+ 1600 03df 555400   		.ascii	"UT\000"
+ 1601 03e2 01       		.byte	0x1
+ 1602 03e3 32       		.byte	0x32
+ 1603 03e4 41000000 		.4byte	0x41
+ 1604 03e8 05       		.uleb128 0x5
+ 1605 03e9 03       		.byte	0x3
+ 1606 03ea 00000000 		.4byte	UT
+ 1607 03ee 0D       		.uleb128 0xd
+ 1608 03ef 555000   		.ascii	"UP\000"
+ 1609 03f2 01       		.byte	0x1
+ 1610 03f3 32       		.byte	0x32
+ 1611 03f4 41000000 		.4byte	0x41
+ 1612 03f8 05       		.uleb128 0x5
+ 1613 03f9 03       		.byte	0x3
+ 1614 03fa 00000000 		.4byte	UP
+ 1615 03fe 0D       		.uleb128 0xd
+ 1616 03ff 423400   		.ascii	"B4\000"
+ 1617 0402 01       		.byte	0x1
+ 1618 0403 2F       		.byte	0x2f
+ 1619 0404 48000000 		.4byte	0x48
+ 1620 0408 05       		.uleb128 0x5
+ 1621 0409 03       		.byte	0x3
+ 1622 040a 00000000 		.4byte	B4
+ 1623 040e 0D       		.uleb128 0xd
+ 1624 040f 423700   		.ascii	"B7\000"
+ 1625 0412 01       		.byte	0x1
+ 1626 0413 2F       		.byte	0x2f
+ 1627 0414 48000000 		.4byte	0x48
+ 1628 0418 05       		.uleb128 0x5
+ 1629 0419 03       		.byte	0x3
+ 1630 041a 00000000 		.4byte	B7
+ 1631 041e 0D       		.uleb128 0xd
+ 1632 041f 41433100 		.ascii	"AC1\000"
+ 1633 0423 01       		.byte	0x1
+ 1634 0424 30       		.byte	0x30
+ 1635 0425 33000000 		.4byte	0x33
+ 1636 0429 05       		.uleb128 0x5
+ 1637 042a 03       		.byte	0x3
+ 1638 042b 00000000 		.4byte	AC1
+ 1639 042f 0D       		.uleb128 0xd
+ 1640 0430 41433200 		.ascii	"AC2\000"
+ 1641 0434 01       		.byte	0x1
+ 1642 0435 30       		.byte	0x30
+ 1643 0436 33000000 		.4byte	0x33
+ 1644 043a 05       		.uleb128 0x5
+ 1645 043b 03       		.byte	0x3
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 34
+
+
+ 1646 043c 00000000 		.4byte	AC2
+ 1647 0440 0D       		.uleb128 0xd
+ 1648 0441 41433300 		.ascii	"AC3\000"
+ 1649 0445 01       		.byte	0x1
+ 1650 0446 30       		.byte	0x30
+ 1651 0447 33000000 		.4byte	0x33
+ 1652 044b 05       		.uleb128 0x5
+ 1653 044c 03       		.byte	0x3
+ 1654 044d 00000000 		.4byte	AC3
+ 1655 0451 0D       		.uleb128 0xd
+ 1656 0452 423100   		.ascii	"B1\000"
+ 1657 0455 01       		.byte	0x1
+ 1658 0456 30       		.byte	0x30
+ 1659 0457 33000000 		.4byte	0x33
+ 1660 045b 05       		.uleb128 0x5
+ 1661 045c 03       		.byte	0x3
+ 1662 045d 00000000 		.4byte	B1
+ 1663 0461 0D       		.uleb128 0xd
+ 1664 0462 423200   		.ascii	"B2\000"
+ 1665 0465 01       		.byte	0x1
+ 1666 0466 30       		.byte	0x30
+ 1667 0467 33000000 		.4byte	0x33
+ 1668 046b 05       		.uleb128 0x5
+ 1669 046c 03       		.byte	0x3
+ 1670 046d 00000000 		.4byte	B2
+ 1671 0471 0D       		.uleb128 0xd
+ 1672 0472 4D4300   		.ascii	"MC\000"
+ 1673 0475 01       		.byte	0x1
+ 1674 0476 30       		.byte	0x30
+ 1675 0477 33000000 		.4byte	0x33
+ 1676 047b 05       		.uleb128 0x5
+ 1677 047c 03       		.byte	0x3
+ 1678 047d 00000000 		.4byte	MC
+ 1679 0481 0D       		.uleb128 0xd
+ 1680 0482 4D4400   		.ascii	"MD\000"
+ 1681 0485 01       		.byte	0x1
+ 1682 0486 30       		.byte	0x30
+ 1683 0487 33000000 		.4byte	0x33
+ 1684 048b 05       		.uleb128 0x5
+ 1685 048c 03       		.byte	0x3
+ 1686 048d 00000000 		.4byte	MD
+ 1687 0491 0D       		.uleb128 0xd
+ 1688 0492 41433400 		.ascii	"AC4\000"
+ 1689 0496 01       		.byte	0x1
+ 1690 0497 31       		.byte	0x31
+ 1691 0498 3A000000 		.4byte	0x3a
+ 1692 049c 05       		.uleb128 0x5
+ 1693 049d 03       		.byte	0x3
+ 1694 049e 00000000 		.4byte	AC4
+ 1695 04a2 0D       		.uleb128 0xd
+ 1696 04a3 41433500 		.ascii	"AC5\000"
+ 1697 04a7 01       		.byte	0x1
+ 1698 04a8 31       		.byte	0x31
+ 1699 04a9 3A000000 		.4byte	0x3a
+ 1700 04ad 05       		.uleb128 0x5
+ 1701 04ae 03       		.byte	0x3
+ 1702 04af 00000000 		.4byte	AC5
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 35
+
+
+ 1703 04b3 0D       		.uleb128 0xd
+ 1704 04b4 41433600 		.ascii	"AC6\000"
+ 1705 04b8 01       		.byte	0x1
+ 1706 04b9 31       		.byte	0x31
+ 1707 04ba 3A000000 		.4byte	0x3a
+ 1708 04be 05       		.uleb128 0x5
+ 1709 04bf 03       		.byte	0x3
+ 1710 04c0 00000000 		.4byte	AC6
+ 1711 04c4 0C       		.uleb128 0xc
+ 1712 04c5 8A090000 		.4byte	.LASF89
+ 1713 04c9 01       		.byte	0x1
+ 1714 04ca 33       		.byte	0x33
+ 1715 04cb 41000000 		.4byte	0x41
+ 1716 04cf 05       		.uleb128 0x5
+ 1717 04d0 03       		.byte	0x3
+ 1718 04d1 00000000 		.4byte	Temperature
+ 1719 04d5 0C       		.uleb128 0xc
+ 1720 04d6 2C010000 		.4byte	.LASF90
+ 1721 04da 01       		.byte	0x1
+ 1722 04db 33       		.byte	0x33
+ 1723 04dc 41000000 		.4byte	0x41
+ 1724 04e0 05       		.uleb128 0x5
+ 1725 04e1 03       		.byte	0x3
+ 1726 04e2 00000000 		.4byte	Pressure
+ 1727 04e6 0C       		.uleb128 0xc
+ 1728 04e7 BF010000 		.4byte	.LASF91
+ 1729 04eb 01       		.byte	0x1
+ 1730 04ec 33       		.byte	0x33
+ 1731 04ed 41000000 		.4byte	0x41
+ 1732 04f1 05       		.uleb128 0x5
+ 1733 04f2 03       		.byte	0x3
+ 1734 04f3 00000000 		.4byte	Altitude
+ 1735 04f7 0C       		.uleb128 0xc
+ 1736 04f8 14090000 		.4byte	.LASF92
+ 1737 04fc 01       		.byte	0x1
+ 1738 04fd 34       		.byte	0x34
+ 1739 04fe 8A000000 		.4byte	0x8a
+ 1740 0502 05       		.uleb128 0x5
+ 1741 0503 03       		.byte	0x3
+ 1742 0504 00000000 		.4byte	PressureAtSeaLevel
+ 1743 0508 0C       		.uleb128 0xc
+ 1744 0509 97030000 		.4byte	.LASF93
+ 1745 050d 01       		.byte	0x1
+ 1746 050e 35       		.byte	0x35
+ 1747 050f 6B000000 		.4byte	0x6b
+ 1748 0513 05       		.uleb128 0x5
+ 1749 0514 03       		.byte	0x3
+ 1750 0515 00000000 		.4byte	CalibrationDataAvailable
+ 1751 0519 00       		.byte	0
+ 1752              		.section	.debug_abbrev,"",%progbits
+ 1753              	.Ldebug_abbrev0:
+ 1754 0000 01       		.uleb128 0x1
+ 1755 0001 11       		.uleb128 0x11
+ 1756 0002 01       		.byte	0x1
+ 1757 0003 25       		.uleb128 0x25
+ 1758 0004 0E       		.uleb128 0xe
+ 1759 0005 13       		.uleb128 0x13
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 36
+
+
+ 1760 0006 0B       		.uleb128 0xb
+ 1761 0007 03       		.uleb128 0x3
+ 1762 0008 0E       		.uleb128 0xe
+ 1763 0009 1B       		.uleb128 0x1b
+ 1764 000a 0E       		.uleb128 0xe
+ 1765 000b 55       		.uleb128 0x55
+ 1766 000c 17       		.uleb128 0x17
+ 1767 000d 11       		.uleb128 0x11
+ 1768 000e 01       		.uleb128 0x1
+ 1769 000f 10       		.uleb128 0x10
+ 1770 0010 17       		.uleb128 0x17
+ 1771 0011 00       		.byte	0
+ 1772 0012 00       		.byte	0
+ 1773 0013 02       		.uleb128 0x2
+ 1774 0014 24       		.uleb128 0x24
+ 1775 0015 00       		.byte	0
+ 1776 0016 0B       		.uleb128 0xb
+ 1777 0017 0B       		.uleb128 0xb
+ 1778 0018 3E       		.uleb128 0x3e
+ 1779 0019 0B       		.uleb128 0xb
+ 1780 001a 03       		.uleb128 0x3
+ 1781 001b 0E       		.uleb128 0xe
+ 1782 001c 00       		.byte	0
+ 1783 001d 00       		.byte	0
+ 1784 001e 03       		.uleb128 0x3
+ 1785 001f 24       		.uleb128 0x24
+ 1786 0020 00       		.byte	0
+ 1787 0021 0B       		.uleb128 0xb
+ 1788 0022 0B       		.uleb128 0xb
+ 1789 0023 3E       		.uleb128 0x3e
+ 1790 0024 0B       		.uleb128 0xb
+ 1791 0025 03       		.uleb128 0x3
+ 1792 0026 08       		.uleb128 0x8
+ 1793 0027 00       		.byte	0
+ 1794 0028 00       		.byte	0
+ 1795 0029 04       		.uleb128 0x4
+ 1796 002a 16       		.uleb128 0x16
+ 1797 002b 00       		.byte	0
+ 1798 002c 03       		.uleb128 0x3
+ 1799 002d 0E       		.uleb128 0xe
+ 1800 002e 3A       		.uleb128 0x3a
+ 1801 002f 0B       		.uleb128 0xb
+ 1802 0030 3B       		.uleb128 0x3b
+ 1803 0031 05       		.uleb128 0x5
+ 1804 0032 49       		.uleb128 0x49
+ 1805 0033 13       		.uleb128 0x13
+ 1806 0034 00       		.byte	0
+ 1807 0035 00       		.byte	0
+ 1808 0036 05       		.uleb128 0x5
+ 1809 0037 04       		.uleb128 0x4
+ 1810 0038 01       		.byte	0x1
+ 1811 0039 0B       		.uleb128 0xb
+ 1812 003a 0B       		.uleb128 0xb
+ 1813 003b 3A       		.uleb128 0x3a
+ 1814 003c 0B       		.uleb128 0xb
+ 1815 003d 3B       		.uleb128 0x3b
+ 1816 003e 05       		.uleb128 0x5
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 37
+
+
+ 1817 003f 01       		.uleb128 0x1
+ 1818 0040 13       		.uleb128 0x13
+ 1819 0041 00       		.byte	0
+ 1820 0042 00       		.byte	0
+ 1821 0043 06       		.uleb128 0x6
+ 1822 0044 28       		.uleb128 0x28
+ 1823 0045 00       		.byte	0
+ 1824 0046 03       		.uleb128 0x3
+ 1825 0047 0E       		.uleb128 0xe
+ 1826 0048 1C       		.uleb128 0x1c
+ 1827 0049 0D       		.uleb128 0xd
+ 1828 004a 00       		.byte	0
+ 1829 004b 00       		.byte	0
+ 1830 004c 07       		.uleb128 0x7
+ 1831 004d 2E       		.uleb128 0x2e
+ 1832 004e 01       		.byte	0x1
+ 1833 004f 3F       		.uleb128 0x3f
+ 1834 0050 19       		.uleb128 0x19
+ 1835 0051 03       		.uleb128 0x3
+ 1836 0052 0E       		.uleb128 0xe
+ 1837 0053 3A       		.uleb128 0x3a
+ 1838 0054 0B       		.uleb128 0xb
+ 1839 0055 3B       		.uleb128 0x3b
+ 1840 0056 0B       		.uleb128 0xb
+ 1841 0057 27       		.uleb128 0x27
+ 1842 0058 19       		.uleb128 0x19
+ 1843 0059 11       		.uleb128 0x11
+ 1844 005a 01       		.uleb128 0x1
+ 1845 005b 12       		.uleb128 0x12
+ 1846 005c 06       		.uleb128 0x6
+ 1847 005d 40       		.uleb128 0x40
+ 1848 005e 18       		.uleb128 0x18
+ 1849 005f 9642     		.uleb128 0x2116
+ 1850 0061 19       		.uleb128 0x19
+ 1851 0062 01       		.uleb128 0x1
+ 1852 0063 13       		.uleb128 0x13
+ 1853 0064 00       		.byte	0
+ 1854 0065 00       		.byte	0
+ 1855 0066 08       		.uleb128 0x8
+ 1856 0067 34       		.uleb128 0x34
+ 1857 0068 00       		.byte	0
+ 1858 0069 03       		.uleb128 0x3
+ 1859 006a 0E       		.uleb128 0xe
+ 1860 006b 3A       		.uleb128 0x3a
+ 1861 006c 0B       		.uleb128 0xb
+ 1862 006d 3B       		.uleb128 0x3b
+ 1863 006e 0B       		.uleb128 0xb
+ 1864 006f 49       		.uleb128 0x49
+ 1865 0070 13       		.uleb128 0x13
+ 1866 0071 02       		.uleb128 0x2
+ 1867 0072 18       		.uleb128 0x18
+ 1868 0073 00       		.byte	0
+ 1869 0074 00       		.byte	0
+ 1870 0075 09       		.uleb128 0x9
+ 1871 0076 01       		.uleb128 0x1
+ 1872 0077 01       		.byte	0x1
+ 1873 0078 49       		.uleb128 0x49
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 38
+
+
+ 1874 0079 13       		.uleb128 0x13
+ 1875 007a 01       		.uleb128 0x1
+ 1876 007b 13       		.uleb128 0x13
+ 1877 007c 00       		.byte	0
+ 1878 007d 00       		.byte	0
+ 1879 007e 0A       		.uleb128 0xa
+ 1880 007f 21       		.uleb128 0x21
+ 1881 0080 00       		.byte	0
+ 1882 0081 49       		.uleb128 0x49
+ 1883 0082 13       		.uleb128 0x13
+ 1884 0083 2F       		.uleb128 0x2f
+ 1885 0084 0B       		.uleb128 0xb
+ 1886 0085 00       		.byte	0
+ 1887 0086 00       		.byte	0
+ 1888 0087 0B       		.uleb128 0xb
+ 1889 0088 2E       		.uleb128 0x2e
+ 1890 0089 00       		.byte	0
+ 1891 008a 3F       		.uleb128 0x3f
+ 1892 008b 19       		.uleb128 0x19
+ 1893 008c 03       		.uleb128 0x3
+ 1894 008d 0E       		.uleb128 0xe
+ 1895 008e 3A       		.uleb128 0x3a
+ 1896 008f 0B       		.uleb128 0xb
+ 1897 0090 3B       		.uleb128 0x3b
+ 1898 0091 0B       		.uleb128 0xb
+ 1899 0092 27       		.uleb128 0x27
+ 1900 0093 19       		.uleb128 0x19
+ 1901 0094 11       		.uleb128 0x11
+ 1902 0095 01       		.uleb128 0x1
+ 1903 0096 12       		.uleb128 0x12
+ 1904 0097 06       		.uleb128 0x6
+ 1905 0098 40       		.uleb128 0x40
+ 1906 0099 18       		.uleb128 0x18
+ 1907 009a 9642     		.uleb128 0x2116
+ 1908 009c 19       		.uleb128 0x19
+ 1909 009d 00       		.byte	0
+ 1910 009e 00       		.byte	0
+ 1911 009f 0C       		.uleb128 0xc
+ 1912 00a0 34       		.uleb128 0x34
+ 1913 00a1 00       		.byte	0
+ 1914 00a2 03       		.uleb128 0x3
+ 1915 00a3 0E       		.uleb128 0xe
+ 1916 00a4 3A       		.uleb128 0x3a
+ 1917 00a5 0B       		.uleb128 0xb
+ 1918 00a6 3B       		.uleb128 0x3b
+ 1919 00a7 0B       		.uleb128 0xb
+ 1920 00a8 49       		.uleb128 0x49
+ 1921 00a9 13       		.uleb128 0x13
+ 1922 00aa 3F       		.uleb128 0x3f
+ 1923 00ab 19       		.uleb128 0x19
+ 1924 00ac 02       		.uleb128 0x2
+ 1925 00ad 18       		.uleb128 0x18
+ 1926 00ae 00       		.byte	0
+ 1927 00af 00       		.byte	0
+ 1928 00b0 0D       		.uleb128 0xd
+ 1929 00b1 34       		.uleb128 0x34
+ 1930 00b2 00       		.byte	0
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 39
+
+
+ 1931 00b3 03       		.uleb128 0x3
+ 1932 00b4 08       		.uleb128 0x8
+ 1933 00b5 3A       		.uleb128 0x3a
+ 1934 00b6 0B       		.uleb128 0xb
+ 1935 00b7 3B       		.uleb128 0x3b
+ 1936 00b8 0B       		.uleb128 0xb
+ 1937 00b9 49       		.uleb128 0x49
+ 1938 00ba 13       		.uleb128 0x13
+ 1939 00bb 3F       		.uleb128 0x3f
+ 1940 00bc 19       		.uleb128 0x19
+ 1941 00bd 02       		.uleb128 0x2
+ 1942 00be 18       		.uleb128 0x18
+ 1943 00bf 00       		.byte	0
+ 1944 00c0 00       		.byte	0
+ 1945 00c1 00       		.byte	0
+ 1946              		.section	.debug_aranges,"",%progbits
+ 1947 0000 34000000 		.4byte	0x34
+ 1948 0004 0200     		.2byte	0x2
+ 1949 0006 00000000 		.4byte	.Ldebug_info0
+ 1950 000a 04       		.byte	0x4
+ 1951 000b 00       		.byte	0
+ 1952 000c 0000     		.2byte	0
+ 1953 000e 0000     		.2byte	0
+ 1954 0010 00000000 		.4byte	.LFB37
+ 1955 0014 64010000 		.4byte	.LFE37-.LFB37
+ 1956 0018 00000000 		.4byte	.LFB38
+ 1957 001c 90000000 		.4byte	.LFE38-.LFB38
+ 1958 0020 00000000 		.4byte	.LFB39
+ 1959 0024 98000000 		.4byte	.LFE39-.LFB39
+ 1960 0028 00000000 		.4byte	.LFB40
+ 1961 002c 54050000 		.4byte	.LFE40-.LFB40
+ 1962 0030 00000000 		.4byte	0
+ 1963 0034 00000000 		.4byte	0
+ 1964              		.section	.debug_ranges,"",%progbits
+ 1965              	.Ldebug_ranges0:
+ 1966 0000 00000000 		.4byte	.LFB37
+ 1967 0004 64010000 		.4byte	.LFE37
+ 1968 0008 00000000 		.4byte	.LFB38
+ 1969 000c 90000000 		.4byte	.LFE38
+ 1970 0010 00000000 		.4byte	.LFB39
+ 1971 0014 98000000 		.4byte	.LFE39
+ 1972 0018 00000000 		.4byte	.LFB40
+ 1973 001c 54050000 		.4byte	.LFE40
+ 1974 0020 00000000 		.4byte	0
+ 1975 0024 00000000 		.4byte	0
+ 1976              		.section	.debug_line,"",%progbits
+ 1977              	.Ldebug_line0:
+ 1978 0000 30010000 		.section	.debug_str,"MS",%progbits,1
+ 1978      02005700 
+ 1978      00000201 
+ 1978      FB0E0D00 
+ 1978      01010101 
+ 1979              	.LASF81:
+ 1980 0000 6C6F6E67 		.ascii	"long double\000"
+ 1980      20646F75 
+ 1980      626C6500 
+ 1981              	.LASF24:
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 40
+
+
+ 1982 000c 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_ENTRY_REQUEST\000"
+ 1982      455F4556 
+ 1982      545F4741 
+ 1982      505F5041 
+ 1982      53534B45 
+ 1983              	.LASF57:
+ 1984 0030 4359424C 		.ascii	"CYBLE_EVT_GATTS_PREP_WRITE_REQ\000"
+ 1984      455F4556 
+ 1984      545F4741 
+ 1984      5454535F 
+ 1984      50524550 
+ 1985              	.LASF55:
+ 1986 004f 4359424C 		.ascii	"CYBLE_EVT_GATTC_WRITE_RSP\000"
+ 1986      455F4556 
+ 1986      545F4741 
+ 1986      5454435F 
+ 1986      57524954 
+ 1987              	.LASF21:
+ 1988 0069 4359424C 		.ascii	"CYBLE_EVT_MEMORY_REQUEST\000"
+ 1988      455F4556 
+ 1988      545F4D45 
+ 1988      4D4F5259 
+ 1988      5F524551 
+ 1989              	.LASF42:
+ 1990 0082 4359424C 		.ascii	"CYBLE_EVT_GATTC_ERROR_RSP\000"
+ 1990      455F4556 
+ 1990      545F4741 
+ 1990      5454435F 
+ 1990      4552524F 
+ 1991              	.LASF36:
+ 1992 009c 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYPRESS_NOTIFICATION\000"
+ 1992      455F4556 
+ 1992      545F4741 
+ 1992      505F4B45 
+ 1992      59505245 
+ 1993              	.LASF2:
+ 1994 00c0 73686F72 		.ascii	"short int\000"
+ 1994      7420696E 
+ 1994      7400
+ 1995              	.LASF27:
+ 1996 00ca 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_FAILED\000"
+ 1996      455F4556 
+ 1996      545F4741 
+ 1996      505F4155 
+ 1996      54485F46 
+ 1997              	.LASF44:
+ 1998 00e4 4359424C 		.ascii	"CYBLE_EVT_GATT_DISCONNECT_IND\000"
+ 1998      455F4556 
+ 1998      545F4741 
+ 1998      54545F44 
+ 1998      4953434F 
+ 1999              	.LASF14:
+ 2000 0102 73697A65 		.ascii	"sizetype\000"
+ 2000      74797065 
+ 2000      00
+ 2001              	.LASF38:
+ 2002 010b 4359424C 		.ascii	"CYBLE_EVT_GAP_DATA_LENGTH_CHANGE\000"
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 41
+
+
+ 2002      455F4556 
+ 2002      545F4741 
+ 2002      505F4441 
+ 2002      54415F4C 
+ 2003              	.LASF90:
+ 2004 012c 50726573 		.ascii	"Pressure\000"
+ 2004      73757265 
+ 2004      00
+ 2005              	.LASF6:
+ 2006 0135 6C6F6E67 		.ascii	"long long int\000"
+ 2006      206C6F6E 
+ 2006      6720696E 
+ 2006      7400
+ 2007              	.LASF85:
+ 2008 0143 49324352 		.ascii	"I2CReadBuffer\000"
+ 2008      65616442 
+ 2008      75666665 
+ 2008      7200
+ 2009              	.LASF19:
+ 2010 0151 4359424C 		.ascii	"CYBLE_EVT_HCI_STATUS\000"
+ 2010      455F4556 
+ 2010      545F4843 
+ 2010      495F5354 
+ 2010      41545553 
+ 2011              	.LASF48:
+ 2012 0166 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_TYPE_RSP\000"
+ 2012      455F4556 
+ 2012      545F4741 
+ 2012      5454435F 
+ 2012      52454144 
+ 2013              	.LASF16:
+ 2014 0187 4359424C 		.ascii	"CYBLE_EVT_STACK_ON\000"
+ 2014      455F4556 
+ 2014      545F5354 
+ 2014      41434B5F 
+ 2014      4F4E00
+ 2015              	.LASF45:
+ 2016 019a 4359424C 		.ascii	"CYBLE_EVT_GATTS_XCNHG_MTU_REQ\000"
+ 2016      455F4556 
+ 2016      545F4741 
+ 2016      5454535F 
+ 2016      58434E48 
+ 2017              	.LASF10:
+ 2018 01b8 75696E74 		.ascii	"uint16\000"
+ 2018      313600
+ 2019              	.LASF91:
+ 2020 01bf 416C7469 		.ascii	"Altitude\000"
+ 2020      74756465 
+ 2020      00
+ 2021              	.LASF53:
+ 2022 01c8 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_MULTI_RSP\000"
+ 2022      455F4556 
+ 2022      545F4741 
+ 2022      5454435F 
+ 2022      52454144 
+ 2023              	.LASF62:
+ 2024 01e7 4359424C 		.ascii	"CYBLE_EVT_GATTS_HANDLE_VALUE_CNF\000"
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 42
+
+
+ 2024      455F4556 
+ 2024      545F4741 
+ 2024      5454535F 
+ 2024      48414E44 
+ 2025              	.LASF15:
+ 2026 0208 4359424C 		.ascii	"CYBLE_EVT_HOST_INVALID\000"
+ 2026      455F4556 
+ 2026      545F484F 
+ 2026      53545F49 
+ 2026      4E56414C 
+ 2027              	.LASF70:
+ 2028 021f 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_IND\000"
+ 2028      455F4556 
+ 2028      545F4C32 
+ 2028      4341505F 
+ 2028      43424643 
+ 2029              	.LASF73:
+ 2030 023d 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_CNF\000"
+ 2030      455F4556 
+ 2030      545F4C32 
+ 2030      4341505F 
+ 2030      43424643 
+ 2031              	.LASF11:
+ 2032 025e 666C6F61 		.ascii	"float\000"
+ 2032      7400
+ 2033              	.LASF22:
+ 2034 0264 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT\000"
+ 2034      455F4556 
+ 2034      545F4741 
+ 2034      50435F53 
+ 2034      43414E5F 
+ 2035              	.LASF51:
+ 2036 0288 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_RSP\000"
+ 2036      455F4556 
+ 2036      545F4741 
+ 2036      5454435F 
+ 2036      52454144 
+ 2037              	.LASF35:
+ 2038 02a1 4359424C 		.ascii	"CYBLE_EVT_GAP_NUMERIC_COMPARISON_REQUEST\000"
+ 2038      455F4556 
+ 2038      545F4741 
+ 2038      505F4E55 
+ 2038      4D455249 
+ 2039              	.LASF40:
+ 2040 02ca 4359424C 		.ascii	"CYBLE_EVT_GAPC_DIRECT_ADV_REPORT\000"
+ 2040      455F4556 
+ 2040      545F4741 
+ 2040      50435F44 
+ 2040      49524543 
+ 2041              	.LASF7:
+ 2042 02eb 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2042      206C6F6E 
+ 2042      6720756E 
+ 2042      7369676E 
+ 2042      65642069 
+ 2043              	.LASF86:
+ 2044 0302 53657452 		.ascii	"SetReadAddressBuffer\000"
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 43
+
+
+ 2044      65616441 
+ 2044      64647265 
+ 2044      73734275 
+ 2044      66666572 
+ 2045              	.LASF96:
+ 2046 0317 433A5C55 		.ascii	"C:\\Users\\Ecapable\\Desktop\\PSoC_4_BLE_Pressure_S"
+ 2046      73657273 
+ 2046      5C456361 
+ 2046      7061626C 
+ 2046      655C4465 
+ 2047 0346 656E736F 		.ascii	"ensor\\PSoC_4_BLE_Pressure_Sensor.cydsn\000"
+ 2047      725C5053 
+ 2047      6F435F34 
+ 2047      5F424C45 
+ 2047      5F507265 
+ 2048              	.LASF4:
+ 2049 036d 6C6F6E67 		.ascii	"long int\000"
+ 2049      20696E74 
+ 2049      00
+ 2050              	.LASF61:
+ 2051 0376 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_IND\000"
+ 2051      455F4556 
+ 2051      545F4741 
+ 2051      5454435F 
+ 2051      48414E44 
+ 2052              	.LASF93:
+ 2053 0397 43616C69 		.ascii	"CalibrationDataAvailable\000"
+ 2053      62726174 
+ 2053      696F6E44 
+ 2053      61746141 
+ 2053      7661696C 
+ 2054              	.LASF29:
+ 2055 03b0 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_CONNECTED\000"
+ 2055      455F4556 
+ 2055      545F4741 
+ 2055      505F4445 
+ 2055      56494345 
+ 2056              	.LASF28:
+ 2057 03cf 4359424C 		.ascii	"CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\000"
+ 2057      455F4556 
+ 2057      545F4741 
+ 2057      50505F41 
+ 2057      44564552 
+ 2058              	.LASF60:
+ 2059 03f7 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_NTF\000"
+ 2059      455F4556 
+ 2059      545F4741 
+ 2059      5454435F 
+ 2059      48414E44 
+ 2060              	.LASF20:
+ 2061 0418 4359424C 		.ascii	"CYBLE_EVT_STACK_BUSY_STATUS\000"
+ 2061      455F4556 
+ 2061      545F5354 
+ 2061      41434B5F 
+ 2061      42555359 
+ 2062              	.LASF83:
+ 2063 0434 52656164 		.ascii	"ReadUncompensatedTemperature\000"
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 44
+
+
+ 2063      556E636F 
+ 2063      6D70656E 
+ 2063      73617465 
+ 2063      6454656D 
+ 2064              	.LASF25:
+ 2065 0451 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_DISPLAY_REQUEST\000"
+ 2065      455F4556 
+ 2065      545F4741 
+ 2065      505F5041 
+ 2065      53534B45 
+ 2066              	.LASF77:
+ 2067 0477 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_WRITE_IND\000"
+ 2067      455F4556 
+ 2067      545F4C32 
+ 2067      4341505F 
+ 2067      43424643 
+ 2068              	.LASF95:
+ 2069 049b 2E5C4932 		.ascii	".\\I2CMaster.c\000"
+ 2069      434D6173 
+ 2069      7465722E 
+ 2069      6300
+ 2070              	.LASF71:
+ 2071 04a9 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_CNF\000"
+ 2071      455F4556 
+ 2071      545F4C32 
+ 2071      4341505F 
+ 2071      43424643 
+ 2072              	.LASF39:
+ 2073 04c7 4359424C 		.ascii	"CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE\000"
+ 2073      455F4556 
+ 2073      545F4741 
+ 2073      505F454E 
+ 2073      48414E43 
+ 2074              	.LASF79:
+ 2075 04eb 4359424C 		.ascii	"CYBLE_EVT_LE_PING_AUTH_TIMEOUT\000"
+ 2075      455F4556 
+ 2075      545F4C45 
+ 2075      5F50494E 
+ 2075      475F4155 
+ 2076              	.LASF67:
+ 2077 050a 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_REQ\000"
+ 2077      455F4556 
+ 2077      545F4C32 
+ 2077      4341505F 
+ 2077      434F4E4E 
+ 2078              	.LASF1:
+ 2079 0530 756E7369 		.ascii	"unsigned char\000"
+ 2079      676E6564 
+ 2079      20636861 
+ 2079      7200
+ 2080              	.LASF97:
+ 2081 053e 52656164 		.ascii	"ReadAndCalculateSensorData\000"
+ 2081      416E6443 
+ 2081      616C6375 
+ 2081      6C617465 
+ 2081      53656E73 
+ 2082              	.LASF0:
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 45
+
+
+ 2083 0559 7369676E 		.ascii	"signed char\000"
+ 2083      65642063 
+ 2083      68617200 
+ 2084              	.LASF54:
+ 2085 0565 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_REQ\000"
+ 2085      455F4556 
+ 2085      545F4741 
+ 2085      5454535F 
+ 2085      57524954 
+ 2086              	.LASF50:
+ 2087 057f 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_BY_TYPE_VALUE_RSP\000"
+ 2087      455F4556 
+ 2087      545F4741 
+ 2087      5454435F 
+ 2087      46494E44 
+ 2088              	.LASF26:
+ 2089 05a6 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_COMPLETE\000"
+ 2089      455F4556 
+ 2089      545F4741 
+ 2089      505F4155 
+ 2089      54485F43 
+ 2090              	.LASF8:
+ 2091 05c2 756E7369 		.ascii	"unsigned int\000"
+ 2091      676E6564 
+ 2091      20696E74 
+ 2091      00
+ 2092              	.LASF88:
+ 2093 05cf 53656E73 		.ascii	"SensorCalibrationData\000"
+ 2093      6F724361 
+ 2093      6C696272 
+ 2093      6174696F 
+ 2093      6E446174 
+ 2094              	.LASF43:
+ 2095 05e5 4359424C 		.ascii	"CYBLE_EVT_GATT_CONNECT_IND\000"
+ 2095      455F4556 
+ 2095      545F4741 
+ 2095      54545F43 
+ 2095      4F4E4E45 
+ 2096              	.LASF5:
+ 2097 0600 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2097      20756E73 
+ 2097      69676E65 
+ 2097      6420696E 
+ 2097      7400
+ 2098              	.LASF23:
+ 2099 0612 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_REQ\000"
+ 2099      455F4556 
+ 2099      545F4741 
+ 2099      505F4155 
+ 2099      54485F52 
+ 2100              	.LASF72:
+ 2101 0629 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_IND\000"
+ 2101      455F4556 
+ 2101      545F4C32 
+ 2101      4341505F 
+ 2101      43424643 
+ 2102              	.LASF31:
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 46
+
+
+ 2103 064a 4359424C 		.ascii	"CYBLE_EVT_GAP_ENCRYPT_CHANGE\000"
+ 2103      455F4556 
+ 2103      545F4741 
+ 2103      505F454E 
+ 2103      43525950 
+ 2104              	.LASF66:
+ 2105 0667 4359424C 		.ascii	"CYBLE_EVT_GATTC_LONG_PROCEDURE_END\000"
+ 2105      455F4556 
+ 2105      545F4741 
+ 2105      5454435F 
+ 2105      4C4F4E47 
+ 2106              	.LASF34:
+ 2107 068a 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYINFO_EXCHNGE_CMPLT\000"
+ 2107      455F4556 
+ 2107      545F4741 
+ 2107      505F4B45 
+ 2107      59494E46 
+ 2108              	.LASF84:
+ 2109 06ae 49324357 		.ascii	"I2CWriteBuffer\000"
+ 2109      72697465 
+ 2109      42756666 
+ 2109      657200
+ 2110              	.LASF32:
+ 2111 06bd 4359424C 		.ascii	"CYBLE_EVT_GAP_CONNECTION_UPDATE_COMPLETE\000"
+ 2111      455F4556 
+ 2111      545F4741 
+ 2111      505F434F 
+ 2111      4E4E4543 
+ 2112              	.LASF41:
+ 2113 06e6 4359424C 		.ascii	"CYBLE_EVT_GAP_SMP_NEGOTIATED_AUTH_INFO\000"
+ 2113      455F4556 
+ 2113      545F4741 
+ 2113      505F534D 
+ 2113      505F4E45 
+ 2114              	.LASF13:
+ 2115 070d 63686172 		.ascii	"char\000"
+ 2115      00
+ 2116              	.LASF94:
+ 2117 0712 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 2117      4320342E 
+ 2117      392E3320 
+ 2117      32303135 
+ 2117      30333033 
+ 2118 0745 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
+ 2118      20726576 
+ 2118      6973696F 
+ 2118      6E203232 
+ 2118      31323230 
+ 2119 0778 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 2119      66756E63 
+ 2119      74696F6E 
+ 2119      2D736563 
+ 2119      74696F6E 
+ 2120              	.LASF69:
+ 2121 07a0 4359424C 		.ascii	"CYBLE_EVT_L2CAP_COMMAND_REJ\000"
+ 2121      455F4556 
+ 2121      545F4C32 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 47
+
+
+ 2121      4341505F 
+ 2121      434F4D4D 
+ 2122              	.LASF3:
+ 2123 07bc 73686F72 		.ascii	"short unsigned int\000"
+ 2123      7420756E 
+ 2123      7369676E 
+ 2123      65642069 
+ 2123      6E7400
+ 2124              	.LASF9:
+ 2125 07cf 75696E74 		.ascii	"uint8\000"
+ 2125      3800
+ 2126              	.LASF52:
+ 2127 07d5 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BLOB_RSP\000"
+ 2127      455F4556 
+ 2127      545F4741 
+ 2127      5454435F 
+ 2127      52454144 
+ 2128              	.LASF59:
+ 2129 07f3 4359424C 		.ascii	"CYBLE_EVT_GATTC_EXEC_WRITE_RSP\000"
+ 2129      455F4556 
+ 2129      545F4741 
+ 2129      5454435F 
+ 2129      45584543 
+ 2130              	.LASF33:
+ 2131 0812 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_START_STOP\000"
+ 2131      455F4556 
+ 2131      545F4741 
+ 2131      50435F53 
+ 2131      43414E5F 
+ 2132              	.LASF78:
+ 2133 0831 4359424C 		.ascii	"CYBLE_EVT_PENDING_FLASH_WRITE\000"
+ 2133      455F4556 
+ 2133      545F5045 
+ 2133      4E44494E 
+ 2133      475F464C 
+ 2134              	.LASF75:
+ 2135 084f 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_RX_CREDIT_IND\000"
+ 2135      455F4556 
+ 2135      545F4C32 
+ 2135      4341505F 
+ 2135      43424643 
+ 2136              	.LASF12:
+ 2137 0872 646F7562 		.ascii	"double\000"
+ 2137      6C6500
+ 2138              	.LASF76:
+ 2139 0879 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_TX_CREDIT_IND\000"
+ 2139      455F4556 
+ 2139      545F4C32 
+ 2139      4341505F 
+ 2139      43424643 
+ 2140              	.LASF18:
+ 2141 089c 4359424C 		.ascii	"CYBLE_EVT_HARDWARE_ERROR\000"
+ 2141      455F4556 
+ 2141      545F4841 
+ 2141      52445741 
+ 2141      52455F45 
+ 2142              	.LASF74:
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 48
+
+
+ 2143 08b5 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_READ\000"
+ 2143      455F4556 
+ 2143      545F4C32 
+ 2143      4341505F 
+ 2143      43424643 
+ 2144              	.LASF68:
+ 2145 08d4 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_RSP\000"
+ 2145      455F4556 
+ 2145      545F4C32 
+ 2145      4341505F 
+ 2145      434F4E4E 
+ 2146              	.LASF82:
+ 2147 08fa 52656164 		.ascii	"ReadSensorCalibrationData\000"
+ 2147      53656E73 
+ 2147      6F724361 
+ 2147      6C696272 
+ 2147      6174696F 
+ 2148              	.LASF92:
+ 2149 0914 50726573 		.ascii	"PressureAtSeaLevel\000"
+ 2149      73757265 
+ 2149      41745365 
+ 2149      614C6576 
+ 2149      656C00
+ 2150              	.LASF47:
+ 2151 0927 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_GROUP_TYPE_RSP\000"
+ 2151      455F4556 
+ 2151      545F4741 
+ 2151      5454435F 
+ 2151      52454144 
+ 2152              	.LASF56:
+ 2153 094e 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_CMD_REQ\000"
+ 2153      455F4556 
+ 2153      545F4741 
+ 2153      5454535F 
+ 2153      57524954 
+ 2154              	.LASF46:
+ 2155 096c 4359424C 		.ascii	"CYBLE_EVT_GATTC_XCHNG_MTU_RSP\000"
+ 2155      455F4556 
+ 2155      545F4741 
+ 2155      5454435F 
+ 2155      5843484E 
+ 2156              	.LASF89:
+ 2157 098a 54656D70 		.ascii	"Temperature\000"
+ 2157      65726174 
+ 2157      75726500 
+ 2158              	.LASF17:
+ 2159 0996 4359424C 		.ascii	"CYBLE_EVT_TIMEOUT\000"
+ 2159      455F4556 
+ 2159      545F5449 
+ 2159      4D454F55 
+ 2159      5400
+ 2160              	.LASF80:
+ 2161 09a8 4359424C 		.ascii	"CYBLE_EVT_MAX\000"
+ 2161      455F4556 
+ 2161      545F4D41 
+ 2161      5800
+ 2162              	.LASF65:
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccWGdrt6.s 			page 49
+
+
+ 2163 09b6 4359424C 		.ascii	"CYBLE_EVT_GATTS_READ_CHAR_VAL_ACCESS_REQ\000"
+ 2163      455F4556 
+ 2163      545F4741 
+ 2163      5454535F 
+ 2163      52454144 
+ 2164              	.LASF49:
+ 2165 09df 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_INFO_RSP\000"
+ 2165      455F4556 
+ 2165      545F4741 
+ 2165      5454435F 
+ 2165      46494E44 
+ 2166              	.LASF64:
+ 2167 09fd 4359424C 		.ascii	"CYBLE_EVT_GATTC_STOP_CMD_COMPLETE\000"
+ 2167      455F4556 
+ 2167      545F4741 
+ 2167      5454435F 
+ 2167      53544F50 
+ 2168              	.LASF58:
+ 2169 0a1f 4359424C 		.ascii	"CYBLE_EVT_GATTS_EXEC_WRITE_REQ\000"
+ 2169      455F4556 
+ 2169      545F4741 
+ 2169      5454535F 
+ 2169      45584543 
+ 2170              	.LASF30:
+ 2171 0a3e 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_DISCONNECTED\000"
+ 2171      455F4556 
+ 2171      545F4741 
+ 2171      505F4445 
+ 2171      56494345 
+ 2172              	.LASF63:
+ 2173 0a60 4359424C 		.ascii	"CYBLE_EVT_GATTS_DATA_SIGNED_CMD_REQ\000"
+ 2173      455F4556 
+ 2173      545F4741 
+ 2173      5454535F 
+ 2173      44415441 
+ 2174              	.LASF87:
+ 2175 0a84 52656164 		.ascii	"ReadUncompensatedPressure\000"
+ 2175      556E636F 
+ 2175      6D70656E 
+ 2175      73617465 
+ 2175      64507265 
+ 2176              	.LASF37:
+ 2177 0a9e 4359424C 		.ascii	"CYBLE_EVT_GAP_OOB_GENERATED_NOTIFICATION\000"
+ 2177      455F4556 
+ 2177      545F4741 
+ 2177      505F4F4F 
+ 2177      425F4745 
+ 2178              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br

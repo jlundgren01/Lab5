@@ -1,0 +1,2648 @@
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 34, 0
+  11              		.eabi_attribute 18, 4
+  12              		.code	16
+  13              		.file	"main.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.global	ChangePowerPinDriveMode
+  18              		.data
+  19              		.type	ChangePowerPinDriveMode, %object
+  20              		.size	ChangePowerPinDriveMode, 1
+  21              	ChangePowerPinDriveMode:
+  22 0000 01       		.byte	1
+  23              		.global	NotificationDelayCounter
+  24              		.type	NotificationDelayCounter, %object
+  25              		.size	NotificationDelayCounter, 1
+  26              	NotificationDelayCounter:
+  27 0001 20       		.byte	32
+  28              		.global	LEDDelayCounter
+  29              		.type	LEDDelayCounter, %object
+  30              		.size	LEDDelayCounter, 1
+  31              	LEDDelayCounter:
+  32 0002 32       		.byte	50
+  33              		.comm	LastTemperatureData,4,4
+  34              		.comm	LastPressureData,4,4
+  35              		.comm	LastAltitudeData,4,4
+  36              		.bss
+  37              	SleepMode:
+  38 0000 00       		.space	1
+  39              	BlessState:
+  40 0001 00       		.space	1
+  41              		.section	.text.main,"ax",%progbits
+  42              		.align	2
+  43              		.global	main
+  44              		.code	16
+  45              		.thumb_func
+  46              		.type	main, %function
+  47              	main:
+  48              	.LFB37:
+  49              		.file 1 ".\\main.c"
+   1:.\main.c      **** /**************************************************************************************************
+   2:.\main.c      **** * Project Name		: PSoC_4_BLE_Pressure_Sensor
+   3:.\main.c      **** * File Name			: main.c
+   4:.\main.c      **** * Version 			: 1.0
+   5:.\main.c      **** * Device Used		: CY8C4247LQI-BL483
+   6:.\main.c      **** * Software Used		: PSoC Creator 3.1
+   7:.\main.c      **** * Compiler    		: ARM GCC 4.8.4
+   8:.\main.c      **** * Related Hardware	: CY8CKIT-042-BLE Bluetooth Low Energy Pioneer Kit
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 2
+
+
+   9:.\main.c      **** ***************************************************************************************************
+  10:.\main.c      **** 
+  11:.\main.c      **** /**************************************************************************************************
+  12:.\main.c      **** * Copyright (2015), Cypress Semiconductor Corporation. All Rights Reserved.
+  13:.\main.c      **** ***************************************************************************************************
+  14:.\main.c      **** * This software, including source code, documentation and related materials
+  15:.\main.c      **** * ("Software") is owned by Cypress Semiconductor Corporation (Cypress) and is
+  16:.\main.c      **** * protected by and subject to worldwide patent protection (United States and 
+  17:.\main.c      **** * foreign), United States copyright laws and international treaty provisions. 
+  18:.\main.c      **** * Cypress hereby grants to licensee a personal, non-exclusive, non-transferable
+  19:.\main.c      **** * license to copy, use, modify, create derivative works of, and compile the 
+  20:.\main.c      **** * Cypress source code and derivative works for the sole purpose of creating 
+  21:.\main.c      **** * custom software in support of licensee product, such licensee product to be
+  22:.\main.c      **** * used only in conjunction with Cypress's integrated circuit as specified in the
+  23:.\main.c      **** * applicable agreement. Any reproduction, modification, translation, compilation,
+  24:.\main.c      **** * or representation of this Software except as specified above is prohibited 
+  25:.\main.c      **** * without the express written permission of Cypress.
+  26:.\main.c      **** * 
+  27:.\main.c      **** * Disclaimer: THIS SOFTWARE IS PROVIDED AS-IS, WITH NO WARRANTY OF ANY KIND, 
+  28:.\main.c      **** * EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, NONINFRINGEMENT, IMPLIED 
+  29:.\main.c      **** * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+  30:.\main.c      **** * Cypress reserves the right to make changes to the Software without notice. 
+  31:.\main.c      **** * Cypress does not assume any liability arising out of the application or use
+  32:.\main.c      **** * of Software or any product or circuit described in the Software. Cypress does
+  33:.\main.c      **** * not authorize its products for use as critical components in any products 
+  34:.\main.c      **** * where a malfunction or failure may reasonably be expected to result in 
+  35:.\main.c      **** * significant injury or death ("ACTIVE Risk Product"). By including Cypress's 
+  36:.\main.c      **** * product in a ACTIVE Risk Product, the manufacturer of such system or application
+  37:.\main.c      **** * assumes all risk of such use and in doing so indemnifies Cypress against all
+  38:.\main.c      **** * liability. Use of this Software may be limited by and subject to the applicable
+  39:.\main.c      **** * Cypress software license agreement.
+  40:.\main.c      **** ***************************************************************************************************
+  41:.\main.c      **** 
+  42:.\main.c      **** /**************************************************************************************************
+  43:.\main.c      **** *                           THEORY OF OPERATION
+  44:.\main.c      **** ***************************************************************************************************
+  45:.\main.c      **** * This project showcases the capability of PSoC 4 BLE to communicate with an I2C digital sensor and
+  46:.\main.c      **** * The data communicated over BLE is the Temperature, Barometric Pressure and Altitude value acquire
+  47:.\main.c      **** * This project uses an I2C component (Master) to acquire the data from the sensor and reports it to
+  48:.\main.c      **** * The sensor data sent to the Central device over a Custom Service.
+  49:.\main.c      **** * The Custom Service allows notifications to be sent to Central device when enabled.
+  50:.\main.c      **** * 
+  51:.\main.c      **** * For Adafruit's BMP180 Pressure Sensor theory of operation, please refer to the sensor datasheet.
+  52:.\main.c      **** * http://www.adafruit.com/product/1603
+  53:.\main.c      **** 
+  54:.\main.c      **** ***************************************************************************************************
+  55:.\main.c      **** * Note: The programming pins in the project have been configured as SWD.
+  56:.\main.c      **** * With this settings, the PSoC 4 BLE device consumes extra power through the programming pins.
+  57:.\main.c      **** * To prevent the leakage of power, the programming pins can be configured as GPIO. To configure,
+  58:.\main.c      **** * open the PSoC_4_BLE_Pressure_Sensor.cydwr file from the Workspace Explorer, go to Systems tab,
+  59:.\main.c      **** * and set the Debug Select option to GPIO.
+  60:.\main.c      **** ***************************************************************************************************
+  61:.\main.c      **** * Hardware connection required:
+  62:.\main.c      **** * Red LED - P2[6] (Hard-wired on the BLE Pioneer Kit)
+  63:.\main.c      **** * Plug in the sensor to the outer row of the BLE Pioneer Kit Arduino compatible header J2
+  64:.\main.c      **** * Sensor SDA - P3[0] - J2.1
+  65:.\main.c      **** * Sensor SCL - P3[1] - J2.3
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 3
+
+
+  66:.\main.c      **** * Sensor GND - P3[2] - J2.5
+  67:.\main.c      **** * Sensor VIN - P3[4] - J2.7
+  68:.\main.c      **** ***************************************************************************************************
+  69:.\main.c      **** 
+  70:.\main.c      **** #include <main.h>
+  71:.\main.c      **** 
+  72:.\main.c      **** /*************************Variables Declaration****************************************************
+  73:.\main.c      **** uint8 ChangePowerPinDriveMode = TRUE; //This flag is set when the GATT disconnect event occurs
+  74:.\main.c      **** uint8 NotificationDelayCounter = NOTIFICATION_DELAY_COUNT; //Counter to handle the periodic notific
+  75:.\main.c      **** uint8 LEDDelayCounter = LED_DELAY_COUNT; //Counter to handle the LED blinking
+  76:.\main.c      **** long LastTemperatureData; //Variable to store the previous temperature reading
+  77:.\main.c      **** long LastPressureData; //Variable to store the previous pressure reading
+  78:.\main.c      **** long LastAltitudeData; //Variable to store the previous altitude reading
+  79:.\main.c      **** extern uint8 StartAdvertisement; //This flag is used to start advertisement
+  80:.\main.c      **** extern uint8 DeviceConnected; //This flag is set when a Central device is connected
+  81:.\main.c      **** extern uint8 TemperatureNotificationEnabled; //This flag is set when the Central device writes to C
+  82:.\main.c      **** extern uint8 PressureNotificationEnabled; //This flag is set when the Central device writes to CCCD
+  83:.\main.c      **** extern uint8 AltitudeNotificationEnabled; //This flag is set when the Central device writes to CCCD
+  84:.\main.c      **** extern uint8 TemperatureNotificationData[0x04]; //The temperature notification value is stored in t
+  85:.\main.c      **** extern uint8 PressureNotificationData[0x04]; //The pressure notification value is stored in this ar
+  86:.\main.c      **** extern uint8 AltitudeNotificationData[0x04]; //The altitude notification value is stored in this ar
+  87:.\main.c      **** extern long Temperature; //Variable to store the true temperature
+  88:.\main.c      **** extern long Pressure; //Variable to store the true pressure
+  89:.\main.c      **** extern long Altitude; //Variable to store the true altitude
+  90:.\main.c      **** static CYBLE_LP_MODE_T SleepMode; //Variable to store the status of BLESS Hardware block
+  91:.\main.c      **** static CYBLE_BLESS_STATE_T BlessState; //Variable to store the status of BLESS Hardware block
+  92:.\main.c      **** /**************************************************************************************************
+  93:.\main.c      **** 
+  94:.\main.c      **** /**************************************************************************************************
+  95:.\main.c      **** * Function Name: main
+  96:.\main.c      **** ***************************************************************************************************
+  97:.\main.c      **** * Summary: This is the system entrance point. This function initializes the system and
+  98:.\main.c      **** * continuously process sensor data and BLE events. It also handles the low power mode.
+  99:.\main.c      **** *
+ 100:.\main.c      **** * Parameters:
+ 101:.\main.c      **** *  void
+ 102:.\main.c      **** *
+ 103:.\main.c      **** * Return:
+ 104:.\main.c      **** *  int
+ 105:.\main.c      **** *
+ 106:.\main.c      **** 
+ 107:.\main.c      **** ***************************************************************************************************
+ 108:.\main.c      **** int main()
+ 109:.\main.c      **** {
+  50              		.loc 1 109 0
+  51              		.cfi_startproc
+  52 0000 80B5     		push	{r7, lr}
+  53              		.cfi_def_cfa_offset 8
+  54              		.cfi_offset 7, -8
+  55              		.cfi_offset 14, -4
+  56 0002 00AF     		add	r7, sp, #0
+  57              		.cfi_def_cfa_register 7
+ 110:.\main.c      ****     InitializeSystem(); //Initialize the Components and enable interrupts
+  58              		.loc 1 110 0
+  59 0004 FFF7FEFF 		bl	InitializeSystem
+  60              	.L4:
+ 111:.\main.c      ****     
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 4
+
+
+ 112:.\main.c      ****     for(;;)
+ 113:.\main.c      ****     {
+ 114:.\main.c      ****         /* Process event CallBack to handle BLE events.
+ 115:.\main.c      ****         The events generated and used in this application are inside the CustomEventHandler routine
+ 116:.\main.c      ****         CyBle_ProcessEvents();
+  61              		.loc 1 116 0
+  62 0008 FFF7FEFF 		bl	CyBle_ProcessEvents
+ 117:.\main.c      ****         
+ 118:.\main.c      ****         HandleStatusLED(); //Update the status LED depending upon the BLE state
+  63              		.loc 1 118 0
+  64 000c FFF7FEFF 		bl	HandleStatusLED
+ 119:.\main.c      ****         
+ 120:.\main.c      ****         if(DeviceConnected)
+  65              		.loc 1 120 0
+  66 0010 144B     		ldr	r3, .L5
+  67 0012 1B78     		ldrb	r3, [r3]
+  68 0014 002B     		cmp	r3, #0
+  69 0016 12D0     		beq	.L2
+ 121:.\main.c      **** 		{
+ 122:.\main.c      **** 			UpdateConnectionParameters(); //Update the Connection Parameters to run the BLE communication on
+  70              		.loc 1 122 0
+  71 0018 FFF7FEFF 		bl	UpdateConnectionParameters
+ 123:.\main.c      ****             
+ 124:.\main.c      ****             UpdateNotificationCCCDAttribute(); //Update the CCCD writing by the Central device
+  72              		.loc 1 124 0
+  73 001c FFF7FEFF 		bl	UpdateNotificationCCCDAttribute
+ 125:.\main.c      ****             
+ 126:.\main.c      ****             if(--NotificationDelayCounter == ZERO)
+  74              		.loc 1 126 0
+  75 0020 114B     		ldr	r3, .L5+4
+  76 0022 1B78     		ldrb	r3, [r3]
+  77 0024 013B     		sub	r3, r3, #1
+  78 0026 DAB2     		uxtb	r2, r3
+  79 0028 0F4B     		ldr	r3, .L5+4
+  80 002a 1A70     		strb	r2, [r3]
+  81 002c 0E4B     		ldr	r3, .L5+4
+  82 002e 1B78     		ldrb	r3, [r3]
+  83 0030 002B     		cmp	r3, #0
+  84 0032 04D1     		bne	.L2
+ 127:.\main.c      ****             {
+ 128:.\main.c      ****                 NotificationDelayCounter = NOTIFICATION_DELAY_COUNT; //Reset the notification count
+  85              		.loc 1 128 0
+  86 0034 0C4B     		ldr	r3, .L5+4
+  87 0036 2022     		mov	r2, #32
+  88 0038 1A70     		strb	r2, [r3]
+ 129:.\main.c      ****                 ReadSensorDataAndNotify(); //Read the sensor and send notifications if enabled when
+  89              		.loc 1 129 0
+  90 003a FFF7FEFF 		bl	ReadSensorDataAndNotify
+  91              	.L2:
+ 130:.\main.c      ****             }
+ 131:.\main.c      **** 		}
+ 132:.\main.c      **** 		
+ 133:.\main.c      ****         EnterExitLowPowerMode(); //Enter low power mode
+  92              		.loc 1 133 0
+  93 003e FFF7FEFF 		bl	EnterExitLowPowerMode
+ 134:.\main.c      ****         
+ 135:.\main.c      ****         if(StartAdvertisement)
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 5
+
+
+  94              		.loc 1 135 0
+  95 0042 0A4B     		ldr	r3, .L5+8
+  96 0044 1B78     		ldrb	r3, [r3]
+  97 0046 002B     		cmp	r3, #0
+  98 0048 0BD0     		beq	.L3
+ 136:.\main.c      ****         {
+ 137:.\main.c      ****             StartAdvertisement = FALSE; //Clear the advertisement flag
+  99              		.loc 1 137 0
+ 100 004a 084B     		ldr	r3, .L5+8
+ 101 004c 0022     		mov	r2, #0
+ 102 004e 1A70     		strb	r2, [r3]
+ 138:.\main.c      ****             
+ 139:.\main.c      ****             CyBle_GappStartAdvertisement(CYBLE_ADVERTISING_FAST); //Start advertisement and enter D
+ 103              		.loc 1 139 0
+ 104 0050 0020     		mov	r0, #0
+ 105 0052 FFF7FEFF 		bl	CyBle_GappStartAdvertisement
+ 140:.\main.c      ****             
+ 141:.\main.c      ****             LED_Write(ZERO); //Turn on the status LED
+ 106              		.loc 1 141 0
+ 107 0056 0020     		mov	r0, #0
+ 108 0058 FFF7FEFF 		bl	LED_Write
+ 142:.\main.c      ****             LED_SetDriveMode(LED_DM_STRONG); //Set the LED pin drive mode to Strong
+ 109              		.loc 1 142 0
+ 110 005c 0620     		mov	r0, #6
+ 111 005e FFF7FEFF 		bl	LED_SetDriveMode
+ 112              	.L3:
+ 143:.\main.c      ****         }
+ 144:.\main.c      ****     }
+ 113              		.loc 1 144 0
+ 114 0062 D1E7     		b	.L4
+ 115              	.L6:
+ 116              		.align	2
+ 117              	.L5:
+ 118 0064 00000000 		.word	DeviceConnected
+ 119 0068 00000000 		.word	NotificationDelayCounter
+ 120 006c 00000000 		.word	StartAdvertisement
+ 121              		.cfi_endproc
+ 122              	.LFE37:
+ 123              		.size	main, .-main
+ 124              		.section	.text.InitializeSystem,"ax",%progbits
+ 125              		.align	2
+ 126              		.global	InitializeSystem
+ 127              		.code	16
+ 128              		.thumb_func
+ 129              		.type	InitializeSystem, %function
+ 130              	InitializeSystem:
+ 131              	.LFB38:
+ 145:.\main.c      **** }
+ 146:.\main.c      **** /**************************************************************************************************
+ 147:.\main.c      **** 
+ 148:.\main.c      **** /**************************************************************************************************
+ 149:.\main.c      **** * Function Name: InitializeSystem
+ 150:.\main.c      **** ***************************************************************************************************
+ 151:.\main.c      **** * Summary: This function starts the components and initialize system.
+ 152:.\main.c      **** *
+ 153:.\main.c      **** * Parameters:
+ 154:.\main.c      **** *  void
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 6
+
+
+ 155:.\main.c      **** *
+ 156:.\main.c      **** * Return:
+ 157:.\main.c      **** *  void
+ 158:.\main.c      **** *
+ 159:.\main.c      **** ***************************************************************************************************
+ 160:.\main.c      **** void InitializeSystem(void)
+ 161:.\main.c      **** {
+ 132              		.loc 1 161 0
+ 133              		.cfi_startproc
+ 134 0000 80B5     		push	{r7, lr}
+ 135              		.cfi_def_cfa_offset 8
+ 136              		.cfi_offset 7, -8
+ 137              		.cfi_offset 14, -4
+ 138 0002 00AF     		add	r7, sp, #0
+ 139              		.cfi_def_cfa_register 7
+ 162:.\main.c      ****     CyGlobalIntEnable; //Enable global interrupts
+ 140              		.loc 1 162 0
+ 141              	@ 162 ".\main.c" 1
+ 142 0004 62B6     		CPSIE   i
+ 143              	@ 0 "" 2
+ 163:.\main.c      ****     
+ 164:.\main.c      ****     /* Start BLE component and register the CustomEventHandler function.
+ 165:.\main.c      ****     This function exposes the events from BLE component for application use */
+ 166:.\main.c      ****     CyBle_Start(CustomEventHandler);
+ 144              		.loc 1 166 0
+ 145              		.code	16
+ 146 0006 0C4B     		ldr	r3, .L8
+ 147 0008 181C     		mov	r0, r3
+ 148 000a FFF7FEFF 		bl	CyBle_Start
+ 167:.\main.c      ****     
+ 168:.\main.c      ****     I2C_Start(); //Start the I2C component
+ 149              		.loc 1 168 0
+ 150 000e FFF7FEFF 		bl	I2C_Start
+ 169:.\main.c      ****     
+ 170:.\main.c      ****     Btn_Interrupt_StartEx(ButtonISR); //Start the button ISR to allow wakeup from sleep
+ 151              		.loc 1 170 0
+ 152 0012 0A4B     		ldr	r3, .L8+4
+ 153 0014 181C     		mov	r0, r3
+ 154 0016 FFF7FEFF 		bl	Btn_Interrupt_StartEx
+ 171:.\main.c      ****     
+ 172:.\main.c      ****     GND_Write(ZERO); //Turn off the GND pin    
+ 155              		.loc 1 172 0
+ 156 001a 0020     		mov	r0, #0
+ 157 001c FFF7FEFF 		bl	GND_Write
+ 173:.\main.c      ****     GND_SetDriveMode(GND_DM_STRONG); //Set the GND pin drive mode to Strong
+ 158              		.loc 1 173 0
+ 159 0020 0620     		mov	r0, #6
+ 160 0022 FFF7FEFF 		bl	GND_SetDriveMode
+ 174:.\main.c      ****     
+ 175:.\main.c      ****     VDD_Write(ONE); //Turn on the power pin    
+ 161              		.loc 1 175 0
+ 162 0026 0120     		mov	r0, #1
+ 163 0028 FFF7FEFF 		bl	VDD_Write
+ 176:.\main.c      ****     VDD_SetDriveMode(VDD_DM_STRONG); //Set the VDD pin drive mode to Strong
+ 164              		.loc 1 176 0
+ 165 002c 0620     		mov	r0, #6
+ 166 002e FFF7FEFF 		bl	VDD_SetDriveMode
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 7
+
+
+ 177:.\main.c      **** }
+ 167              		.loc 1 177 0
+ 168 0032 BD46     		mov	sp, r7
+ 169              		@ sp needed
+ 170 0034 80BD     		pop	{r7, pc}
+ 171              	.L9:
+ 172 0036 C046     		.align	2
+ 173              	.L8:
+ 174 0038 00000000 		.word	CustomEventHandler
+ 175 003c 00000000 		.word	ButtonISR
+ 176              		.cfi_endproc
+ 177              	.LFE38:
+ 178              		.size	InitializeSystem, .-InitializeSystem
+ 179              		.section	.text.ReadSensorDataAndNotify,"ax",%progbits
+ 180              		.align	2
+ 181              		.global	ReadSensorDataAndNotify
+ 182              		.code	16
+ 183              		.thumb_func
+ 184              		.type	ReadSensorDataAndNotify, %function
+ 185              	ReadSensorDataAndNotify:
+ 186              	.LFB39:
+ 178:.\main.c      **** /**************************************************************************************************
+ 179:.\main.c      **** 
+ 180:.\main.c      **** /**************************************************************************************************
+ 181:.\main.c      **** * Function Name: ReadSensorDataAndNotify
+ 182:.\main.c      **** ***************************************************************************************************
+ 183:.\main.c      **** * Summary: This function checks whether any of the notifications is enabled and sends the sensor da
+ 184:.\main.c      **** * If any notification is enabled and the sensor data has changed from the previous readings, it sen
+ 185:.\main.c      **** *
+ 186:.\main.c      **** * Parameters:
+ 187:.\main.c      **** *  void
+ 188:.\main.c      **** *
+ 189:.\main.c      **** * Return:
+ 190:.\main.c      **** *  void
+ 191:.\main.c      **** *
+ 192:.\main.c      **** ***************************************************************************************************
+ 193:.\main.c      **** void ReadSensorDataAndNotify(void)
+ 194:.\main.c      **** {
+ 187              		.loc 1 194 0
+ 188              		.cfi_startproc
+ 189 0000 80B5     		push	{r7, lr}
+ 190              		.cfi_def_cfa_offset 8
+ 191              		.cfi_offset 7, -8
+ 192              		.cfi_offset 14, -4
+ 193 0002 00AF     		add	r7, sp, #0
+ 194              		.cfi_def_cfa_register 7
+ 195:.\main.c      ****     /* Start sensor data processing if any notification is enabled */
+ 196:.\main.c      ****     if((TemperatureNotificationEnabled || PressureNotificationEnabled || AltitudeNotificationEnable
+ 195              		.loc 1 196 0
+ 196 0004 424B     		ldr	r3, .L16
+ 197 0006 1B78     		ldrb	r3, [r3]
+ 198 0008 002B     		cmp	r3, #0
+ 199 000a 07D1     		bne	.L11
+ 200              		.loc 1 196 0 is_stmt 0 discriminator 1
+ 201 000c 414B     		ldr	r3, .L16+4
+ 202 000e 1B78     		ldrb	r3, [r3]
+ 203 0010 002B     		cmp	r3, #0
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 8
+
+
+ 204 0012 03D1     		bne	.L11
+ 205              		.loc 1 196 0 discriminator 2
+ 206 0014 404B     		ldr	r3, .L16+8
+ 207 0016 1B78     		ldrb	r3, [r3]
+ 208 0018 002B     		cmp	r3, #0
+ 209 001a 01D0     		beq	.L12
+ 210              	.L11:
+ 197:.\main.c      ****     {
+ 198:.\main.c      ****         ReadAndCalculateSensorData(); //Read and calculate the sensor data
+ 211              		.loc 1 198 0 is_stmt 1
+ 212 001c FFF7FEFF 		bl	ReadAndCalculateSensorData
+ 213              	.L12:
+ 199:.\main.c      ****     }
+ 200:.\main.c      ****     
+ 201:.\main.c      ****     /* Check whether the temperature notification is enabled and the data has changed from the prev
+ 202:.\main.c      ****     if(TemperatureNotificationEnabled && (Temperature != LastTemperatureData))
+ 214              		.loc 1 202 0
+ 215 0020 3B4B     		ldr	r3, .L16
+ 216 0022 1B78     		ldrb	r3, [r3]
+ 217 0024 002B     		cmp	r3, #0
+ 218 0026 22D0     		beq	.L13
+ 219              		.loc 1 202 0 is_stmt 0 discriminator 1
+ 220 0028 3C4B     		ldr	r3, .L16+12
+ 221 002a 1A68     		ldr	r2, [r3]
+ 222 002c 3C4B     		ldr	r3, .L16+16
+ 223 002e 1B68     		ldr	r3, [r3]
+ 224 0030 9A42     		cmp	r2, r3
+ 225 0032 1CD0     		beq	.L13
+ 203:.\main.c      ****     {
+ 204:.\main.c      ****         /* Convert the temperature data into notification type */
+ 205:.\main.c      ****         TemperatureNotificationData[0x00] = Temperature;
+ 226              		.loc 1 205 0 is_stmt 1
+ 227 0034 394B     		ldr	r3, .L16+12
+ 228 0036 1B68     		ldr	r3, [r3]
+ 229 0038 DAB2     		uxtb	r2, r3
+ 230 003a 3A4B     		ldr	r3, .L16+20
+ 231 003c 1A70     		strb	r2, [r3]
+ 206:.\main.c      ****         TemperatureNotificationData[0x01] = Temperature >> 0x08;
+ 232              		.loc 1 206 0
+ 233 003e 374B     		ldr	r3, .L16+12
+ 234 0040 1B68     		ldr	r3, [r3]
+ 235 0042 1B12     		asr	r3, r3, #8
+ 236 0044 DAB2     		uxtb	r2, r3
+ 237 0046 374B     		ldr	r3, .L16+20
+ 238 0048 5A70     		strb	r2, [r3, #1]
+ 207:.\main.c      ****         TemperatureNotificationData[0x02] = Temperature >> 0x10;
+ 239              		.loc 1 207 0
+ 240 004a 344B     		ldr	r3, .L16+12
+ 241 004c 1B68     		ldr	r3, [r3]
+ 242 004e 1B14     		asr	r3, r3, #16
+ 243 0050 DAB2     		uxtb	r2, r3
+ 244 0052 344B     		ldr	r3, .L16+20
+ 245 0054 9A70     		strb	r2, [r3, #2]
+ 208:.\main.c      ****         TemperatureNotificationData[0x03] = Temperature >> 0x18;
+ 246              		.loc 1 208 0
+ 247 0056 314B     		ldr	r3, .L16+12
+ 248 0058 1B68     		ldr	r3, [r3]
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 9
+
+
+ 249 005a 1B16     		asr	r3, r3, #24
+ 250 005c DAB2     		uxtb	r2, r3
+ 251 005e 314B     		ldr	r3, .L16+20
+ 252 0060 DA70     		strb	r2, [r3, #3]
+ 209:.\main.c      ****         
+ 210:.\main.c      ****         LastTemperatureData = Temperature; //Store the current temperature data for reference
+ 253              		.loc 1 210 0
+ 254 0062 2E4B     		ldr	r3, .L16+12
+ 255 0064 1A68     		ldr	r2, [r3]
+ 256 0066 2E4B     		ldr	r3, .L16+16
+ 257 0068 1A60     		str	r2, [r3]
+ 211:.\main.c      ****         
+ 212:.\main.c      ****         SendTemperatureOverNotification(); //Send temperature data as notification
+ 258              		.loc 1 212 0
+ 259 006a FFF7FEFF 		bl	SendTemperatureOverNotification
+ 260              	.L13:
+ 213:.\main.c      ****     }
+ 214:.\main.c      ****     
+ 215:.\main.c      ****     /* Check whether the pressure notification is enabled and the data has changed from the previou
+ 216:.\main.c      ****     if(PressureNotificationEnabled && (Pressure != LastPressureData))
+ 261              		.loc 1 216 0
+ 262 006e 294B     		ldr	r3, .L16+4
+ 263 0070 1B78     		ldrb	r3, [r3]
+ 264 0072 002B     		cmp	r3, #0
+ 265 0074 22D0     		beq	.L14
+ 266              		.loc 1 216 0 is_stmt 0 discriminator 1
+ 267 0076 2C4B     		ldr	r3, .L16+24
+ 268 0078 1A68     		ldr	r2, [r3]
+ 269 007a 2C4B     		ldr	r3, .L16+28
+ 270 007c 1B68     		ldr	r3, [r3]
+ 271 007e 9A42     		cmp	r2, r3
+ 272 0080 1CD0     		beq	.L14
+ 217:.\main.c      ****     {
+ 218:.\main.c      ****         /* Convert the pressure data into notification type */
+ 219:.\main.c      ****         PressureNotificationData[0x00] = Pressure;
+ 273              		.loc 1 219 0 is_stmt 1
+ 274 0082 294B     		ldr	r3, .L16+24
+ 275 0084 1B68     		ldr	r3, [r3]
+ 276 0086 DAB2     		uxtb	r2, r3
+ 277 0088 294B     		ldr	r3, .L16+32
+ 278 008a 1A70     		strb	r2, [r3]
+ 220:.\main.c      ****         PressureNotificationData[0x01] = Pressure >> 0x08;
+ 279              		.loc 1 220 0
+ 280 008c 264B     		ldr	r3, .L16+24
+ 281 008e 1B68     		ldr	r3, [r3]
+ 282 0090 1B12     		asr	r3, r3, #8
+ 283 0092 DAB2     		uxtb	r2, r3
+ 284 0094 264B     		ldr	r3, .L16+32
+ 285 0096 5A70     		strb	r2, [r3, #1]
+ 221:.\main.c      ****         PressureNotificationData[0x02] = Pressure >> 0x10;
+ 286              		.loc 1 221 0
+ 287 0098 234B     		ldr	r3, .L16+24
+ 288 009a 1B68     		ldr	r3, [r3]
+ 289 009c 1B14     		asr	r3, r3, #16
+ 290 009e DAB2     		uxtb	r2, r3
+ 291 00a0 234B     		ldr	r3, .L16+32
+ 292 00a2 9A70     		strb	r2, [r3, #2]
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 10
+
+
+ 222:.\main.c      ****         PressureNotificationData[0x03] = Pressure >> 0x18;
+ 293              		.loc 1 222 0
+ 294 00a4 204B     		ldr	r3, .L16+24
+ 295 00a6 1B68     		ldr	r3, [r3]
+ 296 00a8 1B16     		asr	r3, r3, #24
+ 297 00aa DAB2     		uxtb	r2, r3
+ 298 00ac 204B     		ldr	r3, .L16+32
+ 299 00ae DA70     		strb	r2, [r3, #3]
+ 223:.\main.c      ****         
+ 224:.\main.c      ****         LastPressureData = Pressure; //Store the current pressure data for reference
+ 300              		.loc 1 224 0
+ 301 00b0 1D4B     		ldr	r3, .L16+24
+ 302 00b2 1A68     		ldr	r2, [r3]
+ 303 00b4 1D4B     		ldr	r3, .L16+28
+ 304 00b6 1A60     		str	r2, [r3]
+ 225:.\main.c      ****         
+ 226:.\main.c      ****         SendPressureOverNotification(); //Send pressure data as notification
+ 305              		.loc 1 226 0
+ 306 00b8 FFF7FEFF 		bl	SendPressureOverNotification
+ 307              	.L14:
+ 227:.\main.c      ****     }
+ 228:.\main.c      ****     
+ 229:.\main.c      ****     /* Check whether the altitude notification is enabled and the data has changed from the previou
+ 230:.\main.c      ****     if(AltitudeNotificationEnabled && (Altitude != LastAltitudeData))
+ 308              		.loc 1 230 0
+ 309 00bc 164B     		ldr	r3, .L16+8
+ 310 00be 1B78     		ldrb	r3, [r3]
+ 311 00c0 002B     		cmp	r3, #0
+ 312 00c2 22D0     		beq	.L10
+ 313              		.loc 1 230 0 is_stmt 0 discriminator 1
+ 314 00c4 1B4B     		ldr	r3, .L16+36
+ 315 00c6 1A68     		ldr	r2, [r3]
+ 316 00c8 1B4B     		ldr	r3, .L16+40
+ 317 00ca 1B68     		ldr	r3, [r3]
+ 318 00cc 9A42     		cmp	r2, r3
+ 319 00ce 1CD0     		beq	.L10
+ 231:.\main.c      ****     {
+ 232:.\main.c      ****         /* Convert the altitude data into notification type */
+ 233:.\main.c      ****         AltitudeNotificationData[0x00] = Altitude;
+ 320              		.loc 1 233 0 is_stmt 1
+ 321 00d0 184B     		ldr	r3, .L16+36
+ 322 00d2 1B68     		ldr	r3, [r3]
+ 323 00d4 DAB2     		uxtb	r2, r3
+ 324 00d6 194B     		ldr	r3, .L16+44
+ 325 00d8 1A70     		strb	r2, [r3]
+ 234:.\main.c      ****         AltitudeNotificationData[0x01] = Altitude >> 0x08;
+ 326              		.loc 1 234 0
+ 327 00da 164B     		ldr	r3, .L16+36
+ 328 00dc 1B68     		ldr	r3, [r3]
+ 329 00de 1B12     		asr	r3, r3, #8
+ 330 00e0 DAB2     		uxtb	r2, r3
+ 331 00e2 164B     		ldr	r3, .L16+44
+ 332 00e4 5A70     		strb	r2, [r3, #1]
+ 235:.\main.c      ****         AltitudeNotificationData[0x02] = Altitude >> 0x10;
+ 333              		.loc 1 235 0
+ 334 00e6 134B     		ldr	r3, .L16+36
+ 335 00e8 1B68     		ldr	r3, [r3]
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 11
+
+
+ 336 00ea 1B14     		asr	r3, r3, #16
+ 337 00ec DAB2     		uxtb	r2, r3
+ 338 00ee 134B     		ldr	r3, .L16+44
+ 339 00f0 9A70     		strb	r2, [r3, #2]
+ 236:.\main.c      ****         AltitudeNotificationData[0x03] = Altitude >> 0x18;
+ 340              		.loc 1 236 0
+ 341 00f2 104B     		ldr	r3, .L16+36
+ 342 00f4 1B68     		ldr	r3, [r3]
+ 343 00f6 1B16     		asr	r3, r3, #24
+ 344 00f8 DAB2     		uxtb	r2, r3
+ 345 00fa 104B     		ldr	r3, .L16+44
+ 346 00fc DA70     		strb	r2, [r3, #3]
+ 237:.\main.c      ****         
+ 238:.\main.c      ****         LastAltitudeData = Altitude; //Store the current altitude data for reference
+ 347              		.loc 1 238 0
+ 348 00fe 0D4B     		ldr	r3, .L16+36
+ 349 0100 1A68     		ldr	r2, [r3]
+ 350 0102 0D4B     		ldr	r3, .L16+40
+ 351 0104 1A60     		str	r2, [r3]
+ 239:.\main.c      ****         
+ 240:.\main.c      ****         SendAltitudeOverNotification(); //Send altitude data as notification
+ 352              		.loc 1 240 0
+ 353 0106 FFF7FEFF 		bl	SendAltitudeOverNotification
+ 354              	.L10:
+ 241:.\main.c      ****     }
+ 242:.\main.c      **** }
+ 355              		.loc 1 242 0
+ 356 010a BD46     		mov	sp, r7
+ 357              		@ sp needed
+ 358 010c 80BD     		pop	{r7, pc}
+ 359              	.L17:
+ 360 010e C046     		.align	2
+ 361              	.L16:
+ 362 0110 00000000 		.word	TemperatureNotificationEnabled
+ 363 0114 00000000 		.word	PressureNotificationEnabled
+ 364 0118 00000000 		.word	AltitudeNotificationEnabled
+ 365 011c 00000000 		.word	Temperature
+ 366 0120 00000000 		.word	LastTemperatureData
+ 367 0124 00000000 		.word	TemperatureNotificationData
+ 368 0128 00000000 		.word	Pressure
+ 369 012c 00000000 		.word	LastPressureData
+ 370 0130 00000000 		.word	PressureNotificationData
+ 371 0134 00000000 		.word	Altitude
+ 372 0138 00000000 		.word	LastAltitudeData
+ 373 013c 00000000 		.word	AltitudeNotificationData
+ 374              		.cfi_endproc
+ 375              	.LFE39:
+ 376              		.size	ReadSensorDataAndNotify, .-ReadSensorDataAndNotify
+ 377              		.section	.text.HandleStatusLED,"ax",%progbits
+ 378              		.align	2
+ 379              		.global	HandleStatusLED
+ 380              		.code	16
+ 381              		.thumb_func
+ 382              		.type	HandleStatusLED, %function
+ 383              	HandleStatusLED:
+ 384              	.LFB40:
+ 243:.\main.c      **** /**************************************************************************************************
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 12
+
+
+ 244:.\main.c      **** 
+ 245:.\main.c      **** /**************************************************************************************************
+ 246:.\main.c      **** * Function Name: HandleStatusLED
+ 247:.\main.c      **** ***************************************************************************************************
+ 248:.\main.c      **** * Summary: This function controls the status LED depending upon the BLE state.
+ 249:.\main.c      **** *
+ 250:.\main.c      **** * Parameters:
+ 251:.\main.c      **** *  void
+ 252:.\main.c      **** *
+ 253:.\main.c      **** * Return:
+ 254:.\main.c      **** *  void
+ 255:.\main.c      **** *
+ 256:.\main.c      **** ***************************************************************************************************
+ 257:.\main.c      **** void HandleStatusLED(void)
+ 258:.\main.c      **** {
+ 385              		.loc 1 258 0
+ 386              		.cfi_startproc
+ 387 0000 80B5     		push	{r7, lr}
+ 388              		.cfi_def_cfa_offset 8
+ 389              		.cfi_offset 7, -8
+ 390              		.cfi_offset 14, -4
+ 391 0002 00AF     		add	r7, sp, #0
+ 392              		.cfi_def_cfa_register 7
+ 259:.\main.c      ****     /* Check whether the device is advertising and blink the LED */
+ 260:.\main.c      ****     if(CyBle_GetState() == CYBLE_STATE_ADVERTISING)
+ 393              		.loc 1 260 0
+ 394 0004 114B     		ldr	r3, .L22
+ 395 0006 1B78     		ldrb	r3, [r3]
+ 396 0008 032B     		cmp	r3, #3
+ 397 000a 16D1     		bne	.L19
+ 261:.\main.c      ****     {
+ 262:.\main.c      ****         if(--LEDDelayCounter == ZERO)
+ 398              		.loc 1 262 0
+ 399 000c 104B     		ldr	r3, .L22+4
+ 400 000e 1B78     		ldrb	r3, [r3]
+ 401 0010 013B     		sub	r3, r3, #1
+ 402 0012 DAB2     		uxtb	r2, r3
+ 403 0014 0E4B     		ldr	r3, .L22+4
+ 404 0016 1A70     		strb	r2, [r3]
+ 405 0018 0D4B     		ldr	r3, .L22+4
+ 406 001a 1B78     		ldrb	r3, [r3]
+ 407 001c 002B     		cmp	r3, #0
+ 408 001e 12D1     		bne	.L18
+ 263:.\main.c      ****         {
+ 264:.\main.c      ****             LEDDelayCounter = LED_DELAY_COUNT; //Reset the LED state counter
+ 409              		.loc 1 264 0
+ 410 0020 0B4B     		ldr	r3, .L22+4
+ 411 0022 3222     		mov	r2, #50
+ 412 0024 1A70     		strb	r2, [r3]
+ 265:.\main.c      ****             LED_Write(!LED_Read()); //Toggle the status LED when the counter is reset
+ 413              		.loc 1 265 0
+ 414 0026 FFF7FEFF 		bl	LED_Read
+ 415 002a 031C     		mov	r3, r0
+ 416 002c 5A42     		neg	r2, r3
+ 417 002e 5341     		adc	r3, r3, r2
+ 418 0030 DBB2     		uxtb	r3, r3
+ 419 0032 181C     		mov	r0, r3
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 13
+
+
+ 420 0034 FFF7FEFF 		bl	LED_Write
+ 421 0038 05E0     		b	.L18
+ 422              	.L19:
+ 266:.\main.c      ****         }
+ 267:.\main.c      ****     }    
+ 268:.\main.c      ****     else
+ 269:.\main.c      ****     {
+ 270:.\main.c      ****         LED_Write(ONE); //Turn off the status LED
+ 423              		.loc 1 270 0
+ 424 003a 0120     		mov	r0, #1
+ 425 003c FFF7FEFF 		bl	LED_Write
+ 271:.\main.c      ****         LED_SetDriveMode(LED_DM_ALG_HIZ); //Set the LED pin drive mode to Hi-Z
+ 426              		.loc 1 271 0
+ 427 0040 0020     		mov	r0, #0
+ 428 0042 FFF7FEFF 		bl	LED_SetDriveMode
+ 429              	.L18:
+ 272:.\main.c      ****     }
+ 273:.\main.c      **** }
+ 430              		.loc 1 273 0
+ 431 0046 BD46     		mov	sp, r7
+ 432              		@ sp needed
+ 433 0048 80BD     		pop	{r7, pc}
+ 434              	.L23:
+ 435 004a C046     		.align	2
+ 436              	.L22:
+ 437 004c 00000000 		.word	cyBle_state
+ 438 0050 00000000 		.word	LEDDelayCounter
+ 439              		.cfi_endproc
+ 440              	.LFE40:
+ 441              		.size	HandleStatusLED, .-HandleStatusLED
+ 442              		.section	.text.EnterExitLowPowerMode,"ax",%progbits
+ 443              		.align	2
+ 444              		.global	EnterExitLowPowerMode
+ 445              		.code	16
+ 446              		.thumb_func
+ 447              		.type	EnterExitLowPowerMode, %function
+ 448              	EnterExitLowPowerMode:
+ 449              	.LFB41:
+ 274:.\main.c      **** /**************************************************************************************************
+ 275:.\main.c      **** 
+ 276:.\main.c      **** /**************************************************************************************************
+ 277:.\main.c      **** * Function Name: EnterExitLowPowerMode
+ 278:.\main.c      **** ***************************************************************************************************
+ 279:.\main.c      **** * Summary: This function puts the BLESS and CPU to deep sleep mode. 
+ 280:.\main.c      **** * System will resume from here when it wakes up from user button press.
+ 281:.\main.c      **** *
+ 282:.\main.c      **** * Parameters:
+ 283:.\main.c      **** *  void
+ 284:.\main.c      **** *
+ 285:.\main.c      **** * Return:
+ 286:.\main.c      **** *  void
+ 287:.\main.c      **** *
+ 288:.\main.c      **** ***************************************************************************************************
+ 289:.\main.c      **** void EnterExitLowPowerMode(void)
+ 290:.\main.c      **** {
+ 450              		.loc 1 290 0
+ 451              		.cfi_startproc
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 14
+
+
+ 452 0000 80B5     		push	{r7, lr}
+ 453              		.cfi_def_cfa_offset 8
+ 454              		.cfi_offset 7, -8
+ 455              		.cfi_offset 14, -4
+ 456 0002 00AF     		add	r7, sp, #0
+ 457              		.cfi_def_cfa_register 7
+ 291:.\main.c      **** 	I2C_Sleep(); //Put I2C to sleep
+ 458              		.loc 1 291 0
+ 459 0004 FFF7FEFF 		bl	I2C_Sleep
+ 292:.\main.c      ****     
+ 293:.\main.c      ****     /* Change the pin drive mode to save power consumption */
+ 294:.\main.c      ****     if(ChangePowerPinDriveMode)
+ 460              		.loc 1 294 0
+ 461 0008 1D4B     		ldr	r3, .L31
+ 462 000a 1B78     		ldrb	r3, [r3]
+ 463 000c 002B     		cmp	r3, #0
+ 464 000e 05D0     		beq	.L25
+ 295:.\main.c      ****     {
+ 296:.\main.c      ****         GND_SetDriveMode(GND_DM_ALG_HIZ); //Set the GND pin drive mode to Hi-Z
+ 465              		.loc 1 296 0
+ 466 0010 0020     		mov	r0, #0
+ 467 0012 FFF7FEFF 		bl	GND_SetDriveMode
+ 297:.\main.c      ****         VDD_SetDriveMode(VDD_DM_ALG_HIZ); //Set the VDD pin drive mode to Hi-Z
+ 468              		.loc 1 297 0
+ 469 0016 0020     		mov	r0, #0
+ 470 0018 FFF7FEFF 		bl	VDD_SetDriveMode
+ 471              	.L25:
+ 298:.\main.c      ****     }
+ 299:.\main.c      **** 	
+ 300:.\main.c      **** 	SleepMode = CyBle_EnterLPM(CYBLE_BLESS_DEEPSLEEP); //Put the BLESS to sleep
+ 472              		.loc 1 300 0
+ 473 001c 0320     		mov	r0, #3
+ 474 001e FFF7FEFF 		bl	CyBle_EnterLPM
+ 475 0022 031C     		mov	r3, r0
+ 476 0024 1A1C     		mov	r2, r3
+ 477 0026 174B     		ldr	r3, .L31+4
+ 478 0028 1A70     		strb	r2, [r3]
+ 301:.\main.c      ****     
+ 302:.\main.c      ****     CyGlobalIntDisable; //Disable global interrupts
+ 479              		.loc 1 302 0
+ 480              	@ 302 ".\main.c" 1
+ 481 002a 72B6     		CPSID   i
+ 482              	@ 0 "" 2
+ 303:.\main.c      ****     
+ 304:.\main.c      ****     BlessState = CyBle_GetBleSsState(); //Check the Status of BLESS
+ 483              		.loc 1 304 0
+ 484              		.code	16
+ 485 002c FFF7FEFF 		bl	CyBle_GetBleSsState
+ 486 0030 031C     		mov	r3, r0
+ 487 0032 1A1C     		mov	r2, r3
+ 488 0034 144B     		ldr	r3, .L31+8
+ 489 0036 1A70     		strb	r2, [r3]
+ 305:.\main.c      ****     
+ 306:.\main.c      ****     if(SleepMode == CYBLE_BLESS_DEEPSLEEP)
+ 490              		.loc 1 306 0
+ 491 0038 124B     		ldr	r3, .L31+4
+ 492 003a 1B78     		ldrb	r3, [r3]
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 15
+
+
+ 493 003c 032B     		cmp	r3, #3
+ 494 003e 0AD1     		bne	.L26
+ 307:.\main.c      ****     {
+ 308:.\main.c      ****         if(BlessState == CYBLE_BLESS_STATE_ECO_ON || BlessState == CYBLE_BLESS_STATE_DEEPSLEEP)
+ 495              		.loc 1 308 0
+ 496 0040 114B     		ldr	r3, .L31+8
+ 497 0042 1B78     		ldrb	r3, [r3]
+ 498 0044 042B     		cmp	r3, #4
+ 499 0046 03D0     		beq	.L27
+ 500              		.loc 1 308 0 is_stmt 0 discriminator 1
+ 501 0048 0F4B     		ldr	r3, .L31+8
+ 502 004a 1B78     		ldrb	r3, [r3]
+ 503 004c 062B     		cmp	r3, #6
+ 504 004e 08D1     		bne	.L29
+ 505              	.L27:
+ 309:.\main.c      ****         {
+ 310:.\main.c      ****             CySysPmDeepSleep(); //Put the CPU to Deep Sleep mode when the ECO has started
+ 506              		.loc 1 310 0 is_stmt 1
+ 507 0050 FFF7FEFF 		bl	CySysPmDeepSleep
+ 508 0054 05E0     		b	.L29
+ 509              	.L26:
+ 311:.\main.c      ****         }
+ 312:.\main.c      ****     }
+ 313:.\main.c      ****     else
+ 314:.\main.c      ****     {    
+ 315:.\main.c      ****         if(BlessState != CYBLE_BLESS_STATE_EVENT_CLOSE)
+ 510              		.loc 1 315 0
+ 511 0056 0C4B     		ldr	r3, .L31+8
+ 512 0058 1B78     		ldrb	r3, [r3]
+ 513 005a 022B     		cmp	r3, #2
+ 514 005c 01D0     		beq	.L29
+ 316:.\main.c      ****         {
+ 317:.\main.c      ****             CySysPmSleep(); //Put the CPU to Sleep mode if all the BLE events are not closed
+ 515              		.loc 1 317 0
+ 516 005e FFF7FEFF 		bl	CySysPmSleep
+ 517              	.L29:
+ 318:.\main.c      ****         }
+ 319:.\main.c      ****     }
+ 320:.\main.c      ****     
+ 321:.\main.c      ****     CyGlobalIntEnable; //Enable global interrupts
+ 518              		.loc 1 321 0
+ 519              	@ 321 ".\main.c" 1
+ 520 0062 62B6     		CPSIE   i
+ 521              	@ 0 "" 2
+ 322:.\main.c      ****     
+ 323:.\main.c      ****     /* Revert the pin drive mode back to the original set in the initialization */
+ 324:.\main.c      ****     if(ChangePowerPinDriveMode)
+ 522              		.loc 1 324 0
+ 523              		.code	16
+ 524 0064 064B     		ldr	r3, .L31
+ 525 0066 1B78     		ldrb	r3, [r3]
+ 526 0068 002B     		cmp	r3, #0
+ 527 006a 05D0     		beq	.L30
+ 325:.\main.c      ****     {
+ 326:.\main.c      ****         GND_SetDriveMode(GND_DM_STRONG); //Set the GND pin drive mode to Strong
+ 528              		.loc 1 326 0
+ 529 006c 0620     		mov	r0, #6
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 16
+
+
+ 530 006e FFF7FEFF 		bl	GND_SetDriveMode
+ 327:.\main.c      ****         VDD_SetDriveMode(VDD_DM_STRONG); //Set the VDD pin drive mode to Strong
+ 531              		.loc 1 327 0
+ 532 0072 0620     		mov	r0, #6
+ 533 0074 FFF7FEFF 		bl	VDD_SetDriveMode
+ 534              	.L30:
+ 328:.\main.c      ****     }
+ 329:.\main.c      ****     
+ 330:.\main.c      ****     I2C_Wakeup(); //Wakeup the I2C
+ 535              		.loc 1 330 0
+ 536 0078 FFF7FEFF 		bl	I2C_Wakeup
+ 331:.\main.c      **** }
+ 537              		.loc 1 331 0
+ 538 007c BD46     		mov	sp, r7
+ 539              		@ sp needed
+ 540 007e 80BD     		pop	{r7, pc}
+ 541              	.L32:
+ 542              		.align	2
+ 543              	.L31:
+ 544 0080 00000000 		.word	ChangePowerPinDriveMode
+ 545 0084 00000000 		.word	SleepMode
+ 546 0088 01000000 		.word	BlessState
+ 547              		.cfi_endproc
+ 548              	.LFE41:
+ 549              		.size	EnterExitLowPowerMode, .-EnterExitLowPowerMode
+ 550              		.section	.text.ButtonISR,"ax",%progbits
+ 551              		.align	2
+ 552              		.global	ButtonISR
+ 553              		.code	16
+ 554              		.thumb_func
+ 555              		.type	ButtonISR, %function
+ 556              	ButtonISR:
+ 557              	.LFB42:
+ 332:.\main.c      **** /**************************************************************************************************
+ 333:.\main.c      **** 
+ 334:.\main.c      **** /**************************************************************************************************
+ 335:.\main.c      **** * Function Name: CY_ISR
+ 336:.\main.c      **** ***************************************************************************************************
+ 337:.\main.c      **** * Summary: ISR routine for button interrupt. The system enters here after the CPU wakeup.
+ 338:.\main.c      **** * It also Clears pending interrupt.
+ 339:.\main.c      **** *
+ 340:.\main.c      **** * Parameters:
+ 341:.\main.c      **** *  ButtonISR - Address of the ISR to set in the interrupt vector table
+ 342:.\main.c      **** *
+ 343:.\main.c      **** * Return:
+ 344:.\main.c      **** *  void
+ 345:.\main.c      **** *
+ 346:.\main.c      **** ***************************************************************************************************
+ 347:.\main.c      **** CY_ISR(ButtonISR)
+ 348:.\main.c      **** {
+ 558              		.loc 1 348 0
+ 559              		.cfi_startproc
+ 560 0000 80B5     		push	{r7, lr}
+ 561              		.cfi_def_cfa_offset 8
+ 562              		.cfi_offset 7, -8
+ 563              		.cfi_offset 14, -4
+ 564 0002 00AF     		add	r7, sp, #0
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 17
+
+
+ 565              		.cfi_def_cfa_register 7
+ 349:.\main.c      ****     /* Clear the pending interrupts */
+ 350:.\main.c      ****     Btn_Interrupt_ClearPending();    
+ 566              		.loc 1 350 0
+ 567 0004 FFF7FEFF 		bl	Btn_Interrupt_ClearPending
+ 351:.\main.c      ****     Button_ClearInterrupt();
+ 568              		.loc 1 351 0
+ 569 0008 FFF7FEFF 		bl	Button_ClearInterrupt
+ 352:.\main.c      **** }
+ 570              		.loc 1 352 0
+ 571 000c BD46     		mov	sp, r7
+ 572              		@ sp needed
+ 573 000e 80BD     		pop	{r7, pc}
+ 574              		.cfi_endproc
+ 575              	.LFE42:
+ 576              		.size	ButtonISR, .-ButtonISR
+ 577              		.text
+ 578              	.Letext0:
+ 579              		.file 2 "Generated_Source\\PSoC4/BLE_Stack.h"
+ 580              		.file 3 "Generated_Source\\PSoC4/cytypes.h"
+ 581              		.file 4 "Generated_Source\\PSoC4/BLE_eventHandler.h"
+ 582              		.section	.debug_info,"",%progbits
+ 583              	.Ldebug_info0:
+ 584 0000 8E040000 		.4byte	0x48e
+ 585 0004 0400     		.2byte	0x4
+ 586 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 587 000a 04       		.byte	0x4
+ 588 000b 01       		.uleb128 0x1
+ 589 000c E40B0000 		.4byte	.LASF128
+ 590 0010 01       		.byte	0x1
+ 591 0011 59020000 		.4byte	.LASF129
+ 592 0015 86080000 		.4byte	.LASF130
+ 593 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 594 001d 00000000 		.4byte	0
+ 595 0021 00000000 		.4byte	.Ldebug_line0
+ 596 0025 02       		.uleb128 0x2
+ 597 0026 01       		.byte	0x1
+ 598 0027 06       		.byte	0x6
+ 599 0028 3A020000 		.4byte	.LASF0
+ 600 002c 02       		.uleb128 0x2
+ 601 002d 01       		.byte	0x1
+ 602 002e 08       		.byte	0x8
+ 603 002f 78080000 		.4byte	.LASF1
+ 604 0033 02       		.uleb128 0x2
+ 605 0034 02       		.byte	0x2
+ 606 0035 05       		.byte	0x5
+ 607 0036 11090000 		.4byte	.LASF2
+ 608 003a 02       		.uleb128 0x2
+ 609 003b 02       		.byte	0x2
+ 610 003c 07       		.byte	0x7
+ 611 003d F7040000 		.4byte	.LASF3
+ 612 0041 02       		.uleb128 0x2
+ 613 0042 04       		.byte	0x4
+ 614 0043 05       		.byte	0x5
+ 615 0044 45010000 		.4byte	.LASF4
+ 616 0048 02       		.uleb128 0x2
+ 617 0049 04       		.byte	0x4
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 18
+
+
+ 618 004a 07       		.byte	0x7
+ 619 004b 3E040000 		.4byte	.LASF5
+ 620 004f 02       		.uleb128 0x2
+ 621 0050 08       		.byte	0x8
+ 622 0051 05       		.byte	0x5
+ 623 0052 2C020000 		.4byte	.LASF6
+ 624 0056 02       		.uleb128 0x2
+ 625 0057 08       		.byte	0x8
+ 626 0058 07       		.byte	0x7
+ 627 0059 5A010000 		.4byte	.LASF7
+ 628 005d 03       		.uleb128 0x3
+ 629 005e 04       		.byte	0x4
+ 630 005f 05       		.byte	0x5
+ 631 0060 696E7400 		.ascii	"int\000"
+ 632 0064 02       		.uleb128 0x2
+ 633 0065 04       		.byte	0x4
+ 634 0066 07       		.byte	0x7
+ 635 0067 E3030000 		.4byte	.LASF8
+ 636 006b 04       		.uleb128 0x4
+ 637 006c 35030000 		.4byte	.LASF84
+ 638 0070 03       		.byte	0x3
+ 639 0071 9801     		.2byte	0x198
+ 640 0073 2C000000 		.4byte	0x2c
+ 641 0077 02       		.uleb128 0x2
+ 642 0078 04       		.byte	0x4
+ 643 0079 04       		.byte	0x4
+ 644 007a 14080000 		.4byte	.LASF9
+ 645 007e 02       		.uleb128 0x2
+ 646 007f 08       		.byte	0x8
+ 647 0080 04       		.byte	0x4
+ 648 0081 5A030000 		.4byte	.LASF10
+ 649 0085 02       		.uleb128 0x2
+ 650 0086 01       		.byte	0x1
+ 651 0087 08       		.byte	0x8
+ 652 0088 590A0000 		.4byte	.LASF11
+ 653 008c 02       		.uleb128 0x2
+ 654 008d 04       		.byte	0x4
+ 655 008e 07       		.byte	0x7
+ 656 008f 81060000 		.4byte	.LASF12
+ 657 0093 05       		.uleb128 0x5
+ 658 0094 01       		.byte	0x1
+ 659 0095 02       		.byte	0x2
+ 660 0096 4201     		.2byte	0x142
+ 661 0098 50020000 		.4byte	0x250
+ 662 009c 06       		.uleb128 0x6
+ 663 009d 0A050000 		.4byte	.LASF13
+ 664 00a1 00       		.sleb128 0
+ 665 00a2 06       		.uleb128 0x6
+ 666 00a3 46020000 		.4byte	.LASF14
+ 667 00a7 01       		.sleb128 1
+ 668 00a8 06       		.uleb128 0x6
+ 669 00a9 33010000 		.4byte	.LASF15
+ 670 00ad 02       		.sleb128 2
+ 671 00ae 06       		.uleb128 0x6
+ 672 00af E50A0000 		.4byte	.LASF16
+ 673 00b3 03       		.sleb128 3
+ 674 00b4 06       		.uleb128 0x6
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 19
+
+
+ 675 00b5 71010000 		.4byte	.LASF17
+ 676 00b9 04       		.sleb128 4
+ 677 00ba 06       		.uleb128 0x6
+ 678 00bb 23000000 		.4byte	.LASF18
+ 679 00bf 05       		.sleb128 5
+ 680 00c0 06       		.uleb128 0x6
+ 681 00c1 3F050000 		.4byte	.LASF19
+ 682 00c5 06       		.sleb128 6
+ 683 00c6 06       		.uleb128 0x6
+ 684 00c7 1E060000 		.4byte	.LASF20
+ 685 00cb 20       		.sleb128 32
+ 686 00cc 06       		.uleb128 0x6
+ 687 00cd 81020000 		.4byte	.LASF21
+ 688 00d1 21       		.sleb128 33
+ 689 00d2 06       		.uleb128 0x6
+ 690 00d3 58050000 		.4byte	.LASF22
+ 691 00d7 22       		.sleb128 34
+ 692 00d8 06       		.uleb128 0x6
+ 693 00d9 C1050000 		.4byte	.LASF23
+ 694 00dd 23       		.sleb128 35
+ 695 00de 06       		.uleb128 0x6
+ 696 00df 52070000 		.4byte	.LASF24
+ 697 00e3 24       		.sleb128 36
+ 698 00e4 06       		.uleb128 0x6
+ 699 00e5 BC060000 		.4byte	.LASF25
+ 700 00e9 25       		.sleb128 37
+ 701 00ea 06       		.uleb128 0x6
+ 702 00eb 0D030000 		.4byte	.LASF26
+ 703 00ef 26       		.sleb128 38
+ 704 00f0 06       		.uleb128 0x6
+ 705 00f1 7C050000 		.4byte	.LASF27
+ 706 00f5 27       		.sleb128 39
+ 707 00f6 06       		.uleb128 0x6
+ 708 00f7 770A0000 		.4byte	.LASF28
+ 709 00fb 28       		.sleb128 40
+ 710 00fc 06       		.uleb128 0x6
+ 711 00fd BD010000 		.4byte	.LASF29
+ 712 0101 29       		.sleb128 41
+ 713 0102 06       		.uleb128 0x6
+ 714 0103 72000000 		.4byte	.LASF30
+ 715 0107 2A       		.sleb128 42
+ 716 0108 06       		.uleb128 0x6
+ 717 0109 62020000 		.4byte	.LASF31
+ 718 010d 2B       		.sleb128 43
+ 719 010e 06       		.uleb128 0x6
+ 720 010f 990C0000 		.4byte	.LASF32
+ 721 0113 2C       		.sleb128 44
+ 722 0114 06       		.uleb128 0x6
+ 723 0115 EB010000 		.4byte	.LASF33
+ 724 0119 2D       		.sleb128 45
+ 725 011a 06       		.uleb128 0x6
+ 726 011b DC080000 		.4byte	.LASF34
+ 727 011f 2E       		.sleb128 46
+ 728 0120 06       		.uleb128 0x6
+ 729 0121 BC000000 		.4byte	.LASF35
+ 730 0125 2F       		.sleb128 47
+ 731 0126 06       		.uleb128 0x6
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 20
+
+
+ 732 0127 27070000 		.4byte	.LASF36
+ 733 012b 30       		.sleb128 48
+ 734 012c 06       		.uleb128 0x6
+ 735 012d 3B0D0000 		.4byte	.LASF37
+ 736 0131 31       		.sleb128 49
+ 737 0132 06       		.uleb128 0x6
+ 738 0133 F0060000 		.4byte	.LASF38
+ 739 0137 32       		.sleb128 50
+ 740 0138 06       		.uleb128 0x6
+ 741 0139 E2090000 		.4byte	.LASF39
+ 742 013d 33       		.sleb128 51
+ 743 013e 06       		.uleb128 0x6
+ 744 013f C8090000 		.4byte	.LASF40
+ 745 0143 C000     		.sleb128 64
+ 746 0145 06       		.uleb128 0x6
+ 747 0146 E7050000 		.4byte	.LASF41
+ 748 014a C100     		.sleb128 65
+ 749 014c 06       		.uleb128 0x6
+ 750 014d 5A080000 		.4byte	.LASF42
+ 751 0151 C200     		.sleb128 66
+ 752 0153 06       		.uleb128 0x6
+ 753 0154 380B0000 		.4byte	.LASF43
+ 754 0158 C300     		.sleb128 67
+ 755 015a 06       		.uleb128 0x6
+ 756 015b 7C040000 		.4byte	.LASF44
+ 757 015f C400     		.sleb128 68
+ 758 0161 06       		.uleb128 0x6
+ 759 0162 ED070000 		.4byte	.LASF45
+ 760 0166 C500     		.sleb128 69
+ 761 0168 06       		.uleb128 0x6
+ 762 0169 60060000 		.4byte	.LASF46
+ 763 016d C600     		.sleb128 70
+ 764 016f 06       		.uleb128 0x6
+ 765 0170 21050000 		.4byte	.LASF47
+ 766 0174 C700     		.sleb128 71
+ 767 0176 06       		.uleb128 0x6
+ 768 0177 720C0000 		.4byte	.LASF48
+ 769 017b C800     		.sleb128 72
+ 770 017d 06       		.uleb128 0x6
+ 771 017e 98020000 		.4byte	.LASF49
+ 772 0182 C900     		.sleb128 73
+ 773 0184 06       		.uleb128 0x6
+ 774 0185 7D0B0000 		.4byte	.LASF50
+ 775 0189 CA00     		.sleb128 74
+ 776 018b 06       		.uleb128 0x6
+ 777 018c E5000000 		.4byte	.LASF51
+ 778 0190 CB00     		.sleb128 75
+ 779 0192 06       		.uleb128 0x6
+ 780 0193 9B050000 		.4byte	.LASF52
+ 781 0197 CC00     		.sleb128 76
+ 782 0199 06       		.uleb128 0x6
+ 783 019a D6060000 		.4byte	.LASF53
+ 784 019e CD00     		.sleb128 77
+ 785 01a0 06       		.uleb128 0x6
+ 786 01a1 BA020000 		.4byte	.LASF54
+ 787 01a5 CE00     		.sleb128 78
+ 788 01a7 06       		.uleb128 0x6
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 21
+
+
+ 789 01a8 6E090000 		.4byte	.LASF55
+ 790 01ac CF00     		.sleb128 79
+ 791 01ae 06       		.uleb128 0x6
+ 792 01af 04010000 		.4byte	.LASF56
+ 793 01b3 D000     		.sleb128 80
+ 794 01b5 06       		.uleb128 0x6
+ 795 01b6 3B030000 		.4byte	.LASF57
+ 796 01ba D100     		.sleb128 81
+ 797 01bc 06       		.uleb128 0x6
+ 798 01bd 7F070000 		.4byte	.LASF58
+ 799 01c1 D200     		.sleb128 82
+ 800 01c3 06       		.uleb128 0x6
+ 801 01c4 1B090000 		.4byte	.LASF59
+ 802 01c8 D300     		.sleb128 83
+ 803 01ca 06       		.uleb128 0x6
+ 804 01cb A7090000 		.4byte	.LASF60
+ 805 01cf D400     		.sleb128 84
+ 806 01d1 06       		.uleb128 0x6
+ 807 01d2 9A040000 		.4byte	.LASF61
+ 808 01d6 D500     		.sleb128 85
+ 809 01d8 06       		.uleb128 0x6
+ 810 01d9 C1030000 		.4byte	.LASF62
+ 811 01dd D600     		.sleb128 86
+ 812 01df 06       		.uleb128 0x6
+ 813 01e0 990A0000 		.4byte	.LASF63
+ 814 01e4 D700     		.sleb128 87
+ 815 01e6 06       		.uleb128 0x6
+ 816 01e7 BE040000 		.4byte	.LASF64
+ 817 01eb D800     		.sleb128 88
+ 818 01ed 06       		.uleb128 0x6
+ 819 01ee 77030000 		.4byte	.LASF65
+ 820 01f2 F000     		.sleb128 112
+ 821 01f4 06       		.uleb128 0x6
+ 822 01f5 E90C0000 		.4byte	.LASF66
+ 823 01f9 F100     		.sleb128 113
+ 824 01fb 06       		.uleb128 0x6
+ 825 01fc D8020000 		.4byte	.LASF67
+ 826 0200 F200     		.sleb128 114
+ 827 0202 06       		.uleb128 0x6
+ 828 0203 42060000 		.4byte	.LASF68
+ 829 0207 F300     		.sleb128 115
+ 830 0209 06       		.uleb128 0x6
+ 831 020a BF070000 		.4byte	.LASF69
+ 832 020e F400     		.sleb128 116
+ 833 0210 06       		.uleb128 0x6
+ 834 0211 BD0C0000 		.4byte	.LASF70
+ 835 0215 F500     		.sleb128 117
+ 836 0217 06       		.uleb128 0x6
+ 837 0218 9B000000 		.4byte	.LASF71
+ 838 021c F600     		.sleb128 118
+ 839 021e 06       		.uleb128 0x6
+ 840 021f 53000000 		.4byte	.LASF72
+ 841 0223 F700     		.sleb128 119
+ 842 0225 06       		.uleb128 0x6
+ 843 0226 00000000 		.4byte	.LASF73
+ 844 022a F800     		.sleb128 120
+ 845 022c 06       		.uleb128 0x6
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 22
+
+
+ 846 022d C20A0000 		.4byte	.LASF74
+ 847 0231 F900     		.sleb128 121
+ 848 0233 06       		.uleb128 0x6
+ 849 0234 9D030000 		.4byte	.LASF75
+ 850 0238 FA00     		.sleb128 122
+ 851 023a 06       		.uleb128 0x6
+ 852 023b 86010000 		.4byte	.LASF76
+ 853 023f FA01     		.sleb128 250
+ 854 0241 06       		.uleb128 0x6
+ 855 0242 F0030000 		.4byte	.LASF77
+ 856 0246 FB01     		.sleb128 251
+ 857 0248 06       		.uleb128 0x6
+ 858 0249 1D0A0000 		.4byte	.LASF78
+ 859 024d FF01     		.sleb128 255
+ 860 024f 00       		.byte	0
+ 861 0250 05       		.uleb128 0x5
+ 862 0251 01       		.byte	0x1
+ 863 0252 02       		.byte	0x2
+ 864 0253 6F03     		.2byte	0x36f
+ 865 0255 79020000 		.4byte	0x279
+ 866 0259 06       		.uleb128 0x6
+ 867 025a 280D0000 		.4byte	.LASF79
+ 868 025e 01       		.sleb128 1
+ 869 025f 06       		.uleb128 0x6
+ 870 0260 470A0000 		.4byte	.LASF80
+ 871 0264 02       		.sleb128 2
+ 872 0265 06       		.uleb128 0x6
+ 873 0266 CE0B0000 		.4byte	.LASF81
+ 874 026a 03       		.sleb128 3
+ 875 026b 06       		.uleb128 0x6
+ 876 026c 11070000 		.4byte	.LASF82
+ 877 0270 04       		.sleb128 4
+ 878 0271 06       		.uleb128 0x6
+ 879 0272 68040000 		.4byte	.LASF83
+ 880 0276 FF01     		.sleb128 255
+ 881 0278 00       		.byte	0
+ 882 0279 04       		.uleb128 0x4
+ 883 027a 23010000 		.4byte	.LASF85
+ 884 027e 02       		.byte	0x2
+ 885 027f 8B03     		.2byte	0x38b
+ 886 0281 50020000 		.4byte	0x250
+ 887 0285 05       		.uleb128 0x5
+ 888 0286 01       		.byte	0x1
+ 889 0287 02       		.byte	0x2
+ 890 0288 8F03     		.2byte	0x38f
+ 891 028a C0020000 		.4byte	0x2c0
+ 892 028e 06       		.uleb128 0x6
+ 893 028f A4010000 		.4byte	.LASF86
+ 894 0293 01       		.sleb128 1
+ 895 0294 06       		.uleb128 0x6
+ 896 0295 1A0B0000 		.4byte	.LASF87
+ 897 0299 02       		.sleb128 2
+ 898 029a 06       		.uleb128 0x6
+ 899 029b 42080000 		.4byte	.LASF88
+ 900 029f 03       		.sleb128 3
+ 901 02a0 06       		.uleb128 0x6
+ 902 02a1 560B0000 		.4byte	.LASF89
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 23
+
+
+ 903 02a5 04       		.sleb128 4
+ 904 02a6 06       		.uleb128 0x6
+ 905 02a7 9B0B0000 		.4byte	.LASF90
+ 906 02ab 05       		.sleb128 5
+ 907 02ac 06       		.uleb128 0x6
+ 908 02ad 22040000 		.4byte	.LASF91
+ 909 02b1 06       		.sleb128 6
+ 910 02b2 06       		.uleb128 0x6
+ 911 02b3 02060000 		.4byte	.LASF92
+ 912 02b7 07       		.sleb128 7
+ 913 02b8 06       		.uleb128 0x6
+ 914 02b9 8D090000 		.4byte	.LASF93
+ 915 02bd FF01     		.sleb128 255
+ 916 02bf 00       		.byte	0
+ 917 02c0 04       		.uleb128 0x4
+ 918 02c1 090A0000 		.4byte	.LASF94
+ 919 02c5 02       		.byte	0x2
+ 920 02c6 9803     		.2byte	0x398
+ 921 02c8 85020000 		.4byte	0x285
+ 922 02cc 05       		.uleb128 0x5
+ 923 02cd 01       		.byte	0x1
+ 924 02ce 04       		.byte	0x4
+ 925 02cf BF07     		.2byte	0x7bf
+ 926 02d1 F4020000 		.4byte	0x2f4
+ 927 02d5 06       		.uleb128 0x6
+ 928 02d6 3F000000 		.4byte	.LASF95
+ 929 02da 00       		.sleb128 0
+ 930 02db 06       		.uleb128 0x6
+ 931 02dc 8A060000 		.4byte	.LASF96
+ 932 02e0 01       		.sleb128 1
+ 933 02e1 06       		.uleb128 0x6
+ 934 02e2 B80B0000 		.4byte	.LASF97
+ 935 02e6 02       		.sleb128 2
+ 936 02e7 06       		.uleb128 0x6
+ 937 02e8 14020000 		.4byte	.LASF98
+ 938 02ec 03       		.sleb128 3
+ 939 02ed 06       		.uleb128 0x6
+ 940 02ee F4020000 		.4byte	.LASF99
+ 941 02f2 04       		.sleb128 4
+ 942 02f3 00       		.byte	0
+ 943 02f4 04       		.uleb128 0x4
+ 944 02f5 6F0B0000 		.4byte	.LASF100
+ 945 02f9 04       		.byte	0x4
+ 946 02fa CD07     		.2byte	0x7cd
+ 947 02fc CC020000 		.4byte	0x2cc
+ 948 0300 02       		.uleb128 0x2
+ 949 0301 08       		.byte	0x8
+ 950 0302 04       		.byte	0x4
+ 951 0303 61030000 		.4byte	.LASF101
+ 952 0307 07       		.uleb128 0x7
+ 953 0308 230D0000 		.4byte	.LASF102
+ 954 030c 01       		.byte	0x1
+ 955 030d 6C       		.byte	0x6c
+ 956 030e 5D000000 		.4byte	0x5d
+ 957 0312 00000000 		.4byte	.LFB37
+ 958 0316 70000000 		.4byte	.LFE37-.LFB37
+ 959 031a 01       		.uleb128 0x1
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 24
+
+
+ 960 031b 9C       		.byte	0x9c
+ 961 031c 08       		.uleb128 0x8
+ 962 031d 00090000 		.4byte	.LASF103
+ 963 0321 01       		.byte	0x1
+ 964 0322 A0       		.byte	0xa0
+ 965 0323 00000000 		.4byte	.LFB38
+ 966 0327 40000000 		.4byte	.LFE38-.LFB38
+ 967 032b 01       		.uleb128 0x1
+ 968 032c 9C       		.byte	0x9c
+ 969 032d 08       		.uleb128 0x8
+ 970 032e 50040000 		.4byte	.LASF104
+ 971 0332 01       		.byte	0x1
+ 972 0333 C1       		.byte	0xc1
+ 973 0334 00000000 		.4byte	.LFB39
+ 974 0338 40010000 		.4byte	.LFE39-.LFB39
+ 975 033c 01       		.uleb128 0x1
+ 976 033d 9C       		.byte	0x9c
+ 977 033e 09       		.uleb128 0x9
+ 978 033f DD070000 		.4byte	.LASF105
+ 979 0343 01       		.byte	0x1
+ 980 0344 0101     		.2byte	0x101
+ 981 0346 00000000 		.4byte	.LFB40
+ 982 034a 54000000 		.4byte	.LFE40-.LFB40
+ 983 034e 01       		.uleb128 0x1
+ 984 034f 9C       		.byte	0x9c
+ 985 0350 09       		.uleb128 0x9
+ 986 0351 E1040000 		.4byte	.LASF106
+ 987 0355 01       		.byte	0x1
+ 988 0356 2101     		.2byte	0x121
+ 989 0358 00000000 		.4byte	.LFB41
+ 990 035c 8C000000 		.4byte	.LFE41-.LFB41
+ 991 0360 01       		.uleb128 0x1
+ 992 0361 9C       		.byte	0x9c
+ 993 0362 09       		.uleb128 0x9
+ 994 0363 6D030000 		.4byte	.LASF107
+ 995 0367 01       		.byte	0x1
+ 996 0368 5B01     		.2byte	0x15b
+ 997 036a 00000000 		.4byte	.LFB42
+ 998 036e 10000000 		.4byte	.LFE42-.LFB42
+ 999 0372 01       		.uleb128 0x1
+ 1000 0373 9C       		.byte	0x9c
+ 1001 0374 0A       		.uleb128 0xa
+ 1002 0375 48070000 		.4byte	.LASF108
+ 1003 0379 01       		.byte	0x1
+ 1004 037a 5A       		.byte	0x5a
+ 1005 037b 79020000 		.4byte	0x279
+ 1006 037f 05       		.uleb128 0x5
+ 1007 0380 03       		.byte	0x3
+ 1008 0381 00000000 		.4byte	SleepMode
+ 1009 0385 0A       		.uleb128 0xa
+ 1010 0386 DE0C0000 		.4byte	.LASF109
+ 1011 038a 01       		.byte	0x1
+ 1012 038b 5B       		.byte	0x5b
+ 1013 038c C0020000 		.4byte	0x2c0
+ 1014 0390 05       		.uleb128 0x5
+ 1015 0391 03       		.byte	0x3
+ 1016 0392 01000000 		.4byte	BlessState
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 25
+
+
+ 1017 0396 0B       		.uleb128 0xb
+ 1018 0397 B5050000 		.4byte	.LASF110
+ 1019 039b 04       		.byte	0x4
+ 1020 039c DA09     		.2byte	0x9da
+ 1021 039e F4020000 		.4byte	0x2f4
+ 1022 03a2 0C       		.uleb128 0xc
+ 1023 03a3 2A080000 		.4byte	.LASF111
+ 1024 03a7 01       		.byte	0x1
+ 1025 03a8 49       		.byte	0x49
+ 1026 03a9 6B000000 		.4byte	0x6b
+ 1027 03ad 05       		.uleb128 0x5
+ 1028 03ae 03       		.byte	0x3
+ 1029 03af 00000000 		.4byte	ChangePowerPinDriveMode
+ 1030 03b3 0C       		.uleb128 0xc
+ 1031 03b4 3C090000 		.4byte	.LASF112
+ 1032 03b8 01       		.byte	0x1
+ 1033 03b9 4A       		.byte	0x4a
+ 1034 03ba 6B000000 		.4byte	0x6b
+ 1035 03be 05       		.uleb128 0x5
+ 1036 03bf 03       		.byte	0x3
+ 1037 03c0 00000000 		.4byte	NotificationDelayCounter
+ 1038 03c4 0C       		.uleb128 0xc
+ 1039 03c5 1A080000 		.4byte	.LASF113
+ 1040 03c9 01       		.byte	0x1
+ 1041 03ca 4B       		.byte	0x4b
+ 1042 03cb 6B000000 		.4byte	0x6b
+ 1043 03cf 05       		.uleb128 0x5
+ 1044 03d0 03       		.byte	0x3
+ 1045 03d1 00000000 		.4byte	LEDDelayCounter
+ 1046 03d5 0C       		.uleb128 0xc
+ 1047 03d6 0F0D0000 		.4byte	.LASF114
+ 1048 03da 01       		.byte	0x1
+ 1049 03db 4C       		.byte	0x4c
+ 1050 03dc 41000000 		.4byte	0x41
+ 1051 03e0 05       		.uleb128 0x5
+ 1052 03e1 03       		.byte	0x3
+ 1053 03e2 00000000 		.4byte	LastTemperatureData
+ 1054 03e6 0C       		.uleb128 0xc
+ 1055 03e7 DA010000 		.4byte	.LASF115
+ 1056 03eb 01       		.byte	0x1
+ 1057 03ec 4D       		.byte	0x4d
+ 1058 03ed 41000000 		.4byte	0x41
+ 1059 03f1 05       		.uleb128 0x5
+ 1060 03f2 03       		.byte	0x3
+ 1061 03f3 00000000 		.4byte	LastPressureData
+ 1062 03f7 0C       		.uleb128 0xc
+ 1063 03f8 6E070000 		.4byte	.LASF116
+ 1064 03fc 01       		.byte	0x1
+ 1065 03fd 4E       		.byte	0x4e
+ 1066 03fe 41000000 		.4byte	0x41
+ 1067 0402 05       		.uleb128 0x5
+ 1068 0403 03       		.byte	0x3
+ 1069 0404 00000000 		.4byte	LastAltitudeData
+ 1070 0408 0D       		.uleb128 0xd
+ 1071 0409 0F040000 		.4byte	.LASF117
+ 1072 040d 01       		.byte	0x1
+ 1073 040e 4F       		.byte	0x4f
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 26
+
+
+ 1074 040f 6B000000 		.4byte	0x6b
+ 1075 0413 0D       		.uleb128 0xd
+ 1076 0414 5E090000 		.4byte	.LASF118
+ 1077 0418 01       		.byte	0x1
+ 1078 0419 50       		.byte	0x50
+ 1079 041a 6B000000 		.4byte	0x6b
+ 1080 041e 0D       		.uleb128 0xd
+ 1081 041f A0070000 		.4byte	.LASF119
+ 1082 0423 01       		.byte	0x1
+ 1083 0424 51       		.byte	0x51
+ 1084 0425 6B000000 		.4byte	0x6b
+ 1085 0429 0D       		.uleb128 0xd
+ 1086 042a FE0A0000 		.4byte	.LASF120
+ 1087 042e 01       		.byte	0x1
+ 1088 042f 52       		.byte	0x52
+ 1089 0430 6B000000 		.4byte	0x6b
+ 1090 0434 0D       		.uleb128 0xd
+ 1091 0435 2B0A0000 		.4byte	.LASF121
+ 1092 0439 01       		.byte	0x1
+ 1093 043a 53       		.byte	0x53
+ 1094 043b 6B000000 		.4byte	0x6b
+ 1095 043f 0E       		.uleb128 0xe
+ 1096 0440 6B000000 		.4byte	0x6b
+ 1097 0444 4F040000 		.4byte	0x44f
+ 1098 0448 0F       		.uleb128 0xf
+ 1099 0449 8C000000 		.4byte	0x8c
+ 1100 044d 03       		.byte	0x3
+ 1101 044e 00       		.byte	0
+ 1102 044f 0D       		.uleb128 0xd
+ 1103 0450 5F0D0000 		.4byte	.LASF122
+ 1104 0454 01       		.byte	0x1
+ 1105 0455 54       		.byte	0x54
+ 1106 0456 3F040000 		.4byte	0x43f
+ 1107 045a 0D       		.uleb128 0xd
+ 1108 045b A3060000 		.4byte	.LASF123
+ 1109 045f 01       		.byte	0x1
+ 1110 0460 55       		.byte	0x55
+ 1111 0461 3F040000 		.4byte	0x43f
+ 1112 0465 0D       		.uleb128 0xd
+ 1113 0466 5E0A0000 		.4byte	.LASF124
+ 1114 046a 01       		.byte	0x1
+ 1115 046b 56       		.byte	0x56
+ 1116 046c 3F040000 		.4byte	0x43f
+ 1117 0470 0D       		.uleb128 0xd
+ 1118 0471 4E010000 		.4byte	.LASF125
+ 1119 0475 01       		.byte	0x1
+ 1120 0476 57       		.byte	0x57
+ 1121 0477 41000000 		.4byte	0x41
+ 1122 047b 0D       		.uleb128 0xd
+ 1123 047c B1020000 		.4byte	.LASF126
+ 1124 0480 01       		.byte	0x1
+ 1125 0481 58       		.byte	0x58
+ 1126 0482 41000000 		.4byte	0x41
+ 1127 0486 0D       		.uleb128 0xd
+ 1128 0487 55090000 		.4byte	.LASF127
+ 1129 048b 01       		.byte	0x1
+ 1130 048c 59       		.byte	0x59
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 27
+
+
+ 1131 048d 41000000 		.4byte	0x41
+ 1132 0491 00       		.byte	0
+ 1133              		.section	.debug_abbrev,"",%progbits
+ 1134              	.Ldebug_abbrev0:
+ 1135 0000 01       		.uleb128 0x1
+ 1136 0001 11       		.uleb128 0x11
+ 1137 0002 01       		.byte	0x1
+ 1138 0003 25       		.uleb128 0x25
+ 1139 0004 0E       		.uleb128 0xe
+ 1140 0005 13       		.uleb128 0x13
+ 1141 0006 0B       		.uleb128 0xb
+ 1142 0007 03       		.uleb128 0x3
+ 1143 0008 0E       		.uleb128 0xe
+ 1144 0009 1B       		.uleb128 0x1b
+ 1145 000a 0E       		.uleb128 0xe
+ 1146 000b 55       		.uleb128 0x55
+ 1147 000c 17       		.uleb128 0x17
+ 1148 000d 11       		.uleb128 0x11
+ 1149 000e 01       		.uleb128 0x1
+ 1150 000f 10       		.uleb128 0x10
+ 1151 0010 17       		.uleb128 0x17
+ 1152 0011 00       		.byte	0
+ 1153 0012 00       		.byte	0
+ 1154 0013 02       		.uleb128 0x2
+ 1155 0014 24       		.uleb128 0x24
+ 1156 0015 00       		.byte	0
+ 1157 0016 0B       		.uleb128 0xb
+ 1158 0017 0B       		.uleb128 0xb
+ 1159 0018 3E       		.uleb128 0x3e
+ 1160 0019 0B       		.uleb128 0xb
+ 1161 001a 03       		.uleb128 0x3
+ 1162 001b 0E       		.uleb128 0xe
+ 1163 001c 00       		.byte	0
+ 1164 001d 00       		.byte	0
+ 1165 001e 03       		.uleb128 0x3
+ 1166 001f 24       		.uleb128 0x24
+ 1167 0020 00       		.byte	0
+ 1168 0021 0B       		.uleb128 0xb
+ 1169 0022 0B       		.uleb128 0xb
+ 1170 0023 3E       		.uleb128 0x3e
+ 1171 0024 0B       		.uleb128 0xb
+ 1172 0025 03       		.uleb128 0x3
+ 1173 0026 08       		.uleb128 0x8
+ 1174 0027 00       		.byte	0
+ 1175 0028 00       		.byte	0
+ 1176 0029 04       		.uleb128 0x4
+ 1177 002a 16       		.uleb128 0x16
+ 1178 002b 00       		.byte	0
+ 1179 002c 03       		.uleb128 0x3
+ 1180 002d 0E       		.uleb128 0xe
+ 1181 002e 3A       		.uleb128 0x3a
+ 1182 002f 0B       		.uleb128 0xb
+ 1183 0030 3B       		.uleb128 0x3b
+ 1184 0031 05       		.uleb128 0x5
+ 1185 0032 49       		.uleb128 0x49
+ 1186 0033 13       		.uleb128 0x13
+ 1187 0034 00       		.byte	0
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 28
+
+
+ 1188 0035 00       		.byte	0
+ 1189 0036 05       		.uleb128 0x5
+ 1190 0037 04       		.uleb128 0x4
+ 1191 0038 01       		.byte	0x1
+ 1192 0039 0B       		.uleb128 0xb
+ 1193 003a 0B       		.uleb128 0xb
+ 1194 003b 3A       		.uleb128 0x3a
+ 1195 003c 0B       		.uleb128 0xb
+ 1196 003d 3B       		.uleb128 0x3b
+ 1197 003e 05       		.uleb128 0x5
+ 1198 003f 01       		.uleb128 0x1
+ 1199 0040 13       		.uleb128 0x13
+ 1200 0041 00       		.byte	0
+ 1201 0042 00       		.byte	0
+ 1202 0043 06       		.uleb128 0x6
+ 1203 0044 28       		.uleb128 0x28
+ 1204 0045 00       		.byte	0
+ 1205 0046 03       		.uleb128 0x3
+ 1206 0047 0E       		.uleb128 0xe
+ 1207 0048 1C       		.uleb128 0x1c
+ 1208 0049 0D       		.uleb128 0xd
+ 1209 004a 00       		.byte	0
+ 1210 004b 00       		.byte	0
+ 1211 004c 07       		.uleb128 0x7
+ 1212 004d 2E       		.uleb128 0x2e
+ 1213 004e 00       		.byte	0
+ 1214 004f 3F       		.uleb128 0x3f
+ 1215 0050 19       		.uleb128 0x19
+ 1216 0051 03       		.uleb128 0x3
+ 1217 0052 0E       		.uleb128 0xe
+ 1218 0053 3A       		.uleb128 0x3a
+ 1219 0054 0B       		.uleb128 0xb
+ 1220 0055 3B       		.uleb128 0x3b
+ 1221 0056 0B       		.uleb128 0xb
+ 1222 0057 49       		.uleb128 0x49
+ 1223 0058 13       		.uleb128 0x13
+ 1224 0059 11       		.uleb128 0x11
+ 1225 005a 01       		.uleb128 0x1
+ 1226 005b 12       		.uleb128 0x12
+ 1227 005c 06       		.uleb128 0x6
+ 1228 005d 40       		.uleb128 0x40
+ 1229 005e 18       		.uleb128 0x18
+ 1230 005f 9642     		.uleb128 0x2116
+ 1231 0061 19       		.uleb128 0x19
+ 1232 0062 00       		.byte	0
+ 1233 0063 00       		.byte	0
+ 1234 0064 08       		.uleb128 0x8
+ 1235 0065 2E       		.uleb128 0x2e
+ 1236 0066 00       		.byte	0
+ 1237 0067 3F       		.uleb128 0x3f
+ 1238 0068 19       		.uleb128 0x19
+ 1239 0069 03       		.uleb128 0x3
+ 1240 006a 0E       		.uleb128 0xe
+ 1241 006b 3A       		.uleb128 0x3a
+ 1242 006c 0B       		.uleb128 0xb
+ 1243 006d 3B       		.uleb128 0x3b
+ 1244 006e 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 29
+
+
+ 1245 006f 27       		.uleb128 0x27
+ 1246 0070 19       		.uleb128 0x19
+ 1247 0071 11       		.uleb128 0x11
+ 1248 0072 01       		.uleb128 0x1
+ 1249 0073 12       		.uleb128 0x12
+ 1250 0074 06       		.uleb128 0x6
+ 1251 0075 40       		.uleb128 0x40
+ 1252 0076 18       		.uleb128 0x18
+ 1253 0077 9642     		.uleb128 0x2116
+ 1254 0079 19       		.uleb128 0x19
+ 1255 007a 00       		.byte	0
+ 1256 007b 00       		.byte	0
+ 1257 007c 09       		.uleb128 0x9
+ 1258 007d 2E       		.uleb128 0x2e
+ 1259 007e 00       		.byte	0
+ 1260 007f 3F       		.uleb128 0x3f
+ 1261 0080 19       		.uleb128 0x19
+ 1262 0081 03       		.uleb128 0x3
+ 1263 0082 0E       		.uleb128 0xe
+ 1264 0083 3A       		.uleb128 0x3a
+ 1265 0084 0B       		.uleb128 0xb
+ 1266 0085 3B       		.uleb128 0x3b
+ 1267 0086 05       		.uleb128 0x5
+ 1268 0087 27       		.uleb128 0x27
+ 1269 0088 19       		.uleb128 0x19
+ 1270 0089 11       		.uleb128 0x11
+ 1271 008a 01       		.uleb128 0x1
+ 1272 008b 12       		.uleb128 0x12
+ 1273 008c 06       		.uleb128 0x6
+ 1274 008d 40       		.uleb128 0x40
+ 1275 008e 18       		.uleb128 0x18
+ 1276 008f 9642     		.uleb128 0x2116
+ 1277 0091 19       		.uleb128 0x19
+ 1278 0092 00       		.byte	0
+ 1279 0093 00       		.byte	0
+ 1280 0094 0A       		.uleb128 0xa
+ 1281 0095 34       		.uleb128 0x34
+ 1282 0096 00       		.byte	0
+ 1283 0097 03       		.uleb128 0x3
+ 1284 0098 0E       		.uleb128 0xe
+ 1285 0099 3A       		.uleb128 0x3a
+ 1286 009a 0B       		.uleb128 0xb
+ 1287 009b 3B       		.uleb128 0x3b
+ 1288 009c 0B       		.uleb128 0xb
+ 1289 009d 49       		.uleb128 0x49
+ 1290 009e 13       		.uleb128 0x13
+ 1291 009f 02       		.uleb128 0x2
+ 1292 00a0 18       		.uleb128 0x18
+ 1293 00a1 00       		.byte	0
+ 1294 00a2 00       		.byte	0
+ 1295 00a3 0B       		.uleb128 0xb
+ 1296 00a4 34       		.uleb128 0x34
+ 1297 00a5 00       		.byte	0
+ 1298 00a6 03       		.uleb128 0x3
+ 1299 00a7 0E       		.uleb128 0xe
+ 1300 00a8 3A       		.uleb128 0x3a
+ 1301 00a9 0B       		.uleb128 0xb
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 30
+
+
+ 1302 00aa 3B       		.uleb128 0x3b
+ 1303 00ab 05       		.uleb128 0x5
+ 1304 00ac 49       		.uleb128 0x49
+ 1305 00ad 13       		.uleb128 0x13
+ 1306 00ae 3F       		.uleb128 0x3f
+ 1307 00af 19       		.uleb128 0x19
+ 1308 00b0 3C       		.uleb128 0x3c
+ 1309 00b1 19       		.uleb128 0x19
+ 1310 00b2 00       		.byte	0
+ 1311 00b3 00       		.byte	0
+ 1312 00b4 0C       		.uleb128 0xc
+ 1313 00b5 34       		.uleb128 0x34
+ 1314 00b6 00       		.byte	0
+ 1315 00b7 03       		.uleb128 0x3
+ 1316 00b8 0E       		.uleb128 0xe
+ 1317 00b9 3A       		.uleb128 0x3a
+ 1318 00ba 0B       		.uleb128 0xb
+ 1319 00bb 3B       		.uleb128 0x3b
+ 1320 00bc 0B       		.uleb128 0xb
+ 1321 00bd 49       		.uleb128 0x49
+ 1322 00be 13       		.uleb128 0x13
+ 1323 00bf 3F       		.uleb128 0x3f
+ 1324 00c0 19       		.uleb128 0x19
+ 1325 00c1 02       		.uleb128 0x2
+ 1326 00c2 18       		.uleb128 0x18
+ 1327 00c3 00       		.byte	0
+ 1328 00c4 00       		.byte	0
+ 1329 00c5 0D       		.uleb128 0xd
+ 1330 00c6 34       		.uleb128 0x34
+ 1331 00c7 00       		.byte	0
+ 1332 00c8 03       		.uleb128 0x3
+ 1333 00c9 0E       		.uleb128 0xe
+ 1334 00ca 3A       		.uleb128 0x3a
+ 1335 00cb 0B       		.uleb128 0xb
+ 1336 00cc 3B       		.uleb128 0x3b
+ 1337 00cd 0B       		.uleb128 0xb
+ 1338 00ce 49       		.uleb128 0x49
+ 1339 00cf 13       		.uleb128 0x13
+ 1340 00d0 3F       		.uleb128 0x3f
+ 1341 00d1 19       		.uleb128 0x19
+ 1342 00d2 3C       		.uleb128 0x3c
+ 1343 00d3 19       		.uleb128 0x19
+ 1344 00d4 00       		.byte	0
+ 1345 00d5 00       		.byte	0
+ 1346 00d6 0E       		.uleb128 0xe
+ 1347 00d7 01       		.uleb128 0x1
+ 1348 00d8 01       		.byte	0x1
+ 1349 00d9 49       		.uleb128 0x49
+ 1350 00da 13       		.uleb128 0x13
+ 1351 00db 01       		.uleb128 0x1
+ 1352 00dc 13       		.uleb128 0x13
+ 1353 00dd 00       		.byte	0
+ 1354 00de 00       		.byte	0
+ 1355 00df 0F       		.uleb128 0xf
+ 1356 00e0 21       		.uleb128 0x21
+ 1357 00e1 00       		.byte	0
+ 1358 00e2 49       		.uleb128 0x49
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 31
+
+
+ 1359 00e3 13       		.uleb128 0x13
+ 1360 00e4 2F       		.uleb128 0x2f
+ 1361 00e5 0B       		.uleb128 0xb
+ 1362 00e6 00       		.byte	0
+ 1363 00e7 00       		.byte	0
+ 1364 00e8 00       		.byte	0
+ 1365              		.section	.debug_aranges,"",%progbits
+ 1366 0000 44000000 		.4byte	0x44
+ 1367 0004 0200     		.2byte	0x2
+ 1368 0006 00000000 		.4byte	.Ldebug_info0
+ 1369 000a 04       		.byte	0x4
+ 1370 000b 00       		.byte	0
+ 1371 000c 0000     		.2byte	0
+ 1372 000e 0000     		.2byte	0
+ 1373 0010 00000000 		.4byte	.LFB37
+ 1374 0014 70000000 		.4byte	.LFE37-.LFB37
+ 1375 0018 00000000 		.4byte	.LFB38
+ 1376 001c 40000000 		.4byte	.LFE38-.LFB38
+ 1377 0020 00000000 		.4byte	.LFB39
+ 1378 0024 40010000 		.4byte	.LFE39-.LFB39
+ 1379 0028 00000000 		.4byte	.LFB40
+ 1380 002c 54000000 		.4byte	.LFE40-.LFB40
+ 1381 0030 00000000 		.4byte	.LFB41
+ 1382 0034 8C000000 		.4byte	.LFE41-.LFB41
+ 1383 0038 00000000 		.4byte	.LFB42
+ 1384 003c 10000000 		.4byte	.LFE42-.LFB42
+ 1385 0040 00000000 		.4byte	0
+ 1386 0044 00000000 		.4byte	0
+ 1387              		.section	.debug_ranges,"",%progbits
+ 1388              	.Ldebug_ranges0:
+ 1389 0000 00000000 		.4byte	.LFB37
+ 1390 0004 70000000 		.4byte	.LFE37
+ 1391 0008 00000000 		.4byte	.LFB38
+ 1392 000c 40000000 		.4byte	.LFE38
+ 1393 0010 00000000 		.4byte	.LFB39
+ 1394 0014 40010000 		.4byte	.LFE39
+ 1395 0018 00000000 		.4byte	.LFB40
+ 1396 001c 54000000 		.4byte	.LFE40
+ 1397 0020 00000000 		.4byte	.LFB41
+ 1398 0024 8C000000 		.4byte	.LFE41
+ 1399 0028 00000000 		.4byte	.LFB42
+ 1400 002c 10000000 		.4byte	.LFE42
+ 1401 0030 00000000 		.4byte	0
+ 1402 0034 00000000 		.4byte	0
+ 1403              		.section	.debug_line,"",%progbits
+ 1404              	.Ldebug_line0:
+ 1405 0000 43010000 		.section	.debug_str,"MS",%progbits,1
+ 1405      02006800 
+ 1405      00000201 
+ 1405      FB0E0D00 
+ 1405      01010101 
+ 1406              	.LASF73:
+ 1407 0000 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_RX_CREDIT_IND\000"
+ 1407      455F4556 
+ 1407      545F4C32 
+ 1407      4341505F 
+ 1407      43424643 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 32
+
+
+ 1408              	.LASF18:
+ 1409 0023 4359424C 		.ascii	"CYBLE_EVT_STACK_BUSY_STATUS\000"
+ 1409      455F4556 
+ 1409      545F5354 
+ 1409      41434B5F 
+ 1409      42555359 
+ 1410              	.LASF95:
+ 1411 003f 4359424C 		.ascii	"CYBLE_STATE_STOPPED\000"
+ 1411      455F5354 
+ 1411      4154455F 
+ 1411      53544F50 
+ 1411      50454400 
+ 1412              	.LASF72:
+ 1413 0053 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_READ\000"
+ 1413      455F4556 
+ 1413      545F4C32 
+ 1413      4341505F 
+ 1413      43424643 
+ 1414              	.LASF30:
+ 1415 0072 4359424C 		.ascii	"CYBLE_EVT_GAP_CONNECTION_UPDATE_COMPLETE\000"
+ 1415      455F4556 
+ 1415      545F4741 
+ 1415      505F434F 
+ 1415      4E4E4543 
+ 1416              	.LASF71:
+ 1417 009b 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_CNF\000"
+ 1417      455F4556 
+ 1417      545F4C32 
+ 1417      4341505F 
+ 1417      43424643 
+ 1418              	.LASF35:
+ 1419 00bc 4359424C 		.ascii	"CYBLE_EVT_GAP_OOB_GENERATED_NOTIFICATION\000"
+ 1419      455F4556 
+ 1419      545F4741 
+ 1419      505F4F4F 
+ 1419      425F4745 
+ 1420              	.LASF51:
+ 1421 00e5 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_MULTI_RSP\000"
+ 1421      455F4556 
+ 1421      545F4741 
+ 1421      5454435F 
+ 1421      52454144 
+ 1422              	.LASF56:
+ 1423 0104 4359424C 		.ascii	"CYBLE_EVT_GATTS_EXEC_WRITE_REQ\000"
+ 1423      455F4556 
+ 1423      545F4741 
+ 1423      5454535F 
+ 1423      45584543 
+ 1424              	.LASF85:
+ 1425 0123 4359424C 		.ascii	"CYBLE_LP_MODE_T\000"
+ 1425      455F4C50 
+ 1425      5F4D4F44 
+ 1425      455F5400 
+ 1426              	.LASF15:
+ 1427 0133 4359424C 		.ascii	"CYBLE_EVT_TIMEOUT\000"
+ 1427      455F4556 
+ 1427      545F5449 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 33
+
+
+ 1427      4D454F55 
+ 1427      5400
+ 1428              	.LASF4:
+ 1429 0145 6C6F6E67 		.ascii	"long int\000"
+ 1429      20696E74 
+ 1429      00
+ 1430              	.LASF125:
+ 1431 014e 54656D70 		.ascii	"Temperature\000"
+ 1431      65726174 
+ 1431      75726500 
+ 1432              	.LASF7:
+ 1433 015a 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1433      206C6F6E 
+ 1433      6720756E 
+ 1433      7369676E 
+ 1433      65642069 
+ 1434              	.LASF17:
+ 1435 0171 4359424C 		.ascii	"CYBLE_EVT_HCI_STATUS\000"
+ 1435      455F4556 
+ 1435      545F4843 
+ 1435      495F5354 
+ 1435      41545553 
+ 1436              	.LASF76:
+ 1437 0186 4359424C 		.ascii	"CYBLE_EVT_PENDING_FLASH_WRITE\000"
+ 1437      455F4556 
+ 1437      545F5045 
+ 1437      4E44494E 
+ 1437      475F464C 
+ 1438              	.LASF86:
+ 1439 01a4 4359424C 		.ascii	"CYBLE_BLESS_STATE_ACTIVE\000"
+ 1439      455F424C 
+ 1439      4553535F 
+ 1439      53544154 
+ 1439      455F4143 
+ 1440              	.LASF29:
+ 1441 01bd 4359424C 		.ascii	"CYBLE_EVT_GAP_ENCRYPT_CHANGE\000"
+ 1441      455F4556 
+ 1441      545F4741 
+ 1441      505F454E 
+ 1441      43525950 
+ 1442              	.LASF115:
+ 1443 01da 4C617374 		.ascii	"LastPressureData\000"
+ 1443      50726573 
+ 1443      73757265 
+ 1443      44617461 
+ 1443      00
+ 1444              	.LASF33:
+ 1445 01eb 4359424C 		.ascii	"CYBLE_EVT_GAP_NUMERIC_COMPARISON_REQUEST\000"
+ 1445      455F4556 
+ 1445      545F4741 
+ 1445      505F4E55 
+ 1445      4D455249 
+ 1446              	.LASF98:
+ 1447 0214 4359424C 		.ascii	"CYBLE_STATE_ADVERTISING\000"
+ 1447      455F5354 
+ 1447      4154455F 
+ 1447      41445645 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 34
+
+
+ 1447      52544953 
+ 1448              	.LASF6:
+ 1449 022c 6C6F6E67 		.ascii	"long long int\000"
+ 1449      206C6F6E 
+ 1449      6720696E 
+ 1449      7400
+ 1450              	.LASF0:
+ 1451 023a 7369676E 		.ascii	"signed char\000"
+ 1451      65642063 
+ 1451      68617200 
+ 1452              	.LASF14:
+ 1453 0246 4359424C 		.ascii	"CYBLE_EVT_STACK_ON\000"
+ 1453      455F4556 
+ 1453      545F5354 
+ 1453      41434B5F 
+ 1453      4F4E00
+ 1454              	.LASF129:
+ 1455 0259 2E5C6D61 		.ascii	".\\main.c\000"
+ 1455      696E2E63 
+ 1455      00
+ 1456              	.LASF31:
+ 1457 0262 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_START_STOP\000"
+ 1457      455F4556 
+ 1457      545F4741 
+ 1457      50435F53 
+ 1457      43414E5F 
+ 1458              	.LASF21:
+ 1459 0281 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_REQ\000"
+ 1459      455F4556 
+ 1459      545F4741 
+ 1459      505F4155 
+ 1459      54485F52 
+ 1460              	.LASF49:
+ 1461 0298 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_RSP\000"
+ 1461      455F4556 
+ 1461      545F4741 
+ 1461      5454435F 
+ 1461      52454144 
+ 1462              	.LASF126:
+ 1463 02b1 50726573 		.ascii	"Pressure\000"
+ 1463      73757265 
+ 1463      00
+ 1464              	.LASF54:
+ 1465 02ba 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_CMD_REQ\000"
+ 1465      455F4556 
+ 1465      545F4741 
+ 1465      5454535F 
+ 1465      57524954 
+ 1466              	.LASF67:
+ 1467 02d8 4359424C 		.ascii	"CYBLE_EVT_L2CAP_COMMAND_REJ\000"
+ 1467      455F4556 
+ 1467      545F4C32 
+ 1467      4341505F 
+ 1467      434F4D4D 
+ 1468              	.LASF99:
+ 1469 02f4 4359424C 		.ascii	"CYBLE_STATE_DISCONNECTED\000"
+ 1469      455F5354 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 35
+
+
+ 1469      4154455F 
+ 1469      44495343 
+ 1469      4F4E4E45 
+ 1470              	.LASF26:
+ 1471 030d 4359424C 		.ascii	"CYBLE_EVT_GAPP_ADVERTISEMENT_START_STOP\000"
+ 1471      455F4556 
+ 1471      545F4741 
+ 1471      50505F41 
+ 1471      44564552 
+ 1472              	.LASF84:
+ 1473 0335 75696E74 		.ascii	"uint8\000"
+ 1473      3800
+ 1474              	.LASF57:
+ 1475 033b 4359424C 		.ascii	"CYBLE_EVT_GATTC_EXEC_WRITE_RSP\000"
+ 1475      455F4556 
+ 1475      545F4741 
+ 1475      5454435F 
+ 1475      45584543 
+ 1476              	.LASF10:
+ 1477 035a 646F7562 		.ascii	"double\000"
+ 1477      6C6500
+ 1478              	.LASF101:
+ 1479 0361 6C6F6E67 		.ascii	"long double\000"
+ 1479      20646F75 
+ 1479      626C6500 
+ 1480              	.LASF107:
+ 1481 036d 42757474 		.ascii	"ButtonISR\000"
+ 1481      6F6E4953 
+ 1481      5200
+ 1482              	.LASF65:
+ 1483 0377 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_REQ\000"
+ 1483      455F4556 
+ 1483      545F4C32 
+ 1483      4341505F 
+ 1483      434F4E4E 
+ 1484              	.LASF75:
+ 1485 039d 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DATA_WRITE_IND\000"
+ 1485      455F4556 
+ 1485      545F4C32 
+ 1485      4341505F 
+ 1485      43424643 
+ 1486              	.LASF62:
+ 1487 03c1 4359424C 		.ascii	"CYBLE_EVT_GATTC_STOP_CMD_COMPLETE\000"
+ 1487      455F4556 
+ 1487      545F4741 
+ 1487      5454435F 
+ 1487      53544F50 
+ 1488              	.LASF8:
+ 1489 03e3 756E7369 		.ascii	"unsigned int\000"
+ 1489      676E6564 
+ 1489      20696E74 
+ 1489      00
+ 1490              	.LASF77:
+ 1491 03f0 4359424C 		.ascii	"CYBLE_EVT_LE_PING_AUTH_TIMEOUT\000"
+ 1491      455F4556 
+ 1491      545F4C45 
+ 1491      5F50494E 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 36
+
+
+ 1491      475F4155 
+ 1492              	.LASF117:
+ 1493 040f 53746172 		.ascii	"StartAdvertisement\000"
+ 1493      74416476 
+ 1493      65727469 
+ 1493      73656D65 
+ 1493      6E7400
+ 1494              	.LASF91:
+ 1495 0422 4359424C 		.ascii	"CYBLE_BLESS_STATE_DEEPSLEEP\000"
+ 1495      455F424C 
+ 1495      4553535F 
+ 1495      53544154 
+ 1495      455F4445 
+ 1496              	.LASF5:
+ 1497 043e 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1497      20756E73 
+ 1497      69676E65 
+ 1497      6420696E 
+ 1497      7400
+ 1498              	.LASF104:
+ 1499 0450 52656164 		.ascii	"ReadSensorDataAndNotify\000"
+ 1499      53656E73 
+ 1499      6F724461 
+ 1499      7461416E 
+ 1499      644E6F74 
+ 1500              	.LASF83:
+ 1501 0468 4359424C 		.ascii	"CYBLE_BLESS_INVALID\000"
+ 1501      455F424C 
+ 1501      4553535F 
+ 1501      494E5641 
+ 1501      4C494400 
+ 1502              	.LASF44:
+ 1503 047c 4359424C 		.ascii	"CYBLE_EVT_GATTC_XCHNG_MTU_RSP\000"
+ 1503      455F4556 
+ 1503      545F4741 
+ 1503      5454435F 
+ 1503      5843484E 
+ 1504              	.LASF61:
+ 1505 049a 4359424C 		.ascii	"CYBLE_EVT_GATTS_DATA_SIGNED_CMD_REQ\000"
+ 1505      455F4556 
+ 1505      545F4741 
+ 1505      5454535F 
+ 1505      44415441 
+ 1506              	.LASF64:
+ 1507 04be 4359424C 		.ascii	"CYBLE_EVT_GATTC_LONG_PROCEDURE_END\000"
+ 1507      455F4556 
+ 1507      545F4741 
+ 1507      5454435F 
+ 1507      4C4F4E47 
+ 1508              	.LASF106:
+ 1509 04e1 456E7465 		.ascii	"EnterExitLowPowerMode\000"
+ 1509      72457869 
+ 1509      744C6F77 
+ 1509      506F7765 
+ 1509      724D6F64 
+ 1510              	.LASF3:
+ 1511 04f7 73686F72 		.ascii	"short unsigned int\000"
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 37
+
+
+ 1511      7420756E 
+ 1511      7369676E 
+ 1511      65642069 
+ 1511      6E7400
+ 1512              	.LASF13:
+ 1513 050a 4359424C 		.ascii	"CYBLE_EVT_HOST_INVALID\000"
+ 1513      455F4556 
+ 1513      545F484F 
+ 1513      53545F49 
+ 1513      4E56414C 
+ 1514              	.LASF47:
+ 1515 0521 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_INFO_RSP\000"
+ 1515      455F4556 
+ 1515      545F4741 
+ 1515      5454435F 
+ 1515      46494E44 
+ 1516              	.LASF19:
+ 1517 053f 4359424C 		.ascii	"CYBLE_EVT_MEMORY_REQUEST\000"
+ 1517      455F4556 
+ 1517      545F4D45 
+ 1517      4D4F5259 
+ 1517      5F524551 
+ 1518              	.LASF22:
+ 1519 0558 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_ENTRY_REQUEST\000"
+ 1519      455F4556 
+ 1519      545F4741 
+ 1519      505F5041 
+ 1519      53534B45 
+ 1520              	.LASF27:
+ 1521 057c 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_CONNECTED\000"
+ 1521      455F4556 
+ 1521      545F4741 
+ 1521      505F4445 
+ 1521      56494345 
+ 1522              	.LASF52:
+ 1523 059b 4359424C 		.ascii	"CYBLE_EVT_GATTS_WRITE_REQ\000"
+ 1523      455F4556 
+ 1523      545F4741 
+ 1523      5454535F 
+ 1523      57524954 
+ 1524              	.LASF110:
+ 1525 05b5 6379426C 		.ascii	"cyBle_state\000"
+ 1525      655F7374 
+ 1525      61746500 
+ 1526              	.LASF23:
+ 1527 05c1 4359424C 		.ascii	"CYBLE_EVT_GAP_PASSKEY_DISPLAY_REQUEST\000"
+ 1527      455F4556 
+ 1527      545F4741 
+ 1527      505F5041 
+ 1527      53534B45 
+ 1528              	.LASF41:
+ 1529 05e7 4359424C 		.ascii	"CYBLE_EVT_GATT_CONNECT_IND\000"
+ 1529      455F4556 
+ 1529      545F4741 
+ 1529      54545F43 
+ 1529      4F4E4E45 
+ 1530              	.LASF92:
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 38
+
+
+ 1531 0602 4359424C 		.ascii	"CYBLE_BLESS_STATE_HIBERNATE\000"
+ 1531      455F424C 
+ 1531      4553535F 
+ 1531      53544154 
+ 1531      455F4849 
+ 1532              	.LASF20:
+ 1533 061e 4359424C 		.ascii	"CYBLE_EVT_GAPC_SCAN_PROGRESS_RESULT\000"
+ 1533      455F4556 
+ 1533      545F4741 
+ 1533      50435F53 
+ 1533      43414E5F 
+ 1534              	.LASF68:
+ 1535 0642 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_IND\000"
+ 1535      455F4556 
+ 1535      545F4C32 
+ 1535      4341505F 
+ 1535      43424643 
+ 1536              	.LASF46:
+ 1537 0660 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_TYPE_RSP\000"
+ 1537      455F4556 
+ 1537      545F4741 
+ 1537      5454435F 
+ 1537      52454144 
+ 1538              	.LASF12:
+ 1539 0681 73697A65 		.ascii	"sizetype\000"
+ 1539      74797065 
+ 1539      00
+ 1540              	.LASF96:
+ 1541 068a 4359424C 		.ascii	"CYBLE_STATE_INITIALIZING\000"
+ 1541      455F5354 
+ 1541      4154455F 
+ 1541      494E4954 
+ 1541      49414C49 
+ 1542              	.LASF123:
+ 1543 06a3 50726573 		.ascii	"PressureNotificationData\000"
+ 1543      73757265 
+ 1543      4E6F7469 
+ 1543      66696361 
+ 1543      74696F6E 
+ 1544              	.LASF25:
+ 1545 06bc 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_FAILED\000"
+ 1545      455F4556 
+ 1545      545F4741 
+ 1545      505F4155 
+ 1545      54485F46 
+ 1546              	.LASF53:
+ 1547 06d6 4359424C 		.ascii	"CYBLE_EVT_GATTC_WRITE_RSP\000"
+ 1547      455F4556 
+ 1547      545F4741 
+ 1547      5454435F 
+ 1547      57524954 
+ 1548              	.LASF38:
+ 1549 06f0 4359424C 		.ascii	"CYBLE_EVT_GAPC_DIRECT_ADV_REPORT\000"
+ 1549      455F4556 
+ 1549      545F4741 
+ 1549      50435F44 
+ 1549      49524543 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 39
+
+
+ 1550              	.LASF82:
+ 1551 0711 4359424C 		.ascii	"CYBLE_BLESS_HIBERNATE\000"
+ 1551      455F424C 
+ 1551      4553535F 
+ 1551      48494245 
+ 1551      524E4154 
+ 1552              	.LASF36:
+ 1553 0727 4359424C 		.ascii	"CYBLE_EVT_GAP_DATA_LENGTH_CHANGE\000"
+ 1553      455F4556 
+ 1553      545F4741 
+ 1553      505F4441 
+ 1553      54415F4C 
+ 1554              	.LASF108:
+ 1555 0748 536C6565 		.ascii	"SleepMode\000"
+ 1555      704D6F64 
+ 1555      6500
+ 1556              	.LASF24:
+ 1557 0752 4359424C 		.ascii	"CYBLE_EVT_GAP_AUTH_COMPLETE\000"
+ 1557      455F4556 
+ 1557      545F4741 
+ 1557      505F4155 
+ 1557      54485F43 
+ 1558              	.LASF116:
+ 1559 076e 4C617374 		.ascii	"LastAltitudeData\000"
+ 1559      416C7469 
+ 1559      74756465 
+ 1559      44617461 
+ 1559      00
+ 1560              	.LASF58:
+ 1561 077f 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_NTF\000"
+ 1561      455F4556 
+ 1561      545F4741 
+ 1561      5454435F 
+ 1561      48414E44 
+ 1562              	.LASF119:
+ 1563 07a0 54656D70 		.ascii	"TemperatureNotificationEnabled\000"
+ 1563      65726174 
+ 1563      7572654E 
+ 1563      6F746966 
+ 1563      69636174 
+ 1564              	.LASF69:
+ 1565 07bf 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_CONN_CNF\000"
+ 1565      455F4556 
+ 1565      545F4C32 
+ 1565      4341505F 
+ 1565      43424643 
+ 1566              	.LASF105:
+ 1567 07dd 48616E64 		.ascii	"HandleStatusLED\000"
+ 1567      6C655374 
+ 1567      61747573 
+ 1567      4C454400 
+ 1568              	.LASF45:
+ 1569 07ed 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BY_GROUP_TYPE_RSP\000"
+ 1569      455F4556 
+ 1569      545F4741 
+ 1569      5454435F 
+ 1569      52454144 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 40
+
+
+ 1570              	.LASF9:
+ 1571 0814 666C6F61 		.ascii	"float\000"
+ 1571      7400
+ 1572              	.LASF113:
+ 1573 081a 4C454444 		.ascii	"LEDDelayCounter\000"
+ 1573      656C6179 
+ 1573      436F756E 
+ 1573      74657200 
+ 1574              	.LASF111:
+ 1575 082a 4368616E 		.ascii	"ChangePowerPinDriveMode\000"
+ 1575      6765506F 
+ 1575      77657250 
+ 1575      696E4472 
+ 1575      6976654D 
+ 1576              	.LASF88:
+ 1577 0842 4359424C 		.ascii	"CYBLE_BLESS_STATE_SLEEP\000"
+ 1577      455F424C 
+ 1577      4553535F 
+ 1577      53544154 
+ 1577      455F534C 
+ 1578              	.LASF42:
+ 1579 085a 4359424C 		.ascii	"CYBLE_EVT_GATT_DISCONNECT_IND\000"
+ 1579      455F4556 
+ 1579      545F4741 
+ 1579      54545F44 
+ 1579      4953434F 
+ 1580              	.LASF1:
+ 1581 0878 756E7369 		.ascii	"unsigned char\000"
+ 1581      676E6564 
+ 1581      20636861 
+ 1581      7200
+ 1582              	.LASF130:
+ 1583 0886 433A5C55 		.ascii	"C:\\Users\\Ecapable\\Desktop\\PSoC_4_BLE_Pressure_S"
+ 1583      73657273 
+ 1583      5C456361 
+ 1583      7061626C 
+ 1583      655C4465 
+ 1584 08b5 656E736F 		.ascii	"ensor\\PSoC_4_BLE_Pressure_Sensor.cydsn\000"
+ 1584      725C5053 
+ 1584      6F435F34 
+ 1584      5F424C45 
+ 1584      5F507265 
+ 1585              	.LASF34:
+ 1586 08dc 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYPRESS_NOTIFICATION\000"
+ 1586      455F4556 
+ 1586      545F4741 
+ 1586      505F4B45 
+ 1586      59505245 
+ 1587              	.LASF103:
+ 1588 0900 496E6974 		.ascii	"InitializeSystem\000"
+ 1588      69616C69 
+ 1588      7A655379 
+ 1588      7374656D 
+ 1588      00
+ 1589              	.LASF2:
+ 1590 0911 73686F72 		.ascii	"short int\000"
+ 1590      7420696E 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 41
+
+
+ 1590      7400
+ 1591              	.LASF59:
+ 1592 091b 4359424C 		.ascii	"CYBLE_EVT_GATTC_HANDLE_VALUE_IND\000"
+ 1592      455F4556 
+ 1592      545F4741 
+ 1592      5454435F 
+ 1592      48414E44 
+ 1593              	.LASF112:
+ 1594 093c 4E6F7469 		.ascii	"NotificationDelayCounter\000"
+ 1594      66696361 
+ 1594      74696F6E 
+ 1594      44656C61 
+ 1594      79436F75 
+ 1595              	.LASF127:
+ 1596 0955 416C7469 		.ascii	"Altitude\000"
+ 1596      74756465 
+ 1596      00
+ 1597              	.LASF118:
+ 1598 095e 44657669 		.ascii	"DeviceConnected\000"
+ 1598      6365436F 
+ 1598      6E6E6563 
+ 1598      74656400 
+ 1599              	.LASF55:
+ 1600 096e 4359424C 		.ascii	"CYBLE_EVT_GATTS_PREP_WRITE_REQ\000"
+ 1600      455F4556 
+ 1600      545F4741 
+ 1600      5454535F 
+ 1600      50524550 
+ 1601              	.LASF93:
+ 1602 098d 4359424C 		.ascii	"CYBLE_BLESS_STATE_INVALID\000"
+ 1602      455F424C 
+ 1602      4553535F 
+ 1602      53544154 
+ 1602      455F494E 
+ 1603              	.LASF60:
+ 1604 09a7 4359424C 		.ascii	"CYBLE_EVT_GATTS_HANDLE_VALUE_CNF\000"
+ 1604      455F4556 
+ 1604      545F4741 
+ 1604      5454535F 
+ 1604      48414E44 
+ 1605              	.LASF40:
+ 1606 09c8 4359424C 		.ascii	"CYBLE_EVT_GATTC_ERROR_RSP\000"
+ 1606      455F4556 
+ 1606      545F4741 
+ 1606      5454435F 
+ 1606      4552524F 
+ 1607              	.LASF39:
+ 1608 09e2 4359424C 		.ascii	"CYBLE_EVT_GAP_SMP_NEGOTIATED_AUTH_INFO\000"
+ 1608      455F4556 
+ 1608      545F4741 
+ 1608      505F534D 
+ 1608      505F4E45 
+ 1609              	.LASF94:
+ 1610 0a09 4359424C 		.ascii	"CYBLE_BLESS_STATE_T\000"
+ 1610      455F424C 
+ 1610      4553535F 
+ 1610      53544154 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 42
+
+
+ 1610      455F5400 
+ 1611              	.LASF78:
+ 1612 0a1d 4359424C 		.ascii	"CYBLE_EVT_MAX\000"
+ 1612      455F4556 
+ 1612      545F4D41 
+ 1612      5800
+ 1613              	.LASF121:
+ 1614 0a2b 416C7469 		.ascii	"AltitudeNotificationEnabled\000"
+ 1614      74756465 
+ 1614      4E6F7469 
+ 1614      66696361 
+ 1614      74696F6E 
+ 1615              	.LASF80:
+ 1616 0a47 4359424C 		.ascii	"CYBLE_BLESS_SLEEP\000"
+ 1616      455F424C 
+ 1616      4553535F 
+ 1616      534C4545 
+ 1616      5000
+ 1617              	.LASF11:
+ 1618 0a59 63686172 		.ascii	"char\000"
+ 1618      00
+ 1619              	.LASF124:
+ 1620 0a5e 416C7469 		.ascii	"AltitudeNotificationData\000"
+ 1620      74756465 
+ 1620      4E6F7469 
+ 1620      66696361 
+ 1620      74696F6E 
+ 1621              	.LASF28:
+ 1622 0a77 4359424C 		.ascii	"CYBLE_EVT_GAP_DEVICE_DISCONNECTED\000"
+ 1622      455F4556 
+ 1622      545F4741 
+ 1622      505F4445 
+ 1622      56494345 
+ 1623              	.LASF63:
+ 1624 0a99 4359424C 		.ascii	"CYBLE_EVT_GATTS_READ_CHAR_VAL_ACCESS_REQ\000"
+ 1624      455F4556 
+ 1624      545F4741 
+ 1624      5454535F 
+ 1624      52454144 
+ 1625              	.LASF74:
+ 1626 0ac2 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_TX_CREDIT_IND\000"
+ 1626      455F4556 
+ 1626      545F4C32 
+ 1626      4341505F 
+ 1626      43424643 
+ 1627              	.LASF16:
+ 1628 0ae5 4359424C 		.ascii	"CYBLE_EVT_HARDWARE_ERROR\000"
+ 1628      455F4556 
+ 1628      545F4841 
+ 1628      52445741 
+ 1628      52455F45 
+ 1629              	.LASF120:
+ 1630 0afe 50726573 		.ascii	"PressureNotificationEnabled\000"
+ 1630      73757265 
+ 1630      4E6F7469 
+ 1630      66696361 
+ 1630      74696F6E 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 43
+
+
+ 1631              	.LASF87:
+ 1632 0b1a 4359424C 		.ascii	"CYBLE_BLESS_STATE_EVENT_CLOSE\000"
+ 1632      455F424C 
+ 1632      4553535F 
+ 1632      53544154 
+ 1632      455F4556 
+ 1633              	.LASF43:
+ 1634 0b38 4359424C 		.ascii	"CYBLE_EVT_GATTS_XCNHG_MTU_REQ\000"
+ 1634      455F4556 
+ 1634      545F4741 
+ 1634      5454535F 
+ 1634      58434E48 
+ 1635              	.LASF89:
+ 1636 0b56 4359424C 		.ascii	"CYBLE_BLESS_STATE_ECO_ON\000"
+ 1636      455F424C 
+ 1636      4553535F 
+ 1636      53544154 
+ 1636      455F4543 
+ 1637              	.LASF100:
+ 1638 0b6f 4359424C 		.ascii	"CYBLE_STATE_T\000"
+ 1638      455F5354 
+ 1638      4154455F 
+ 1638      5400
+ 1639              	.LASF50:
+ 1640 0b7d 4359424C 		.ascii	"CYBLE_EVT_GATTC_READ_BLOB_RSP\000"
+ 1640      455F4556 
+ 1640      545F4741 
+ 1640      5454435F 
+ 1640      52454144 
+ 1641              	.LASF90:
+ 1642 0b9b 4359424C 		.ascii	"CYBLE_BLESS_STATE_ECO_STABLE\000"
+ 1642      455F424C 
+ 1642      4553535F 
+ 1642      53544154 
+ 1642      455F4543 
+ 1643              	.LASF97:
+ 1644 0bb8 4359424C 		.ascii	"CYBLE_STATE_CONNECTED\000"
+ 1644      455F5354 
+ 1644      4154455F 
+ 1644      434F4E4E 
+ 1644      45435445 
+ 1645              	.LASF81:
+ 1646 0bce 4359424C 		.ascii	"CYBLE_BLESS_DEEPSLEEP\000"
+ 1646      455F424C 
+ 1646      4553535F 
+ 1646      44454550 
+ 1646      534C4545 
+ 1647              	.LASF128:
+ 1648 0be4 474E5520 		.ascii	"GNU C 4.9.3 20150303 (release) [ARM/embedded-4_9-br"
+ 1648      4320342E 
+ 1648      392E3320 
+ 1648      32303135 
+ 1648      30333033 
+ 1649 0c17 616E6368 		.ascii	"anch revision 221220] -mcpu=cortex-m0 -mthumb -g -O"
+ 1649      20726576 
+ 1649      6973696F 
+ 1649      6E203232 
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 44
+
+
+ 1649      31323230 
+ 1650 0c4a 30202D66 		.ascii	"0 -ffunction-sections -ffat-lto-objects\000"
+ 1650      66756E63 
+ 1650      74696F6E 
+ 1650      2D736563 
+ 1650      74696F6E 
+ 1651              	.LASF48:
+ 1652 0c72 4359424C 		.ascii	"CYBLE_EVT_GATTC_FIND_BY_TYPE_VALUE_RSP\000"
+ 1652      455F4556 
+ 1652      545F4741 
+ 1652      5454435F 
+ 1652      46494E44 
+ 1653              	.LASF32:
+ 1654 0c99 4359424C 		.ascii	"CYBLE_EVT_GAP_KEYINFO_EXCHNGE_CMPLT\000"
+ 1654      455F4556 
+ 1654      545F4741 
+ 1654      505F4B45 
+ 1654      59494E46 
+ 1655              	.LASF70:
+ 1656 0cbd 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CBFC_DISCONN_IND\000"
+ 1656      455F4556 
+ 1656      545F4C32 
+ 1656      4341505F 
+ 1656      43424643 
+ 1657              	.LASF109:
+ 1658 0cde 426C6573 		.ascii	"BlessState\000"
+ 1658      73537461 
+ 1658      746500
+ 1659              	.LASF66:
+ 1660 0ce9 4359424C 		.ascii	"CYBLE_EVT_L2CAP_CONN_PARAM_UPDATE_RSP\000"
+ 1660      455F4556 
+ 1660      545F4C32 
+ 1660      4341505F 
+ 1660      434F4E4E 
+ 1661              	.LASF114:
+ 1662 0d0f 4C617374 		.ascii	"LastTemperatureData\000"
+ 1662      54656D70 
+ 1662      65726174 
+ 1662      75726544 
+ 1662      61746100 
+ 1663              	.LASF102:
+ 1664 0d23 6D61696E 		.ascii	"main\000"
+ 1664      00
+ 1665              	.LASF79:
+ 1666 0d28 4359424C 		.ascii	"CYBLE_BLESS_ACTIVE\000"
+ 1666      455F424C 
+ 1666      4553535F 
+ 1666      41435449 
+ 1666      564500
+ 1667              	.LASF37:
+ 1668 0d3b 4359424C 		.ascii	"CYBLE_EVT_GAP_ENHANCE_CONN_COMPLETE\000"
+ 1668      455F4556 
+ 1668      545F4741 
+ 1668      505F454E 
+ 1668      48414E43 
+ 1669              	.LASF122:
+ 1670 0d5f 54656D70 		.ascii	"TemperatureNotificationData\000"
+ARM GAS  C:\Users\Ecapable\AppData\Local\Temp\ccUEQhMk.s 			page 45
+
+
+ 1670      65726174 
+ 1670      7572654E 
+ 1670      6F746966 
+ 1670      69636174 
+ 1671              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20150303 (release) [ARM/embedded-4_9-br
